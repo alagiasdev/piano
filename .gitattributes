@@ -1,0 +1,12 @@
+# Il progetto gira su Linux (cPanel) ma si sviluppa su Windows: i file di
+# testo si salvano con fine riga LF nel repository, così quello che arriva
+# sul server è sempre uguale a prescindere da dove è stato scritto.
+* text=auto eol=lf
+
+# Binari: mai toccati
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary

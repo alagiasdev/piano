@@ -1,0 +1,22 @@
+{
+    "name": "alagias/piano",
+    "description": "Mini gestionale per piani editoriali social",
+    "type": "project",
+    "require": {
+        "php": ">=8.2"
+    },
+    "suggest": {
+        "dompdf/dompdf": "Export PDF lato server. Senza, l'export usa la pagina print-friendly."
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "files": [
+            "app/Support/helpers.php"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

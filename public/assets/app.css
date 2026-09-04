@@ -1,0 +1,1010 @@
+/* ==========================================================================
+   Piano — foglio di stile unico
+   Colori dei canali (--ig, --ig-soft, ...) iniettati dal PHP: App\Support\Canali
+   ========================================================================== */
+
+:root{
+  --ink:#182230;
+  --ink-2:#4B5563;
+  --ink-3:#8A94A3;
+  --line:#E3E7EC;
+  --paper:#FFFFFF;
+  --surface:#F4F6F8;
+  --blue:#2447D6;
+  --blue-soft:#E8EDFF;
+  --verde:#15803D;
+  --verde-soft:#E6F4EB;
+  --ambra:#B7690B;
+  --ambra-soft:#FBF0DE;
+  --rosso:#B91C1C;
+  --rosso-soft:#FDE8E8;
+
+  --raggio:8px;
+  --ombra:0 1px 2px rgba(24,34,48,.06), 0 8px 24px rgba(24,34,48,.06);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:15px;
+  line-height:1.5;
+  color:var(--ink);
+  background:var(--surface);
+  -webkit-font-smoothing:antialiased;
+}
+
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3{line-height:1.2;letter-spacing:-.02em}
+h1{font-size:1.5rem;font-weight:800}
+h2{font-size:1.125rem;font-weight:700}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.875em;background:var(--surface);padding:1px 5px;border-radius:4px}
+
+.sfumato{color:var(--ink-2)}
+.piccolo{font-size:.8125rem}
+
+/* ------------------------------------------------------------ struttura -- */
+
+.topbar{
+  display:flex;align-items:center;gap:28px;flex-wrap:wrap;
+  background:var(--paper);border-bottom:1px solid var(--line);
+  padding:0 24px;
+}
+
+.marchio{
+  font-weight:800;font-size:1.0625rem;letter-spacing:-.03em;color:var(--ink);
+  padding:16px 0;
+}
+.marchio:hover{text-decoration:none}
+.marchio span,.punto{color:var(--blue)}
+
+.menu{display:flex;gap:4px;flex-wrap:wrap;margin-right:auto}
+.menu a{
+  display:block;padding:16px 12px;color:var(--ink-2);font-weight:600;font-size:.9375rem;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+}
+.menu a:hover{color:var(--ink);text-decoration:none}
+.menu a.attiva{color:var(--blue);border-bottom-color:var(--blue)}
+
+.uscita{display:flex;align-items:center;gap:12px}
+.chi{font-size:.8125rem;color:var(--ink-3);font-weight:600}
+
+.contenitore{max-width:1180px;margin:0 auto;padding:28px 24px 64px}
+
+.pie{
+  max-width:1180px;margin:0 auto;padding:0 24px 32px;
+  font-size:.8125rem;color:var(--ink-3);
+}
+
+.intestazione-pagina{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+  flex-wrap:wrap;margin-bottom:20px;
+}
+.intestazione-pagina .sfumato{font-size:.875rem}
+
+.scheda{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--raggio);
+  padding:24px;box-shadow:var(--ombra);
+}
+.scheda + .scheda{margin-top:20px}
+.scheda p + p{margin-top:10px}
+
+/* Pagine centrate: login ed errori */
+body.centrata{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+.riquadro{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--raggio);
+  box-shadow:var(--ombra);padding:32px;width:100%;max-width:380px;
+}
+.titolo-riquadro{font-size:1.5rem;font-weight:800;letter-spacing:-.03em}
+.riquadro .sfumato{font-size:.875rem;margin-bottom:20px}
+
+.errore-codice{font-size:2.5rem;font-weight:800;color:var(--ink-3);letter-spacing:-.04em}
+.errore-titolo{font-weight:700;margin-bottom:8px}
+
+/* --------------------------------------------------------------- moduli -- */
+
+.modulo{display:flex;flex-direction:column;gap:6px}
+.modulo label{font-size:.8125rem;font-weight:600;color:var(--ink-2);margin-top:10px}
+.modulo label:first-of-type{margin-top:0}
+
+input[type=text],input[type=email],input[type=password],input[type=date],
+input[type=time],input[type=url],input[type=number],select,textarea{
+  font:inherit;color:var(--ink);background:var(--paper);
+  border:1px solid var(--line);border-radius:6px;padding:9px 11px;width:100%;
+}
+input:focus,select:focus,textarea:focus{
+  outline:2px solid var(--blue);outline-offset:-1px;border-color:var(--blue);
+}
+textarea{resize:vertical;min-height:90px;line-height:1.5}
+
+.btn{
+  font:inherit;font-weight:700;font-size:.9375rem;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink);
+  border-radius:6px;padding:9px 16px;cursor:pointer;display:inline-block;
+}
+.btn:hover{border-color:var(--ink-3);text-decoration:none}
+.btn-primario{background:var(--blue);border-color:var(--blue);color:#fff;margin-top:20px}
+.btn-primario:hover{filter:brightness(.93);border-color:var(--blue)}
+.btn-pericolo{color:var(--rosso)}
+.btn-pericolo:hover{border-color:var(--rosso)}
+.btn-piccolo{font-size:.8125rem;padding:5px 10px}
+
+.btn-testo{
+  font:inherit;font-size:.8125rem;font-weight:700;
+  border:0;background:none;color:var(--blue);cursor:pointer;padding:0;
+}
+.btn-testo:hover{text-decoration:underline}
+
+/* -------------------------------------------------------------- avvisi -- */
+
+.avviso{
+  padding:10px 14px;border-radius:6px;font-size:.875rem;margin-bottom:16px;
+  background:var(--verde-soft);color:var(--verde);border:1px solid rgba(21,128,61,.18);
+}
+.avviso.errore{background:var(--rosso-soft);color:var(--rosso);border-color:rgba(185,28,28,.18)}
+.avviso.attenzione{background:var(--ambra-soft);color:var(--ambra);border-color:rgba(183,105,11,.2)}
+.avviso code{background:rgba(0,0,0,.05);color:inherit}
+
+/* ------------------------------------------------- etichette dei canali -- */
+
+.tag{
+  display:inline-block;font-size:.75rem;font-weight:700;
+  padding:2px 8px;border-radius:4px;white-space:nowrap;margin:1px 2px 1px 0;
+}
+.tag.ig{color:var(--ig);background:var(--ig-soft)}
+.tag.fb{color:var(--fb);background:var(--fb-soft)}
+.tag.li{color:var(--li);background:var(--li-soft)}
+.tag.tt{color:var(--tt);background:var(--tt-soft)}
+.tag.yt{color:var(--yt);background:var(--yt-soft)}
+.tag.nl{color:var(--nl);background:var(--nl-soft)}
+
+/* Stati: stesse forme delle etichette, colori semantici */
+.stato-pill{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.stato-pill.bozza,.stato-pill.da_approvare{color:var(--ink-3);background:var(--surface)}
+.stato-pill.inviato{color:var(--blue);background:var(--blue-soft)}
+.stato-pill.approvato,.stato-pill.pubblicato{color:var(--verde);background:var(--verde-soft)}
+.stato-pill.da_rivedere{color:var(--ambra);background:var(--ambra-soft)}
+.stato-pill.chiuso{color:var(--ink-2);background:var(--surface)}
+
+/* ------------------------------------------------------------- tabelle -- */
+
+.tabella{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--paper)}
+.tabella th{
+  background:var(--surface);padding:10px 12px;text-align:left;
+  font-size:.8125rem;font-weight:600;color:var(--ink-3);
+  border-bottom:1px solid var(--line);
+}
+.tabella td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+.tabella tr:last-child td{border-bottom:0}
+.tabella .azioni{text-align:right;white-space:nowrap}
+
+.vuoto{padding:40px 24px;text-align:center;color:var(--ink-3);font-size:.9375rem}
+
+/* ---------------------------------------------------- moduli articolati -- */
+
+.due-colonne{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.due-colonne .barra-azioni{grid-column:1 / -1}
+
+.campo{margin-top:16px}
+.campo:first-of-type{margin-top:12px}
+.campo label,.campo .etichetta{
+  display:block;font-size:.8125rem;font-weight:600;color:var(--ink-2);margin-bottom:5px;
+}
+.obbligatorio{color:var(--rosso)}
+.aiuto{font-size:.8125rem;color:var(--ink-3);margin-top:5px}
+.errore-campo{font-size:.8125rem;color:var(--rosso);font-weight:600;margin-top:5px}
+
+input[type=file]{
+  font:inherit;font-size:.875rem;width:100%;
+  border:1px dashed var(--line);border-radius:6px;padding:9px 11px;background:var(--paper);
+}
+
+.spunte{display:flex;flex-wrap:wrap;gap:6px 16px}
+.spunta{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:.875rem;font-weight:500;color:var(--ink);cursor:pointer;margin-bottom:0;
+}
+.spunta input{accent-color:var(--blue);width:16px;height:16px}
+
+.barra-azioni{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px}
+
+.scheda.pericolo{
+  display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+  margin-top:32px;border-color:rgba(185,28,28,.25);background:#FFFBFB;
+}
+.scheda.pericolo h2{font-size:1rem;color:var(--rosso)}
+
+/* --------------------------------------------------------------- loghi -- */
+
+.logo-mini{
+  width:36px;height:36px;object-fit:contain;border-radius:6px;
+  background:var(--surface);display:block;
+}
+.logo-mini.vuoto-logo{
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;color:var(--ink-3);font-size:.9375rem;
+}
+.logo-grande{
+  max-width:180px;max-height:90px;object-fit:contain;display:block;
+  margin-bottom:12px;padding:10px;background:var(--surface);border-radius:6px;
+}
+tr.spento td{opacity:.6}
+
+/* -------------------------------------------------------------- mobile -- */
+
+@media (max-width:860px){
+  .due-colonne{grid-template-columns:1fr}
+}
+
+/* ==========================================================================
+   Editor del piano
+   ========================================================================== */
+
+.barra-piano{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+  flex-wrap:wrap;margin-bottom:16px;
+}
+.barra-piano-info h1{margin-bottom:4px}
+.barra-piano-info p{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.barra-piano-azioni{display:flex;gap:6px;flex-wrap:wrap}
+
+/* Pannello a fisarmonica con le impostazioni del piano */
+.pannello{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--raggio);
+  margin-bottom:24px;box-shadow:var(--ombra);
+}
+.pannello > summary{
+  padding:12px 20px;font-weight:700;font-size:.9375rem;cursor:pointer;
+  list-style:none;display:flex;align-items:center;gap:8px;
+}
+.pannello > summary::-webkit-details-marker{display:none}
+.pannello > summary::before{content:"▸";color:var(--ink-3);font-size:.75rem}
+.pannello[open] > summary::before{content:"▾"}
+.pannello > summary:hover{color:var(--blue)}
+.pannello-corpo{padding:4px 20px 20px;border-top:1px solid var(--line)}
+
+.riga-campi{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+.riga-campi .campo{flex:1 1 150px;margin-top:12px}
+.separatore{border:0;border-top:1px solid var(--line);margin:18px 0 4px}
+.gruppo-periodo{display:flex;gap:8px;align-items:center;margin:8px 0 0 24px}
+.gruppo-periodo select,.gruppo-periodo input{width:auto}
+
+/* Barra di avanzamento delle approvazioni */
+.avanzamento{height:6px;background:var(--surface);border-radius:99px;overflow:hidden;margin-bottom:4px}
+.avanzamento-barra{height:100%;background:var(--verde);border-radius:99px;transition:width .3s}
+
+/* --------------------------------------------------------- settimane -- */
+
+.settimana{margin-bottom:26px}
+.settimana-testa{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+.settimana-testa h2{font-size:1.0625rem}
+.settimana-testa .btn{margin-left:auto}
+
+.cal{
+  width:100%;border-collapse:collapse;font-size:.875rem;table-layout:fixed;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--raggio);
+  overflow:hidden;
+}
+.cal th{
+  background:var(--surface);padding:9px 10px;text-align:left;
+  font-size:.75rem;font-weight:600;color:var(--ink-3);border-bottom:1px solid var(--line);
+}
+.cal td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+.cal tr:last-child td{border-bottom:0}
+.cal col.c-day{width:128px}
+.cal col.c-ch{width:112px}
+.cal col.c-fmt{width:112px}
+.cal col.c-cta{width:122px}
+.cal col.c-st{width:120px}
+/* Larga da tenere tutti e quattro i comandi (su, giu, duplica, elimina)
+   sulla stessa riga: la tabella ha overflow:hidden e quello che sborda
+   diventa irraggiungibile, non solo invisibile. */
+.cal col.c-x{width:120px}
+
+/* I post dello stesso giorno stanno in un blocco: la linea piu marcata
+   segna dove comincia un giorno nuovo. E' anche la chiave per capire il
+   riordino su/giu, che vale solo dentro un giorno. */
+.cal tr.inizio-giorno:not(:first-child) td{border-top:1px solid var(--line)}
+.cal tr.stesso-giorno .valore-data{color:var(--ink-3);font-weight:600}
+
+.riga-vuota td{color:var(--ink-3);font-size:.8125rem;padding:12px 9px}
+
+/* Giorno e ora: testo compatto, il campo nativo compare al clic */
+.valore{
+  display:block;font:inherit;text-align:left;cursor:pointer;
+  border:1px solid transparent;border-radius:4px;background:transparent;
+  padding:2px 5px;margin-left:-5px;
+}
+.valore:hover{border-color:var(--line);background:var(--surface)}
+.valore-data{font-size:.875rem;font-weight:700;white-space:nowrap}
+.valore-ora{font-size:.8125rem;color:var(--ink-2);margin-top:1px}
+.valore-ora.vuoto{color:var(--ink-3);font-style:italic}
+tr:not(:hover) .valore-ora.vuoto{opacity:0}
+
+.campo-data,.campo-ora{
+  font:inherit;font-size:.8125rem;padding:3px 5px;width:100%;
+  border:1px solid var(--blue);border-radius:4px;background:var(--paper);
+}
+
+/* Campi di testo modificabili al volo */
+[contenteditable]{
+  outline:1px dashed transparent;border-radius:4px;padding:2px 4px;
+  transition:outline-color .15s,background .15s;
+}
+[contenteditable]:hover{outline-color:#B9C4FF}
+[contenteditable]:focus{outline:2px solid var(--blue);background:var(--blue-soft)}
+[contenteditable]:empty::before{content:attr(data-ph);color:var(--ink-3);font-weight:400}
+
+.copy{line-height:1.45;min-height:1.4em}
+.fmt{font-size:.8125rem;color:var(--ink-2)}
+.cta{font-size:.8125rem;color:var(--ink-2)}
+
+/* Campi secondari (link al visual, pilastro): quando sono vuoti restano
+   invisibili e compaiono passando sulla riga. Su dodici righe, dodici
+   segnaposto "incolla un link" erano solo rumore. */
+.visual,.pilastro{font-size:.75rem;color:var(--ink-3);margin-top:3px}
+.visual{display:flex;gap:5px;align-items:baseline;flex-wrap:wrap}
+.visual-etichetta{font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:.6875rem}
+.visual [contenteditable]{flex:1 1 80px;min-width:50px}
+.pilastro.pieno{
+  display:inline-block;background:var(--surface);border-radius:4px;
+  padding:1px 6px;color:var(--ink-2);font-weight:600;
+}
+
+.visual:not(.pieno),.pilastro:not(.pieno){opacity:0;transition:opacity .15s}
+tr:hover .visual:not(.pieno),tr:hover .pilastro:not(.pieno),
+.visual:focus-within,.pilastro:focus{opacity:1}
+
+/* Su schermi senza mouse non c'e' hover: meglio mostrarli sempre */
+@media (hover:none){
+  .visual:not(.pieno),.pilastro:not(.pieno){opacity:1}
+  tr:not(:hover) .valore-ora.vuoto{opacity:1}
+}
+
+/* Selettore dei canali */
+.ch-cell{position:relative}
+.ch-cell .tags{cursor:pointer;display:block;min-height:22px}
+.ch-cell .scegli{color:var(--ink-3);font-size:.75rem}
+/* position:fixed e non absolute: la tabella ha overflow:hidden per gli
+   angoli arrotondati e taglierebbe il pannello. Da fisso il contenitore
+   e' il viewport, quindi nessun antenato lo ritaglia; le coordinate le
+   calcola editor.js, che lo ribalta se non c'e' spazio sotto. */
+.ch-pop{
+  position:fixed;z-index:200;top:0;left:0;min-width:168px;
+  background:var(--paper);border:1px solid var(--line);border-radius:8px;
+  box-shadow:0 10px 30px rgba(24,34,48,.18);padding:6px;display:none;
+  max-height:calc(100vh - 16px);overflow-y:auto;
+}
+.ch-pop.aperto{display:block}
+.ch-pop label{
+  display:flex;align-items:center;gap:7px;padding:4px 6px;
+  border-radius:4px;cursor:pointer;font-size:.8125rem;
+}
+.ch-pop label:hover{background:var(--surface)}
+.ch-pop input{accent-color:var(--blue)}
+
+/* Stato del post: e' un pulsante, e deve sembrarlo */
+.stato-cella .stato-pill{
+  font:inherit;font-size:.75rem;font-weight:700;cursor:pointer;
+  padding:3px 9px;border-radius:4px;
+  border:1px solid rgba(24,34,48,.12);
+}
+.stato-cella .stato-pill::after{
+  content:"⌄";margin-left:5px;font-weight:700;opacity:.5;
+}
+.stato-cella .stato-pill:hover{filter:brightness(.96);border-color:currentColor}
+.commento{
+  font-size:.75rem;color:var(--ink-2);margin-top:6px;padding:6px 8px;
+  background:var(--ambra-soft);border-radius:5px;line-height:1.4;
+}
+
+/* Strumenti di riga: presenti ma discreti, pieni sulla riga sotto il mouse.
+   white-space:normal e non nowrap: se lo spazio non basta i comandi vanno
+   a capo invece di uscire dalla cella e farsi ritagliare. */
+.riga-strumenti{white-space:normal;text-align:right}
+.riga-strumenti button{
+  font:inherit;font-size:.75rem;line-height:1;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink-3);
+  border-radius:5px;padding:4px 5px;cursor:pointer;opacity:.62;
+  margin:1px 0 1px 2px;
+  transition:opacity .15s,border-color .15s,color .15s;
+}
+tr:hover .riga-strumenti button{opacity:1}
+.riga-strumenti button:hover{border-color:var(--blue);color:var(--blue)}
+.riga-strumenti .azione-elimina:hover{border-color:var(--rosso);color:var(--rosso)}
+.riga-strumenti button:disabled{
+  opacity:.2;cursor:default;border-color:var(--line);color:var(--ink-3);
+}
+tr:hover .riga-strumenti button:disabled{opacity:.25}
+.riga-strumenti button:disabled:hover{border-color:var(--line);color:var(--ink-3)}
+
+@media (hover:none){ .riga-strumenti button{opacity:1} }
+
+/* Indicatore di salvataggio */
+.salvataggio{
+  position:fixed;bottom:18px;right:18px;z-index:50;
+  background:var(--ink);color:#fff;font-size:.8125rem;font-weight:600;
+  padding:8px 14px;border-radius:6px;box-shadow:0 6px 20px rgba(24,34,48,.25);
+}
+.salvataggio.errore{background:var(--rosso)}
+
+/* ==========================================================================
+   Vista calendario mensile (sola lettura)
+   ========================================================================== */
+
+.mese h2{margin-bottom:14px}
+.mese + .mese{margin-top:20px}
+
+.griglia-mese{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;
+}
+.griglia-testa{
+  background:var(--surface);padding:7px 8px;
+  font-size:.75rem;font-weight:600;color:var(--ink-3);
+}
+.griglia-giorno{background:var(--paper);min-height:92px;padding:6px}
+.griglia-giorno.fuori{background:#FAFBFC}
+.griglia-giorno.fuori .griglia-numero{color:#C3CAD3}
+.griglia-giorno.oggi{box-shadow:inset 0 0 0 2px var(--blue)}
+.griglia-giorno.pieno{background:#FFFCF5}
+.griglia-numero{font-size:.75rem;font-weight:700;color:var(--ink-3);margin-bottom:4px}
+
+.chip{
+  display:flex;align-items:center;gap:4px;flex-wrap:nowrap;
+  font-size:.6875rem;line-height:1.3;color:var(--ink);
+  background:var(--surface);border-radius:4px;padding:3px 5px;margin-bottom:3px;
+  overflow:hidden;
+}
+.chip:hover{background:var(--blue-soft);text-decoration:none}
+.chip-ora{font-weight:700;color:var(--ink-2);flex:0 0 auto}
+.chip-testo{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip-segno{
+  margin-left:auto;flex:0 0 auto;font-weight:800;color:var(--ambra);
+}
+.chip-segno.ok{color:var(--verde)}
+
+.pallino{
+  display:inline-block;width:8px;height:8px;border-radius:99px;flex:0 0 auto;
+  background:var(--ink-3);
+}
+.pallino.ig{background:var(--ig)}
+.pallino.fb{background:var(--fb)}
+.pallino.li{background:var(--li)}
+.pallino.tt{background:var(--tt)}
+.pallino.yt{background:var(--yt)}
+.pallino.nl{background:var(--nl)}
+
+.legenda{display:flex;gap:18px;flex-wrap:wrap;font-size:.8125rem;color:var(--ink-2);padding:14px 20px}
+.voce-legenda{display:inline-flex;align-items:center;gap:6px}
+
+/* ==========================================================================
+   Pagina pubblica di approvazione — è anche il documento che si stampa
+   ========================================================================== */
+
+body.pubblica{background:var(--surface)}
+
+.striscia-anteprima{
+  background:var(--ambra-soft);color:var(--ambra);
+  font-size:.8125rem;font-weight:600;text-align:center;padding:8px 16px;
+}
+
+.barra-cliente{
+  position:sticky;top:0;z-index:30;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  background:var(--ink);color:#fff;padding:10px 20px;font-size:.875rem;
+}
+.barra-cliente .cresci{flex:1}
+.barra-cliente-conteggio strong{font-size:1.0625rem}
+.barra-cliente .btn{background:#fff;border-color:#fff}
+.barra-cliente .btn-primario{background:var(--blue);border-color:var(--blue);color:#fff}
+
+.doc{
+  max-width:1000px;margin:0 auto;background:var(--paper);
+  padding:44px 52px;
+}
+@media (min-width:760px){
+  .doc{margin:28px auto;border-radius:var(--raggio);box-shadow:var(--ombra)}
+}
+
+.doc-testa{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:24px;
+  flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line);
+}
+.doc-testa h1{font-size:1.75rem;font-weight:800;letter-spacing:-.03em}
+.doc-testa h1 small{
+  display:block;font-size:.9375rem;font-weight:600;color:var(--ink-2);
+  letter-spacing:0;margin-top:6px;
+}
+.doc-marchio{text-align:right;font-size:.8125rem;font-weight:700;color:var(--ink-3)}
+.doc-marchio img{max-width:130px;max-height:56px;object-fit:contain;display:block;margin:0 0 8px auto}
+
+.doc-legenda{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 0}
+.doc-nota{
+  margin-top:16px;font-size:.875rem;color:var(--ink-2);
+  max-width:74ch;line-height:1.55;
+}
+
+.doc-settimana{margin-top:28px}
+.doc-settimana-testa{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
+.doc-settimana-testa h2{font-size:1.0625rem;font-weight:800}
+.doc-settimana-testa span{color:var(--ink-3);font-size:.875rem}
+
+.doc-tabella{width:100%;border-collapse:collapse;font-size:.875rem;table-layout:fixed}
+.doc-tabella th{
+  background:var(--surface);padding:9px 11px;text-align:left;
+  font-size:.75rem;font-weight:600;color:var(--ink-3);border-bottom:1px solid var(--line);
+}
+.doc-tabella td{padding:11px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+.doc-tabella col.c-day{width:104px}
+.doc-tabella col.c-ch{width:112px}
+.doc-tabella col.c-fmt{width:106px}
+.doc-tabella col.c-cta{width:120px}
+.doc-tabella col.c-az{width:186px}
+
+.doc-giorno{font-weight:700;white-space:nowrap}
+.doc-giorno small{display:block;font-weight:500;color:var(--ink-3)}
+.doc-secondario{color:var(--ink-2);font-size:.8125rem}
+.doc-secondario small{display:block;color:var(--ink-3);font-size:.75rem;margin-top:2px}
+.doc-visual{font-size:.75rem;font-weight:600}
+
+.doc-commento{
+  font-size:.75rem;color:var(--ink-2);line-height:1.4;
+  background:var(--ambra-soft);border-radius:5px;padding:6px 8px;margin-top:6px;
+}
+.doc-pulsanti{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.doc-commento-modulo{margin-top:8px}
+.doc-commento-modulo textarea{font-size:.8125rem;min-height:64px}
+
+.doc-pie{
+  margin-top:32px;padding-top:16px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-size:.8125rem;color:var(--ink-3);
+}
+
+/* ==========================================================================
+   Stampa: A4 pulito, senza interfaccia. Vale sia per la pagina pubblica
+   sia per l'export PDF, che riusa lo stesso foglio di stile.
+   ========================================================================== */
+
+@media print{
+  @page{size:A4;margin:14mm 12mm}
+
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html{font-size:12.5px}
+  body{background:#fff}
+
+  /* Fuori tutto ciò che è interfaccia */
+  .barra-cliente,.striscia-anteprima,.topbar,.pie,.pannello,.barra-piano-azioni,
+  .doc-pulsanti,.doc-commento-modulo,.salvataggio,.avviso,.riga-strumenti,
+  .settimana-testa .btn,.intestazione-pagina .btn{display:none !important}
+
+  .doc{box-shadow:none;margin:0;padding:0;max-width:none;border-radius:0}
+  .contenitore{padding:0;max-width:none}
+
+  /* La tabella resta tabella anche se la finestra di stampa è stretta */
+  .doc-tabella{display:table !important;width:100% !important}
+  .doc-tabella thead{display:table-header-group !important}
+  .doc-tabella tbody{display:table-row-group !important}
+  .doc-tabella tr{
+    display:table-row !important;border:0 !important;border-radius:0 !important;
+    margin:0 !important;padding:0 !important;
+  }
+  .doc-tabella td{
+    display:table-cell !important;border-bottom:1px solid var(--line) !important;
+    padding:7px 9px !important;
+  }
+  .doc-tabella th{padding:6px 9px !important}
+  .doc-tabella col.c-day{width:88px}
+  .doc-tabella col.c-ch{width:96px}
+  .doc-tabella col.c-fmt{width:92px}
+  .doc-tabella col.c-cta{width:104px}
+  .doc-tabella col.c-az{width:78px}
+
+  /* Mai spezzare una riga; il titolo settimana resta con la sua tabella */
+  .doc-settimana{margin-top:16px}
+  .doc-settimana-testa{break-after:avoid;page-break-after:avoid}
+  .doc-tabella tr{break-inside:avoid;page-break-inside:avoid}
+  .doc-testa{margin-bottom:4px;padding-bottom:11px}
+  .doc-nota{margin-top:14px}
+
+  a{color:inherit;text-decoration:none}
+}
+
+/* Barra della pagina di stampa (non compare nel PDF) */
+.barra-stampa{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  background:var(--ambra-soft);color:var(--ambra);
+  font-size:.8125rem;font-weight:600;padding:9px 20px;
+}
+@media print{ .barra-stampa{display:none !important} }
+
+/* ==========================================================================
+   Dashboard
+   ========================================================================== */
+
+.griglia-dashboard{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:start}
+.griglia-dashboard .scheda{margin-top:0}
+
+.testa-scheda{
+  font-size:.8125rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+  color:var(--ink-3);padding:13px 16px;border-bottom:1px solid var(--line);
+  background:var(--paper);
+}
+.nota-scheda{
+  font-size:.75rem;color:var(--ink-3);padding:10px 16px;
+  border-top:1px solid var(--line);
+}
+
+.elenco-novita{list-style:none;margin:0}
+.elenco-novita li{padding:11px 16px;border-bottom:1px solid var(--line);font-size:.875rem}
+.elenco-novita li:last-child{border-bottom:0}
+.commento-novita{
+  color:var(--ink-2);margin-top:5px;padding:5px 8px;
+  background:var(--ambra-soft);border-radius:5px;line-height:1.4;
+}
+
+tr.urgente{background:#FFFBF3}
+.etichetta-oggi{
+  display:inline-block;margin-top:3px;font-weight:700;color:var(--blue);
+  background:var(--blue-soft);border-radius:4px;padding:1px 6px;
+}
+.avviso-urgente{color:var(--ambra);font-weight:700;margin-top:4px}
+
+@media (max-width:900px){
+  .griglia-dashboard{grid-template-columns:1fr}
+}
+
+/* Riferimento a "oggi" nell'editor: si apre il piano e si vede dove si è */
+.cal tr.oggi td:first-child{box-shadow:inset 3px 0 0 var(--blue)}
+.segno-oggi{
+  display:inline-block;font-size:.625rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.05em;color:var(--blue);background:var(--blue-soft);
+  border-radius:3px;padding:1px 5px;margin-left:2px;vertical-align:2px;
+}
+.pill-corrente{
+  font-size:.6875rem;font-weight:700;color:var(--blue);background:var(--blue-soft);
+  border-radius:4px;padding:2px 7px;
+}
+
+/* ==========================================================================
+   Mobile
+   Sotto i 760px ogni tabella diventa una scheda per riga. Le intestazioni
+   di colonna spariscono, quindi il nome del campo arriva da
+   data-etichetta sulla cella: senza, i valori impilati non si capiscono.
+   ========================================================================== */
+
+@media (max-width:760px){
+
+  /* --- navigazione: due righe invece di tre, menu scorrevole in orizzontale */
+  .topbar{padding:0 14px;gap:0;align-items:center}
+  .marchio{padding:12px 0;margin-right:auto}
+  .uscita{gap:10px}
+  .menu{
+    order:3;width:100%;margin:0 -14px;padding:0 14px;gap:0;
+    overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  }
+  .menu::-webkit-scrollbar{display:none}
+  .menu a{padding:9px 12px;font-size:.875rem;white-space:nowrap}
+
+  .contenitore{padding:16px 12px 40px}
+  .pie{padding:0 12px 24px}
+  .scheda{padding:16px}
+  h1{font-size:1.3125rem}
+  .intestazione-pagina{gap:12px}
+
+  /* Niente zoom automatico al fuoco su iOS: i campi partono da 16px */
+  input,select,textarea,.campo-data,.campo-ora{font-size:16px}
+
+  /* --- etichetta del campo davanti al valore impilato --- */
+  td[data-etichetta]::before{
+    content:attr(data-etichetta);
+    display:block;margin-top:9px;
+    font-size:.625rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--ink-3);
+  }
+  td[data-etichetta]:first-child::before{margin-top:0}
+
+  /* --- tabelle di elenco: una scheda per riga --- */
+  .tabella thead{display:none}
+  .tabella,.tabella tbody,.tabella tr,.tabella td{display:block;width:auto}
+  .tabella tr{padding:12px 14px;border-bottom:1px solid var(--line)}
+  .tabella tr:last-child{border-bottom:0}
+  .tabella td{border:0;padding:1px 0;width:auto !important}
+  .tabella .azioni{text-align:left;white-space:normal;padding-top:12px}
+  .tabella .azioni .btn{margin-right:6px}
+  /* Specificita' pari a ".tabella td", altrimenti quella vince */
+  .tabella td.cella-logo{display:none}
+  .vuoto{padding:26px 16px}
+  .avanzamento{max-width:220px}
+
+  /* --- editor del piano --- */
+  .barra-piano{gap:10px}
+  .barra-piano-info p{font-size:.75rem}
+  .barra-piano-azioni{width:100%}
+  .pannello > summary{padding:11px 14px}
+  .pannello-corpo{padding:4px 14px 16px}
+
+  .settimana{margin-bottom:20px}
+  .settimana-testa{flex-wrap:wrap;gap:6px 10px}
+  .settimana-testa h2{font-size:1rem}
+  .settimana-testa .btn{margin-left:auto}
+
+  .cal thead{display:none}
+  .cal,.cal tbody,.cal tr,.cal td{display:block;width:auto}
+  .cal col{width:auto !important}
+  .cal tr{padding:12px 14px;border-bottom:1px solid var(--line)}
+  .cal tr:last-child{border-bottom:0}
+  .cal td{border:0 !important;padding:1px 0}
+
+  /* Il bordo che separa i giorni va sulla riga, non fra i campi impilati */
+  .cal tr.inizio-giorno td{border-top:0 !important}
+  .cal tr.inizio-giorno:not(:first-child){border-top:2px solid var(--line)}
+  .cal tr.oggi td:first-child{box-shadow:none}
+  .cal tr.oggi{box-shadow:inset 3px 0 0 var(--blue)}
+
+  /* Giorno, badge "oggi" e ora sulla stessa riga */
+  .cal td.day{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+  .valore{margin-left:0;padding:2px 4px}
+  .valore-ora{margin-top:0}
+  .campo-data,.campo-ora{width:auto;min-width:160px}
+  .segno-oggi{vertical-align:0}
+
+  /* I campi secondari vuoti su mobile non si mostrano: non c'e' hover che
+     li riveli e occuperebbero una riga a vuoto in ogni scheda. Se hanno un
+     valore restano visibili. */
+  .visual:not(.pieno),.pilastro:not(.pieno){display:none}
+
+  .riga-strumenti{text-align:left;padding-top:12px !important}
+  /* Bersagli da dito: almeno 40px di altezza */
+  .riga-strumenti button{padding:12px 14px;font-size:.875rem}
+
+  /* --- calendario mensile: lista dei soli giorni che hanno post --- */
+  .griglia-mese{grid-template-columns:1fr;gap:0;border:0;background:transparent;border-radius:0}
+  .griglia-testa{display:none}
+  .griglia-giorno{min-height:0;padding:9px 2px;border-bottom:1px solid var(--line)}
+  .griglia-giorno.senza-post{display:none}
+  .griglia-giorno.oggi{box-shadow:inset 3px 0 0 var(--blue)}
+  .griglia-nome{display:inline;margin-right:5px;color:var(--ink-2)}
+  .chip{font-size:.8125rem;padding:6px 8px}
+  .chip-testo{white-space:normal}
+  .legenda{padding:12px 14px;gap:10px 16px}
+
+  /* --- pagina pubblica di approvazione --- */
+  .doc{padding:20px 14px}
+  .barra-cliente{padding:9px 14px;font-size:.8125rem;gap:8px}
+  .doc-testa h1{font-size:1.375rem}
+  .doc-tabella thead{display:none}
+  .doc-tabella,.doc-tabella tbody,.doc-tabella tr,.doc-tabella td{display:block;width:auto}
+  .doc-tabella col{width:auto !important}
+  .doc-tabella tr{
+    border:1px solid var(--line);border-radius:8px;
+    margin-bottom:12px;padding:12px 14px;
+  }
+  .doc-tabella td{border:0;padding:1px 0}
+  .doc-giorno{font-size:1rem}
+  .doc-giorno small{display:inline;margin-left:6px}
+  .doc-pulsanti{margin-top:10px}
+  .doc-pulsanti .btn{flex:1 1 auto;text-align:center;padding:11px 12px;font-size:.875rem}
+}
+
+/* Il nome del giorno nel calendario serve solo nella lista mobile */
+@media (min-width:761px){
+  .griglia-nome{display:none}
+}
+
+/* Schermi molto stretti: il pulsante principale a tutta larghezza */
+@media (max-width:420px){
+  .intestazione-pagina{align-items:stretch}
+  .intestazione-pagina > .btn-primario{width:100%;text-align:center}
+  .barra-piano-azioni .btn,.barra-piano-azioni form{flex:1 1 calc(50% - 3px)}
+  .barra-piano-azioni .btn{text-align:center}
+  .barra-piano-azioni form .btn{width:100%}
+}
+
+/* Esiti della verifica installazione */
+.esito{
+  display:inline-block;font-size:.75rem;font-weight:700;white-space:nowrap;
+  padding:2px 8px;border-radius:4px;
+}
+.esito-ok{color:var(--verde);background:var(--verde-soft)}
+.esito-info{color:var(--ink-3);background:var(--surface)}
+.esito-avviso{color:var(--ambra);background:var(--ambra-soft)}
+.esito-errore{color:var(--rosso);background:var(--rosso-soft)}
+
+/* ==========================================================================
+   Schermata degli esecutivi: copy finale e immagini, una scheda per post
+   ========================================================================== */
+
+.btn-fase-attiva{border-color:var(--blue);color:var(--blue)}
+
+.esecutivo{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--raggio);
+  padding:16px 18px;margin-bottom:14px;box-shadow:var(--ombra);
+}
+.esecutivo.oggi{box-shadow:inset 3px 0 0 var(--blue), var(--ombra)}
+
+.esecutivo-testa{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+.esecutivo-testa .stato-pill{
+  font:inherit;font-size:.75rem;font-weight:700;cursor:pointer;
+  padding:3px 9px;border-radius:4px;border:1px solid rgba(24,34,48,.12);
+}
+.esecutivo-testa .stato-pill::after{content:"⌄";margin-left:5px;opacity:.5}
+.esecutivo-testa .stato-pill:hover{filter:brightness(.96);border-color:currentColor}
+
+.esecutivo-concept{font-size:.875rem;color:var(--ink-2);margin-top:10px}
+.esecutivo-etichetta{
+  display:inline-block;font-size:.625rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--ink-3);margin-right:6px;
+}
+
+.esecutivo-corpo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.esecutivo-copy label,.esecutivo-media .etichetta{
+  display:block;font-size:.8125rem;font-weight:600;color:var(--ink-2);margin-bottom:5px;
+}
+/* Il copy va letto come verrà pubblicato: a capo veri, larghezza da feed */
+.campo-copy{
+  font-family:inherit;font-size:.9rem;line-height:1.5;white-space:pre-wrap;
+  min-height:150px;
+}
+.conta-caratteri{float:right}
+
+/* ------------------------------------------------------------ immagini -- */
+
+.griglia-media{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));
+  gap:8px;align-items:start;
+}
+.media{position:relative;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.media img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover}
+.media figcaption{
+  display:flex;gap:3px;justify-content:center;padding:4px;
+  background:var(--paper);border-top:1px solid var(--line);
+}
+.media figcaption button{
+  font:inherit;font-size:.6875rem;line-height:1;cursor:pointer;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink-3);
+  border-radius:4px;padding:4px 6px;
+}
+.media figcaption button:hover{border-color:var(--blue);color:var(--blue)}
+.media figcaption .azione-media-elimina:hover{border-color:var(--rosso);color:var(--rosso)}
+.media figcaption button:disabled{opacity:.25;cursor:default;border-color:var(--line);color:var(--ink-3)}
+
+.media-aggiungi{
+  display:flex;align-items:center;justify-content:center;
+  aspect-ratio:1/1;cursor:pointer;text-align:center;
+  border:1px dashed var(--line);border-radius:6px;background:var(--paper);
+  font-size:.8125rem;font-weight:600;color:var(--ink-3);
+}
+.media-aggiungi:hover{border-color:var(--blue);color:var(--blue)}
+
+@media (max-width:760px){
+  .esecutivo{padding:14px}
+  .esecutivo-corpo{grid-template-columns:1fr;gap:14px}
+  .griglia-media{grid-template-columns:repeat(auto-fill,minmax(84px,1fr))}
+  .media figcaption button{padding:8px 9px;font-size:.75rem}
+}
+
+/* ==========================================================================
+   Fase esecutivi, lato cliente: il post come sarà pubblicato
+
+   Colonna singola larga quanto un post vero. Si scorre con lo stesso gesto
+   con cui si guarderà il contenuto una volta online: è il motivo per cui
+   questa pagina esiste, quindi la foto deve essere grande.
+   ========================================================================== */
+
+.feed{max-width:520px;margin:0 auto}
+
+.scheda-feed{
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  margin-bottom:18px;background:var(--paper);
+}
+
+.scheda-feed-capo{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.scheda-feed-capo .avatar{
+  width:32px;height:32px;border-radius:50%;object-fit:contain;
+  background:var(--surface);flex:0 0 auto;display:block;
+}
+.scheda-feed-capo .avatar.senza-logo{
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;color:var(--ink-3);font-size:.8rem;
+}
+.scheda-feed-capo .chi{font-size:.9rem}
+.scheda-feed-capo .quando{
+  margin-left:auto;text-align:right;font-size:.75rem;color:var(--ink-3);font-weight:600;
+}
+.scheda-feed-capo .canali{display:block;margin-top:2px}
+
+/* Piu immagini: si scorre di lato, una alla volta, senza JS */
+.scheda-feed-media{
+  display:flex;overflow-x:auto;scroll-snap-type:x mandatory;background:var(--surface);
+}
+.scheda-feed-media img{
+  flex:0 0 100%;scroll-snap-align:center;
+  width:100%;aspect-ratio:1/1;object-fit:cover;display:block;
+}
+.scheda-feed-media.verticale img{aspect-ratio:9/16}
+.scheda-feed-conta{font-size:.75rem;color:var(--ink-3);padding:6px 12px 0}
+
+.scheda-feed-testo{padding:12px;font-size:.875rem;line-height:1.55}
+.scheda-feed-cta{padding:0 12px 12px;font-size:.8125rem;font-weight:700;color:var(--blue)}
+
+.scheda-feed-azioni{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-top:1px solid var(--line);background:var(--surface);
+}
+.scheda-feed-azioni .doc-pulsanti{margin-left:auto;margin-top:0}
+.scheda-feed-azioni .doc-commento{flex:1 1 100%;margin:0}
+.scheda-feed-azioni .doc-commento-modulo{flex:1 1 100%}
+
+/* --------------------------------- post non ancora pronti: una riga sola -- */
+
+.preparazione-titolo{
+  font-size:.8125rem;color:var(--ink-3);margin:22px 0 8px;
+}
+.riga-preparazione{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:9px 12px;margin-bottom:8px;font-size:.8125rem;
+  border:1px dashed var(--line);border-radius:8px;background:var(--paper);
+}
+.riga-preparazione .quando{font-weight:700;white-space:nowrap}
+/* flex-basis 0: l'idea si stringe fino a stare in riga anche quando i
+   tag dei canali sono due, invece di spingere il resto a capo. */
+.riga-preparazione .idea{
+  color:var(--ink-3);flex:1 1 0;min-width:50px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.riga-preparazione .in-arrivo{
+  font-size:.7rem;font-weight:700;color:var(--ink-3);white-space:nowrap;
+  background:var(--surface);border-radius:4px;padding:3px 8px;
+}
+
+/* ------------------------------------------ barra in alto con avanzamento -- */
+
+.barra-avanzamento{
+  flex:1;min-width:90px;max-width:320px;height:6px;
+  background:rgba(255,255,255,.18);border-radius:3px;overflow:hidden;
+}
+.barra-avanzamento i{display:block;height:100%;background:#8EE0A5;transition:width .3s}
+.barra-cliente-nota{font-size:.75rem;color:#B8C1CC;white-space:nowrap}
+
+@media (max-width:760px){
+  .feed{max-width:none}
+  .scheda-feed-azioni .doc-pulsanti{margin-left:0;width:100%}
+  .scheda-feed-azioni .doc-pulsanti .btn{flex:1 1 auto}
+  .barra-avanzamento{order:3;flex-basis:100%;max-width:none}
+  .riga-preparazione .idea{flex-basis:100%;white-space:normal;overflow:visible}
+}
+
+@media print{
+  .scheda-feed{break-inside:avoid;page-break-inside:avoid;margin-bottom:12px}
+  .scheda-feed-media{overflow:hidden}
+  .scheda-feed-media img ~ img{display:none}   /* in stampa basta la prima */
+  .feed{max-width:none}
+  .riga-preparazione{break-inside:avoid}
+}
+
+/* ==========================================================================
+   Conflitto: due persone hanno modificato lo stesso campo.
+   Si mostrano tutti e due i valori invece di far vincere l'ultimo.
+   ========================================================================== */
+
+.conflitto{
+  margin-top:8px;padding:10px 12px;font-size:.8125rem;line-height:1.45;
+  background:var(--ambra-soft);border:1px solid rgba(183,105,11,.28);
+  border-radius:6px;color:var(--ink);
+}
+.conflitto-chi{margin-bottom:6px;color:var(--ambra)}
+.conflitto-riga{margin:2px 0;display:flex;gap:6px;align-items:baseline}
+.conflitto-riga span{color:var(--ink-3);flex:0 0 auto;font-size:.75rem}
+.conflitto-riga b{
+  font-weight:600;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;display:-webkit-box;
+  -webkit-line-clamp:3;-webkit-box-orient:vertical;
+}
+.conflitto-pulsanti{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.conflitto-pulsanti .btn{margin-top:0}

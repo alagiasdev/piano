@@ -1,0 +1,9 @@
+# Qui dentro finiscono solo i loghi dei clienti: niente listing e, soprattutto,
+# nessun file eseguibile servito, qualunque estensione abbia.
+# Niente direttive php_flag: non funzionano quando PHP gira come FastCGI/FPM
+# (il caso di cPanel) e farebbero rispondere 500 a tutto il sito.
+Options -Indexes
+
+<FilesMatch "\.(?:php[0-9]?|phtml|phar|pl|py|cgi|sh|shtml|htaccess)$">
+    Require all denied
+</FilesMatch>

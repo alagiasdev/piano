@@ -1,0 +1,26 @@
+# Configurazione con le credenziali: mai nel repository.
+/.env
+
+# Dipendenze installate da Composer
+/vendor/
+
+# File caricati dall'utente: loghi dei clienti e immagini dei post.
+# Sono dati, non codice, e vanno nei backup del server non qui.
+/public/uploads/*
+!/public/uploads/.htaccess
+
+# Editor e sistema operativo
+/.idea/
+/.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Log e file temporanei
+*.log
+*.bak
+*.tmp
+
+# Impostazioni locali degli strumenti: contengono percorsi di questa
+# macchina, non hanno senso per chi clona.
+/.claude/settings.local.json

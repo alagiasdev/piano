@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wireframe — pagina esecutivi per il cliente</title>
+<style>
+:root{
+  --ink:#182230; --ink-2:#4B5563; --ink-3:#8A94A3;
+  --line:#E3E7EC; --paper:#FFFFFF; --surface:#F4F6F8;
+  --blue:#2447D6; --blue-soft:#E8EDFF;
+  --verde:#15803D; --verde-soft:#E6F4EB;
+  --ambra:#B7690B; --ambra-soft:#FBF0DE;
+  --rosso:#B91C1C; --rosso-soft:#FDE8E8;
+  --ig:#C2338B; --ig-soft:#FBE7F3;
+  --fb:#1D5FCC; --fb-soft:#E4EDFB;
+  --li:#0A6BAA; --li-soft:#E1F0F8;
+  --nl:#B7690B; --nl-soft:#FBF0DE;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:15px;line-height:1.5;color:var(--ink);background:var(--surface);
+  -webkit-font-smoothing:antialiased;
+}
+.foglio{max-width:1180px;margin:0 auto;padding:32px 24px 80px}
+
+h1{font-size:1.6rem;font-weight:800;letter-spacing:-.03em}
+h2{font-size:1.15rem;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+h3{font-size:.95rem;font-weight:700}
+p{margin-bottom:10px}
+.sfumato{color:var(--ink-2)}
+.piccolo{font-size:.8125rem}
+
+.intro{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:24px;margin-bottom:12px}
+.intro ul{margin:8px 0 0 18px}
+.intro li{margin-bottom:6px;color:var(--ink-2);font-size:.9rem}
+.intro li b{color:var(--ink)}
+
+.indice{position:sticky;top:0;z-index:20;background:var(--surface);
+  padding:12px 0;margin-bottom:20px;border-bottom:1px solid var(--line);
+  display:flex;gap:8px;flex-wrap:wrap}
+.indice a{
+  font-size:.8125rem;font-weight:700;text-decoration:none;color:var(--ink-2);
+  background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:6px 14px;
+}
+.indice a:hover{border-color:var(--blue);color:var(--blue)}
+
+.variante{margin-top:40px}
+.variante-testa{margin-bottom:14px}
+.etichetta-variante{
+  display:inline-block;font-size:.6875rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--blue);background:var(--blue-soft);
+  border-radius:4px;padding:3px 8px;margin-bottom:6px;
+}
+.pro-contro{display:flex;gap:20px;flex-wrap:wrap;margin-top:8px;font-size:.85rem}
+.pro-contro div{flex:1 1 240px}
+.pro-contro b{display:block;margin-bottom:3px;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pro b{color:var(--verde)} .contro b{color:var(--ambra)}
+.pro-contro ul{margin-left:16px;color:var(--ink-2)}
+
+/* il telaio che simula la finestra del cliente */
+.telaio{
+  background:var(--paper);border:1px solid var(--line);border-radius:10px;
+  overflow:hidden;box-shadow:0 1px 2px rgba(24,34,48,.06),0 8px 24px rgba(24,34,48,.06);
+}
+.telaio-barra{
+  background:#182230;color:#fff;padding:10px 16px;display:flex;align-items:center;
+  gap:12px;flex-wrap:wrap;font-size:.8125rem;
+}
+.telaio-barra .avanzamento{flex:1;min-width:120px;height:6px;background:rgba(255,255,255,.18);border-radius:3px;overflow:hidden}
+.telaio-barra .avanzamento i{display:block;height:100%;width:25%;background:#8EE0A5}
+.bottone{font:inherit;font-size:.8125rem;font-weight:700;border:1px solid var(--line);
+  background:var(--paper);color:var(--ink);border-radius:6px;padding:7px 13px;cursor:pointer}
+.bottone.primario{background:var(--blue);border-color:var(--blue);color:#fff}
+.bottone.piccolo{padding:5px 10px;font-size:.75rem}
+
+.corpo{padding:22px}
+
+.tag{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.tag.ig{color:var(--ig);background:var(--ig-soft)}
+.tag.fb{color:var(--fb);background:var(--fb-soft)}
+.tag.li{color:var(--li);background:var(--li-soft)}
+.tag.nl{color:var(--nl);background:var(--nl-soft)}
+.stato{display:inline-block;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:4px}
+.stato.attesa{color:var(--ink-3);background:var(--surface)}
+.stato.ok{color:var(--verde);background:var(--verde-soft)}
+.stato.rivedere{color:var(--ambra);background:var(--ambra-soft)}
+
+.finta-foto{
+  background:repeating-linear-gradient(45deg,#EDF0F3,#EDF0F3 10px,#E6EAEE 10px,#E6EAEE 20px);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink-3);font-size:.75rem;font-weight:600;
+}
+.settimana-titolo{
+  display:flex;align-items:baseline;gap:10px;margin:26px 0 12px;
+  font-size:.95rem;font-weight:800;
+}
+.settimana-titolo span{font-weight:500;color:var(--ink-3);font-size:.8125rem}
+.settimana-titolo:first-child{margin-top:0}
+
+/* ---------------------------------------------------------- VARIANTE A -- */
+.feed{max-width:520px;margin:0 auto}
+.scheda-feed{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.scheda-feed .capo{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--surface);
+  display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--ink-3);font-size:.8rem}
+.capo .quando{margin-left:auto;font-size:.75rem;color:var(--ink-3);font-weight:600;text-align:right}
+.scheda-feed .foto{aspect-ratio:1/1}
+.scheda-feed .testo{padding:12px;font-size:.875rem;line-height:1.55}
+.scheda-feed .azioni{display:flex;gap:8px;align-items:center;padding:10px 12px;border-top:1px solid var(--line);background:var(--surface)}
+.scheda-feed .azioni .stato{margin-right:auto}
+
+/* riga compatta per i post ancora senza esecutivo */
+.riga-vuota{
+  display:flex;align-items:center;gap:12px;padding:10px 12px;margin-bottom:8px;
+  border:1px dashed var(--line);border-radius:8px;background:var(--paper);font-size:.85rem;
+}
+.riga-vuota .mini{width:44px;height:44px;border-radius:6px;flex:0 0 auto}
+.riga-vuota .quando{font-weight:700;font-size:.8125rem;white-space:nowrap}
+.riga-vuota .dettaglio{color:var(--ink-3);font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.riga-vuota .in-arrivo{margin-left:auto;font-size:.7rem;font-weight:700;color:var(--ink-3);
+  background:var(--surface);border-radius:4px;padding:3px 8px;white-space:nowrap}
+
+/* ---------------------------------------------------------- VARIANTE B -- */
+/* niente align-items:start: le schede devono stirarsi all'altezza della
+   piu alta della riga, altrimenti la griglia torna a essere sfrangiata */
+.griglia{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.scheda-griglia{border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.scheda-griglia .capo{display:flex;align-items:center;gap:8px;padding:9px 11px;border-bottom:1px solid var(--line);font-size:.75rem}
+.scheda-griglia .capo b{font-weight:700}
+.scheda-griglia .foto{aspect-ratio:4/5}
+.scheda-griglia .testo{
+  padding:10px 11px;font-size:.8125rem;line-height:1.5;flex:1;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
+}
+.scheda-griglia .altro{padding:0 11px 8px;font-size:.75rem;font-weight:700;color:var(--blue);cursor:pointer}
+.scheda-griglia .azioni{display:flex;gap:6px;padding:9px 11px;border-top:1px solid var(--line);background:var(--surface)}
+.scheda-griglia .azioni .bottone{flex:1;text-align:center}
+
+/* ---------------------------------------------------------- VARIANTE C -- */
+.lista{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.riga-lista{display:flex;gap:14px;padding:14px;border-bottom:1px solid var(--line);align-items:flex-start}
+.riga-lista:last-child{border-bottom:0}
+.riga-lista:hover{background:var(--surface)}
+.riga-lista .foto{width:88px;height:110px;border-radius:6px;flex:0 0 auto}
+.riga-lista .centro{flex:1;min-width:0}
+.riga-lista .capo{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:.75rem;flex-wrap:wrap}
+.riga-lista .capo b{font-size:.8125rem}
+.riga-lista .testo{font-size:.85rem;line-height:1.5;color:var(--ink-2);
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.riga-lista .destra{flex:0 0 auto;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+
+.nota{background:var(--blue-soft);border-left:3px solid var(--blue);padding:14px 16px;
+  border-radius:0 8px 8px 0;margin-top:16px;font-size:.875rem}
+.nota b{display:block;margin-bottom:4px}
+
+.consiglio{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:24px;margin-top:44px}
+.consiglio ol{margin:10px 0 0 18px}
+.consiglio li{margin-bottom:8px;color:var(--ink-2);font-size:.9rem}
+.consiglio li b{color:var(--ink)}
+
+@media (max-width:760px){
+  .foglio{padding:20px 14px 60px}
+  .riga-lista{flex-wrap:wrap}
+  .riga-lista .destra{flex-direction:row;width:100%}
+}
+</style>
+</head>
+<body>
+<div class="foglio">
+
+  <h1>Pagina degli esecutivi — come la vede il cliente</h1>
+  <p class="sfumato">Wireframe, non codice definitivo. Tre modi di impaginare la stessa pagina, da guardare e scegliere.</p>
+
+  <div class="intro">
+    <h2>Cosa non funziona adesso</h2>
+    <p class="sfumato piccolo">Osservazioni dalla pagina reale con il piano di settembre: 12 post, 7.500 px di altezza.</p>
+    <ul>
+      <li><b>Nove post su dodici mostrano un riquadro vuoto grande come una foto.</b> «Visual non ancora caricato» occupa 400 px a testa: la pagina è lunga soprattutto di niente.</li>
+      <li><b>La griglia a due colonne non si allinea.</b> Le schede hanno altezze diverse e lasciano buchi bianchi larghi mezza pagina.</li>
+      <li><b>La frase di ripiego si ripete dodici volte.</b> «Copy non ancora scritto. Per ora l'idea è…» diventa rumore invece che informazione.</li>
+      <li><b>I pulsanti di approvazione stanno in fondo a schede altissime.</b> Per approvare dodici post il cliente scorre parecchio.</li>
+      <li><b>Non si vede a che punto è.</b> Manca un'idea di quanti ne restano, se non contando.</li>
+    </ul>
+  </div>
+
+  <div class="indice">
+    <a href="#a">A · Feed a colonna singola</a>
+    <a href="#b">B · Griglia allineata</a>
+    <a href="#c">C · Lista compatta</a>
+    <a href="#consiglio">Cosa consiglio</a>
+  </div>
+
+  <!-- ================================================== VARIANTE A ==== -->
+  <section class="variante" id="a">
+    <div class="variante-testa">
+      <span class="etichetta-variante">Variante A</span>
+      <h2>Feed a colonna singola</h2>
+      <p class="sfumato">Una colonna sola, larga quanto un post vero. Si scorre come si scorre un social: è
+        esattamente il gesto con cui il cliente giudicherà il contenuto una volta pubblicato.
+        <b>I post non ancora pronti diventano una riga sottile</b> invece di un riquadro vuoto.</p>
+      <div class="pro-contro">
+        <div class="pro"><b>A favore</b><ul>
+          <li>Il più fedele: si vede il post come sarà</li>
+          <li>Le foto sono grandi e si giudicano davvero</li>
+          <li>Il vuoto non occupa spazio</li>
+        </ul></div>
+        <div class="contro"><b>Contro</b><ul>
+          <li>Resta la pagina più lunga delle tre</li>
+          <li>Poca visione d'insieme del mese</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="telaio">
+      <div class="telaio-barra">
+        <strong>3 di 12 approvati</strong>
+        <span class="avanzamento"><i></i></span>
+        <button class="bottone primario">Approva i rimanenti</button>
+        <button class="bottone">Stampa</button>
+      </div>
+
+      <div class="corpo">
+        <div class="settimana-titolo">Settimana 1 <span>31 agosto – 6 settembre</span></div>
+
+        <div class="feed">
+          <article class="scheda-feed">
+            <div class="capo">
+              <span class="avatar">P</span>
+              <strong>Pasticceria Verdi</strong>
+              <span class="quando">Giovedì 3 · 18:30<br><span class="tag ig">Instagram</span> <span class="tag fb">Facebook</span></span>
+            </div>
+            <div class="foto finta-foto">foto del post</div>
+            <div class="testo">
+              Ottobre porta le prime torte di stagione 🍂<br><br>
+              Apriamo con la crostata di mele e cannella, impastata la mattina presto:
+              perché il profumo giusto si sente già dalle 7.<br><br>
+              #pasticceria #autunno #lauria
+            </div>
+            <div class="azioni">
+              <span class="stato attesa">Da approvare</span>
+              <button class="bottone piccolo">Chiedi modifica</button>
+              <button class="bottone primario piccolo">Approva</button>
+            </div>
+          </article>
+
+          <article class="scheda-feed">
+            <div class="capo">
+              <span class="avatar">P</span>
+              <strong>Pasticceria Verdi</strong>
+              <span class="quando">Venerdì 4 · 12:00<br><span class="tag li">LinkedIn</span></span>
+            </div>
+            <div class="foto finta-foto">foto del post</div>
+            <div class="testo">Una riflessione sul mestiere: perché continuiamo a impastare a mano quando tutti sono passati alla macchina.</div>
+            <div class="azioni">
+              <span class="stato ok">Approvato</span>
+              <span class="piccolo sfumato">il 4 settembre</span>
+            </div>
+          </article>
+
+          <p class="piccolo sfumato" style="margin:18px 0 8px">Ancora in preparazione, li riceverai a breve:</p>
+
+          <div class="riga-vuota">
+            <span class="mini finta-foto"></span>
+            <span class="quando">Sab 5 · 10:00</span>
+            <span class="tag ig">Instagram</span>
+            <span class="dettaglio">Reel «3 errori da evitare quando scegli una torta»</span>
+            <span class="in-arrivo">in preparazione</span>
+          </div>
+          <div class="riga-vuota">
+            <span class="mini finta-foto"></span>
+            <span class="quando">Mar 8 · 18:30</span>
+            <span class="tag ig">Instagram</span>
+            <span class="dettaglio">Focus servizio: torte su misura</span>
+            <span class="in-arrivo">in preparazione</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <b>Il cambio che conta</b>
+      I post senza copy né immagine non sono un buco da 400 px: sono una riga da 44 px che dice
+      «arriva». Il cliente vede subito cosa può giudicare adesso e cosa no, e la pagina si accorcia
+      di circa due terzi.
+    </div>
+  </section>
+
+  <!-- ================================================== VARIANTE B ==== -->
+  <section class="variante" id="b">
+    <div class="variante-testa">
+      <span class="etichetta-variante">Variante B</span>
+      <h2>Griglia allineata</h2>
+      <p class="sfumato">Tre colonne con <b>schede tutte della stessa altezza</b>: immagine con proporzione
+        fissa, copy tagliato a quattro righe con «mostra tutto». Si vede il mese in una schermata.</p>
+      <div class="pro-contro">
+        <div class="pro"><b>A favore</b><ul>
+          <li>Visione d'insieme immediata</li>
+          <li>Niente buchi bianchi: le schede si allineano</li>
+          <li>Pagina corta, poco scorrimento</li>
+        </ul></div>
+        <div class="contro"><b>Contro</b><ul>
+          <li>Le foto sono piccole: i dettagli si giudicano male</li>
+          <li>Il copy va aperto per leggerlo tutto</li>
+          <li>Somiglia meno al post vero</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="telaio">
+      <div class="telaio-barra">
+        <strong>3 di 12 approvati</strong>
+        <span class="avanzamento"><i></i></span>
+        <button class="bottone primario">Approva i rimanenti</button>
+      </div>
+      <div class="corpo">
+        <div class="settimana-titolo">Settimana 1 <span>31 agosto – 6 settembre</span></div>
+        <div class="griglia">
+          <article class="scheda-griglia">
+            <div class="capo"><b>Gio 3 · 18:30</b> <span class="tag ig">IG</span> <span class="tag fb">FB</span></div>
+            <div class="foto finta-foto">foto</div>
+            <div class="testo">Ottobre porta le prime torte di stagione 🍂 Apriamo con la crostata di mele e cannella, impastata la mattina presto: perché il profumo giusto si sente già dalle 7. #pasticceria #autunno</div>
+            <div class="altro">Mostra tutto</div>
+            <div class="azioni">
+              <button class="bottone piccolo">Modifica</button>
+              <button class="bottone primario piccolo">Approva</button>
+            </div>
+          </article>
+
+          <article class="scheda-griglia">
+            <div class="capo"><b>Ven 4 · 12:00</b> <span class="tag li">LI</span></div>
+            <div class="foto finta-foto">foto</div>
+            <div class="testo">Una riflessione sul mestiere: perché continuiamo a impastare a mano quando tutti sono passati alla macchina.</div>
+            <div class="azioni"><span class="stato ok" style="flex:1;text-align:center;padding:6px">Approvato</span></div>
+          </article>
+
+          <article class="scheda-griglia">
+            <div class="capo"><b>Sab 12 · 10:00</b> <span class="tag ig">IG</span> <span class="tag fb">FB</span></div>
+            <div class="foto finta-foto">foto</div>
+            <div class="testo">La recensione di Anna, arrivata ieri: «la torta più buona che abbiamo mangiato al matrimonio». Grazie 🙏</div>
+            <div class="azioni">
+              <button class="bottone piccolo">Modifica</button>
+              <button class="bottone primario piccolo">Approva</button>
+            </div>
+          </article>
+        </div>
+
+        <p class="piccolo sfumato" style="margin:18px 0 8px">Ancora in preparazione:</p>
+        <div class="riga-vuota">
+          <span class="mini finta-foto"></span>
+          <span class="quando">Sab 5 · 10:00</span>
+          <span class="tag ig">Instagram</span>
+          <span class="dettaglio">Reel «3 errori da evitare quando scegli una torta»</span>
+          <span class="in-arrivo">in preparazione</span>
+        </div>
+        <div class="riga-vuota">
+          <span class="mini finta-foto"></span>
+          <span class="quando">Mar 8 · 18:30</span>
+          <span class="tag ig">Instagram</span>
+          <span class="dettaglio">Focus servizio: torte su misura</span>
+          <span class="in-arrivo">in preparazione</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <b>Stessa correzione della A</b>
+      Anche qui i post non pronti stanno in fondo come righe: così il confronto fra le due
+      impaginazioni è onesto, e si giudica solo la differenza che conta — foto grandi in colonna
+      contro foto piccole in griglia.
+    </div>
+  </section>
+
+  <!-- ================================================== VARIANTE C ==== -->
+  <section class="variante" id="c">
+    <div class="variante-testa">
+      <span class="etichetta-variante">Variante C</span>
+      <h2>Lista compatta</h2>
+      <p class="sfumato">Una riga per post: miniatura, copy accorciato, pulsanti sempre nella stessa
+        posizione. Pensata per <b>approvare in fretta</b>, non per ammirare.</p>
+      <div class="pro-contro">
+        <div class="pro"><b>A favore</b><ul>
+          <li>Il modo più rapido per dare dodici ok</li>
+          <li>I pulsanti sono sempre dove te li aspetti</li>
+          <li>Pagina cortissima</li>
+        </ul></div>
+        <div class="contro"><b>Contro</b><ul>
+          <li>Le miniature sono troppo piccole per giudicare una foto</li>
+          <li>Tradisce lo scopo: «vedere il post vero»</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="telaio">
+      <div class="telaio-barra">
+        <strong>3 di 12 approvati</strong>
+        <span class="avanzamento"><i></i></span>
+        <button class="bottone primario">Approva i rimanenti</button>
+      </div>
+      <div class="corpo">
+        <div class="settimana-titolo">Settimana 1 <span>31 agosto – 6 settembre</span></div>
+        <div class="lista">
+          <div class="riga-lista">
+            <span class="foto finta-foto"></span>
+            <div class="centro">
+              <div class="capo"><b>Giovedì 3 · 18:30</b> <span class="tag ig">Instagram</span> <span class="tag fb">Facebook</span></div>
+              <p class="testo">Ottobre porta le prime torte di stagione 🍂 Apriamo con la crostata di mele e cannella, impastata la mattina presto: perché il profumo giusto si sente già dalle 7. #pasticceria #autunno #lauria</p>
+            </div>
+            <div class="destra">
+              <button class="bottone primario piccolo">Approva</button>
+              <button class="bottone piccolo">Chiedi modifica</button>
+            </div>
+          </div>
+
+          <div class="riga-lista">
+            <span class="foto finta-foto"></span>
+            <div class="centro">
+              <div class="capo"><b>Venerdì 4 · 12:00</b> <span class="tag li">LinkedIn</span> <span class="stato ok">Approvato</span></div>
+              <p class="testo">Una riflessione sul mestiere: perché continuiamo a impastare a mano quando tutti sono passati alla macchina.</p>
+            </div>
+            <div class="destra"><span class="piccolo sfumato">4 settembre</span></div>
+          </div>
+
+          <div class="riga-lista" style="opacity:.6">
+            <span class="foto finta-foto"></span>
+            <div class="centro">
+              <div class="capo"><b>Sabato 5 · 10:00</b> <span class="tag ig">Instagram</span></div>
+              <p class="testo">Reel «3 errori da evitare quando scegli una torta per un evento»</p>
+            </div>
+            <div class="destra"><span class="piccolo sfumato">in preparazione</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== CONSIGLIO ===== -->
+  <section class="consiglio" id="consiglio">
+    <h2>Cosa consiglio</h2>
+    <p class="sfumato">La <b>variante A</b>, con tre correzioni che valgono per qualunque scelta.</p>
+    <p class="sfumato piccolo">Il motivo è lo scopo della pagina: esiste perché il cliente veda il post
+      <i>come sarà pubblicato</i>. La B e la C sono più efficienti da sfogliare, ma rimpiccioliscono
+      proprio la cosa che devono far giudicare. Se un giorno i piani diventassero da quaranta post,
+      la B avrebbe più senso.</p>
+    <ol>
+      <li><b>I post senza esecutivo non occupano una scheda.</b> Diventano una riga «in preparazione», raggruppata in fondo alla settimana. È il cambio che da solo accorcia la pagina di due terzi.</li>
+      <li><b>Barra in alto con l'avanzamento.</b> «3 di 12 approvati» più una barra: il cliente sa quanto manca senza contare, e ritrova il pulsante «approva i rimanenti» ovunque si trovi nella pagina.</li>
+      <li><b>Niente frasi di ripiego ripetute.</b> Se manca il copy non si scrive «copy non ancora scritto» dodici volte: quel post sta fra quelli in preparazione, e basta.</li>
+    </ol>
+    <div class="nota" style="margin-top:18px">
+      <b>Da decidere insieme</b>
+      Se un post è «in preparazione», il cliente deve poterlo comunque approvare? Secondo me no:
+      approvare qualcosa che non ha ancora visto non significa niente, e ti toglie la traccia scritta
+      che è il motivo per cui questa pagina esiste.
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendario di pubblicazione</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#182230; --ink-2:#4B5563; --ink-3:#8A94A3;
+    --line:#E3E7EC; --paper:#FFFFFF; --surface:#F4F6F8;
+    --blue:#2447D6; --blue-soft:#E8EDFF;
+    --ig:#C2338B; --ig-soft:#FBE7F3;
+    --fb:#1D5FCC; --fb-soft:#E4EDFB;
+    --li:#0A6BAA; --li-soft:#E1F0F8;
+    --tt:#111827; --tt-soft:#ECEEF1;
+    --nl:#B7690B; --nl-soft:#FBF0DE;
+    --yt:#B91C1C; --yt-soft:#FDE8E8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Manrope",system-ui,sans-serif;color:var(--ink);background:var(--surface);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .doc{max-width:1080px;margin:0 auto;background:var(--paper);padding:48px 56px}
+  @media(min-width:760px){.doc{margin:32px auto;box-shadow:0 1px 2px rgba(24,34,48,.06),0 12px 40px rgba(24,34,48,.08)}}
+  @media(max-width:600px){.doc{padding:28px 20px}}
+
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:8px}
+  header h1{font-size:1.9rem;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+  header h1 small{display:block;font-size:1rem;font-weight:600;color:var(--ink-2);letter-spacing:0;margin-top:6px}
+  .brand{font-size:.8125rem;font-weight:700;color:var(--ink-3);text-align:right}
+  .brand span{display:block;font-weight:500}
+
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.8125rem;color:var(--ink-2);margin:16px 0 8px}
+  .tag{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;margin:1px 2px 1px 0}
+  .tag.ig{color:var(--ig);background:var(--ig-soft)}
+  .tag.fb{color:var(--fb);background:var(--fb-soft)}
+  .tag.li{color:var(--li);background:var(--li-soft)}
+  .tag.tt{color:var(--tt);background:var(--tt-soft)}
+  .tag.nl{color:var(--nl);background:var(--nl-soft)}
+  .tag.yt{color:var(--yt);background:var(--yt-soft)}
+
+  .week{margin-top:28px}
+  .week-h{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+  .week-h h2{font-size:1.0625rem;font-weight:800}
+  .week-h span{color:var(--ink-3);font-size:.875rem}
+  .cal{width:100%;border-collapse:collapse;font-size:.9rem;table-layout:fixed}
+  .cal th{background:var(--surface);padding:10px 12px;font-size:.8125rem;color:var(--ink-3);font-weight:600;text-align:left;border-bottom:1px solid var(--line)}
+  .cal td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+  .cal .day{font-weight:700;white-space:nowrap}
+  .cal .day small{display:block;font-weight:500;color:var(--ink-3)}
+  .cal .fmt,.cal .cta{color:var(--ink-2);font-size:.85rem}
+  .cal .copy{color:var(--ink-2)}
+  .cal .stato{font-size:.8rem;font-weight:700;color:var(--ink-3)}
+  .cal .stato.ok{color:#15803D}
+  .cal col.c-day{width:105px}.cal col.c-ch{width:118px}.cal col.c-fmt{width:115px}.cal col.c-cta{width:135px}.cal col.c-st{width:105px}
+  .cal col.c-x{width:0}
+  body.editing .cal col.c-x{width:36px}
+  @media(max-width:760px){
+    .cal thead{display:none}
+    .cal,.cal tbody,.cal tr,.cal td{display:block;width:100%}
+    .cal tr{border:1px solid var(--line);border-radius:8px;margin-bottom:12px;padding:6px 4px}
+    .cal td{border:0;padding:6px 10px}
+  }
+
+  .note{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);font-size:.85rem;color:var(--ink-2);max-width:70ch}
+  footer{margin-top:24px;font-size:.8125rem;color:var(--ink-3);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  /* ---------- Modalità modifica ---------- */
+  .toolbar{position:sticky;top:0;z-index:10;background:var(--ink);color:#fff;padding:10px 20px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.875rem}
+  .toolbar .grow{flex:1}
+  .toolbar button{font:inherit;font-weight:700;border:0;border-radius:6px;padding:7px 12px;cursor:pointer;background:#fff;color:var(--ink)}
+  .toolbar button.primary{background:var(--blue);color:#fff}
+  .toolbar button:hover{filter:brightness(.94)}
+  .toolbar .hint{color:#B8C1CC;font-weight:500}
+  .toolbar .saved{color:#8EE0A5;font-weight:600;opacity:0;transition:opacity .3s}
+  .toolbar .saved.show{opacity:1}
+
+  .edit-only{display:none}
+  body.editing .edit-only{display:inline-block}
+  body.editing .toolbar .edit-only{display:inline-block}
+  body.editing [contenteditable]{outline:1px dashed transparent;border-radius:3px;transition:outline-color .15s}
+  body.editing [contenteditable]:hover{outline-color:#B9C4FF}
+  body.editing [contenteditable]:focus{outline:2px solid var(--blue);background:var(--blue-soft)}
+  body.editing [contenteditable]:empty::before{content:attr(data-ph);color:var(--ink-3);font-weight:400}
+
+  .row-tools{white-space:nowrap;padding:8px 4px!important;text-align:right}
+  .row-tools button,.week-tools button,.add-week{font:inherit;font-size:.75rem;font-weight:700;border:1px solid var(--line);background:#fff;color:var(--ink-2);border-radius:5px;padding:3px 8px;cursor:pointer}
+  .row-tools button:hover,.week-tools button:hover,.add-week:hover{border-color:var(--blue);color:var(--blue)}
+  .row-tools button.del,.week-tools button.del{color:#B91C1C}
+  .week-tools{margin-left:auto;display:none;gap:6px}
+  body.editing .week-tools{display:flex}
+  .add-week{margin-top:24px;padding:10px 16px;border-style:dashed;width:100%;font-size:.875rem;display:none}
+  body.editing .add-week{display:block}
+
+  /* Selettore canali */
+  .ch-cell{position:relative}
+  .ch-cell .tags{cursor:default}
+  body.editing .ch-cell .tags{cursor:pointer}
+  .ch-pop{position:absolute;z-index:5;top:100%;left:0;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px rgba(24,34,48,.15);padding:8px;display:none;min-width:150px}
+  .ch-pop.open{display:block}
+  .ch-pop label{display:flex;align-items:center;gap:8px;padding:4px 6px;font-size:.85rem;cursor:pointer;border-radius:4px}
+  .ch-pop label:hover{background:var(--surface)}
+
+  /* Stato ciclico */
+  body.editing .stato{cursor:pointer}
+  body.editing .stato:hover{text-decoration:underline}
+
+  @media print{
+    @page{size:A4;margin:14mm 12mm}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    html{font-size:13px}
+    body{background:#fff}.doc{box-shadow:none;margin:0;max-width:none;padding:0}
+    .toolbar,.edit-only,.row-tools,.week-tools,.add-week,.ch-pop{display:none!important}
+    .cal col.c-x{width:0}
+    /* forza il layout tabella anche se il viewport di stampa è stretto */
+    .cal{display:table!important}
+    .cal thead{display:table-header-group!important}
+    .cal tbody{display:table-row-group!important}
+    .cal tr{display:table-row!important;border:0!important;border-radius:0!important;margin:0!important;padding:0!important}
+    .cal td{display:table-cell!important;border-bottom:1px solid var(--line)!important;padding:8px 10px!important}
+    .cal th{padding:7px 10px!important}
+    .cal col.c-day{width:80px}.cal col.c-ch{width:100px}.cal col.c-fmt{width:95px}.cal col.c-cta{width:120px}.cal col.c-st{width:85px}
+    /* interruzioni: mai dentro una riga, titolo settimana sempre con la sua tabella */
+    .week{margin-top:18px}
+    .week-h{break-after:avoid;page-break-after:avoid}
+    .cal tr{break-inside:avoid;page-break-inside:avoid}
+    header{margin-bottom:4px;padding-bottom:12px}
+    .note{margin-top:20px}
+    a{color:inherit;text-decoration:none}
+  }
+</style>
+</head>
+<body class="editing">
+
+<div class="toolbar">
+  <button class="primary" id="btnMode">Anteprima</button>
+  <span class="hint edit-only">Clicca su un testo per modificarlo · canali e stato si cambiano con un clic</span>
+  <span class="grow"></span>
+  <span class="saved" id="savedMsg">Bozza salvata</span>
+  <button id="btnReset">Ripristina</button>
+  <button id="btnPrint">Stampa / PDF</button>
+  <button id="btnExport">Scarica HTML per il cliente</button>
+</div>
+
+<div class="doc" id="doc">
+
+  <header>
+    <h1><span contenteditable data-ph="Titolo">Calendario di pubblicazione</span><small><span contenteditable data-ph="Nome cliente">[Nome Cliente]</span> · <span contenteditable data-ph="Mese e anno">Ottobre 2026</span></small></h1>
+    <div class="brand"><span contenteditable>Alagias. — Soluzioni per il web</span><span contenteditable>Aggiornato al 3 settembre 2026 · v1.0</span></div>
+  </header>
+
+  <div class="legend">
+    <span class="tag ig">Instagram</span><span class="tag fb">Facebook</span><span class="tag li">LinkedIn</span><span class="tag tt">TikTok</span><span class="tag yt">YouTube</span><span class="tag nl">Newsletter</span>
+  </div>
+
+  <div id="weeks"></div>
+
+  <button class="add-week" id="btnAddWeek">+ Aggiungi settimana</button>
+
+  <p class="note" contenteditable data-ph="Nota per il cliente">Le bozze di testo e visual vengono condivise il lunedì della settimana precedente alla pubblicazione. Feedback entro 2 giorni lavorativi; in assenza di risposta il contenuto si intende approvato.</p>
+
+  <footer>
+    <span contenteditable>Alagias. — Soluzioni per il web · Lauria (PZ)</span>
+    <span contenteditable>Documento riservato al cliente</span>
+  </footer>
+</div>
+
+<template id="tplWeek">
+  <div class="week">
+    <div class="week-h">
+      <h2 contenteditable data-ph="Settimana">Settimana</h2>
+      <span contenteditable data-ph="Date">1 – 7</span>
+      <div class="week-tools">
+        <button class="add-row">+ Riga</button>
+        <button class="up">↑</button>
+        <button class="down">↓</button>
+        <button class="del">Elimina settimana</button>
+      </div>
+    </div>
+    <table class="cal">
+      <colgroup><col class="c-day"><col class="c-ch"><col><col class="c-fmt"><col class="c-cta"><col class="c-st"><col class="c-x"></colgroup>
+      <thead><tr><th>Giorno</th><th>Canale</th><th>Contenuto</th><th>Formato</th><th>Call to action</th><th>Stato</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</template>
+
+<template id="tplRow">
+  <tr>
+    <td class="day"><span contenteditable data-ph="Gio 1">Gio 1</span><small contenteditable data-ph="ore">18:30</small></td>
+    <td class="ch-cell"><span class="tags"></span>
+      <div class="ch-pop"></div></td>
+    <td class="copy" contenteditable data-ph="Descrizione del contenuto"></td>
+    <td class="fmt" contenteditable data-ph="Formato"></td>
+    <td class="cta" contenteditable data-ph="CTA"></td>
+    <td class="stato" data-i="0">Da approvare</td>
+    <td class="row-tools edit-only"><button class="del" title="Elimina riga">✕</button></td>
+  </tr>
+</template>
+
+<script>
+(function(){
+  const CHANNELS = {ig:"Instagram",fb:"Facebook",li:"LinkedIn",tt:"TikTok",yt:"YouTube",nl:"Newsletter"};
+  const STATES = ["Da approvare","Approvato","Pubblicato","In revisione"];
+  const KEY = "ped-calendario-bozza";
+
+  const DEFAULT = [
+    {title:"Settimana 1",dates:"1 – 5 ottobre",rows:[
+      {day:"Gio 1",time:"18:30",ch:["ig","fb"],copy:"Apertura del mese: cosa aspettarsi a ottobre, anticipazione delle novità.",fmt:"Carosello",cta:"Salva il post",st:0},
+      {day:"Ven 2",time:"12:00",ch:["li"],copy:"Riflessione del titolare su un tema di settore.",fmt:"Testo + foto",cta:"Commenta",st:0},
+      {day:"Sab 3",time:"10:00",ch:["ig"],copy:"Reel \"3 errori da evitare quando…\" con voce fuori campo.",fmt:"Reel",cta:"Scrivici in DM",st:0},
+      {day:"Dom 4",time:"19:00",ch:["ig"],copy:"Storie: sondaggio \"Quale di questi temi vorresti approfondire?\"",fmt:"Storie",cta:"Vota",st:0}
+    ]},
+    {title:"Settimana 2",dates:"6 – 12 ottobre",rows:[
+      {day:"Mar 7",time:"18:30",ch:["ig","fb"],copy:"Focus servizio: a chi serve, cosa risolve, come si prenota.",fmt:"Carosello",cta:"Prenota dal link in bio",st:0},
+      {day:"Gio 9",time:"13:00",ch:["ig"],copy:"Dietro le quinte: una giornata tipo in sede.",fmt:"Reel",cta:"Seguici",st:0},
+      {day:"Sab 11",time:"10:00",ch:["ig","fb"],copy:"Recensione di un cliente in evidenza, con foto o citazione.",fmt:"Foto singola",cta:"Lascia la tua recensione",st:0}
+    ]},
+    {title:"Settimana 3",dates:"13 – 19 ottobre",rows:[
+      {day:"Mar 14",time:"18:30",ch:["ig","fb"],copy:"Lo sapevi che… curiosità di settore spiegata in modo semplice.",fmt:"Carosello",cta:"Condividi",st:0},
+      {day:"Gio 16",time:"12:00",ch:["li"],copy:"Caso studio in formato documento: problema, soluzione, risultato.",fmt:"PDF",cta:"Contattaci",st:0},
+      {day:"Sab 18",time:"10:00",ch:["ig"],copy:"Reel: prima / dopo.",fmt:"Reel",cta:"Scrivici in DM",st:0}
+    ]},
+    {title:"Settimana 4",dates:"20 – 31 ottobre",rows:[
+      {day:"Mar 21",time:"18:30",ch:["ig","fb"],copy:"Presentazione del team.",fmt:"Foto singola",cta:"Presentati nei commenti",st:0},
+      {day:"Ven 24",time:"13:00",ch:["ig"],copy:"Storie: box domande con risposte in giornata.",fmt:"Storie",cta:"Fai una domanda",st:0},
+      {day:"Mar 28",time:"18:30",ch:["ig","fb"],copy:"Promozione di fine mese / anticipazione novembre.",fmt:"Reel",cta:"Prenota entro il 31",st:0},
+      {day:"Gio 30",time:"09:00",ch:["nl"],copy:"Riepilogo del mese, contenuto più visto, offerta dedicata agli iscritti.",fmt:"Email",cta:"Scopri l'offerta",st:0}
+    ]}
+  ];
+
+  const $ = s => document.querySelector(s);
+  const weeksEl = $("#weeks");
+  const tplWeek = $("#tplWeek").content;
+  const tplRow = $("#tplRow").content;
+
+  /* ---------- Rendering ---------- */
+  function renderTags(cell){
+    const chs = (cell.dataset.ch || "").split(",").filter(Boolean);
+    cell.querySelector(".tags").innerHTML = chs.map(c => `<span class="tag ${c}">${CHANNELS[c]}</span>`).join("") || `<span style="color:var(--ink-3);font-size:.8rem">Scegli canale</span>`;
+    cell.querySelector(".ch-pop").innerHTML = Object.entries(CHANNELS).map(([k,v]) =>
+      `<label><input type="checkbox" value="${k}" ${chs.includes(k)?"checked":""}> <span class="tag ${k}">${v}</span></label>`).join("");
+  }
+  function setState(td,i){
+    td.dataset.i = i; td.textContent = STATES[i];
+    td.classList.toggle("ok", i===1 || i===2);
+  }
+  function addRow(tbody,data){
+    const tr = tplRow.cloneNode(true).firstElementChild;
+    if(data){
+      tr.querySelector(".day span").textContent = data.day;
+      tr.querySelector(".day small").textContent = data.time;
+      tr.querySelector(".copy").textContent = data.copy;
+      tr.querySelector(".fmt").textContent = data.fmt;
+      tr.querySelector(".cta").textContent = data.cta;
+      tr.querySelector(".ch-cell").dataset.ch = data.ch.join(",");
+      setState(tr.querySelector(".stato"), data.st||0);
+    } else { tr.querySelector(".ch-cell").dataset.ch = "ig"; }
+    renderTags(tr.querySelector(".ch-cell"));
+    tbody.appendChild(tr);
+  }
+  function addWeek(data){
+    const w = tplWeek.cloneNode(true).firstElementChild;
+    if(data){ w.querySelector("h2").textContent = data.title; w.querySelector(".week-h > span").textContent = data.dates; }
+    const tbody = w.querySelector("tbody");
+    (data ? data.rows : [null]).forEach(r => addRow(tbody,r));
+    weeksEl.appendChild(w);
+  }
+  function build(model){ weeksEl.innerHTML=""; model.forEach(addWeek); }
+
+  /* ---------- Serializzazione ---------- */
+  function serialize(){
+    return [...weeksEl.querySelectorAll(".week")].map(w => ({
+      title: w.querySelector("h2").textContent,
+      dates: w.querySelector(".week-h > span").textContent,
+      rows: [...w.querySelectorAll("tbody tr")].map(tr => ({
+        day: tr.querySelector(".day span").textContent,
+        time: tr.querySelector(".day small").textContent,
+        ch: (tr.querySelector(".ch-cell").dataset.ch||"").split(",").filter(Boolean),
+        copy: tr.querySelector(".copy").textContent,
+        fmt: tr.querySelector(".fmt").textContent,
+        cta: tr.querySelector(".cta").textContent,
+        st: +tr.querySelector(".stato").dataset.i
+      }))
+    }));
+  }
+  function headerState(){ return [...document.querySelectorAll("#doc > header [contenteditable], #doc > .note, #doc > footer [contenteditable]")].map(e=>e.innerHTML); }
+  function restoreHeader(arr){ if(!arr) return; document.querySelectorAll("#doc > header [contenteditable], #doc > .note, #doc > footer [contenteditable]").forEach((e,i)=>{ if(arr[i]!=null) e.innerHTML=arr[i]; }); }
+
+  let saveT;
+  function save(){
+    clearTimeout(saveT);
+    saveT = setTimeout(()=>{
+      try{ localStorage.setItem(KEY, JSON.stringify({weeks:serialize(),head:headerState()})); flash(); }catch(e){}
+    },400);
+  }
+  function flash(){ const m=$("#savedMsg"); m.classList.add("show"); setTimeout(()=>m.classList.remove("show"),1200); }
+
+  /* ---------- Eventi ---------- */
+  document.addEventListener("input", e => { if(e.target.isContentEditable) save(); });
+  document.addEventListener("keydown", e => { if(e.key==="Enter" && e.target.isContentEditable && !e.target.classList.contains("copy") && !e.target.classList.contains("note")){ e.preventDefault(); e.target.blur(); } });
+
+  document.addEventListener("click", e => {
+    if(!document.body.classList.contains("editing")) return;
+    const t = e.target;
+    // canali
+    const tags = t.closest(".tags");
+    if(tags){ document.querySelectorAll(".ch-pop.open").forEach(p=>p!==tags.nextElementSibling&&p.classList.remove("open")); tags.nextElementSibling.classList.toggle("open"); return; }
+    if(!t.closest(".ch-pop")) document.querySelectorAll(".ch-pop.open").forEach(p=>p.classList.remove("open"));
+    // stato
+    const st = t.closest(".stato");
+    if(st){ setState(st,(+st.dataset.i+1)%STATES.length); save(); return; }
+    // riga
+    if(t.closest(".row-tools .del")){ const tr=t.closest("tr"); if(confirm("Eliminare questa riga?")){ tr.remove(); save(); } return; }
+    // settimana
+    const wt = t.closest(".week-tools");
+    if(wt){
+      const w = wt.closest(".week");
+      if(t.classList.contains("add-row")) addRow(w.querySelector("tbody"));
+      else if(t.classList.contains("del")){ if(confirm("Eliminare l'intera settimana?")) w.remove(); }
+      else if(t.classList.contains("up") && w.previousElementSibling) w.previousElementSibling.before(w);
+      else if(t.classList.contains("down") && w.nextElementSibling) w.nextElementSibling.after(w);
+      save(); return;
+    }
+  });
+  document.addEventListener("change", e => {
+    if(e.target.matches(".ch-pop input")){
+      const cell = e.target.closest(".ch-cell");
+      cell.dataset.ch = [...cell.querySelectorAll("input:checked")].map(i=>i.value).join(",");
+      renderTags(cell); cell.querySelector(".ch-pop").classList.add("open"); save();
+    }
+  });
+
+  $("#btnAddWeek").onclick = () => { addWeek(); save(); weeksEl.lastElementChild.scrollIntoView({behavior:"smooth",block:"center"}); };
+  $("#btnMode").onclick = () => {
+    const ed = document.body.classList.toggle("editing");
+    $("#btnMode").textContent = ed ? "Anteprima" : "Modifica";
+    document.querySelectorAll("[contenteditable]").forEach(el => el.contentEditable = ed);
+  };
+  $("#btnPrint").onclick = () => window.print();
+  $("#btnReset").onclick = () => { if(confirm("Ripristinare il modello iniziale? Le modifiche andranno perse.")){ try{localStorage.removeItem(KEY)}catch(e){} build(DEFAULT); location.reload(); } };
+
+  /* Export: file pulito per il cliente, senza strumenti di modifica */
+  $("#btnExport").onclick = () => {
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelector("body").classList.remove("editing");
+    clone.querySelectorAll(".toolbar,.edit-only,.week-tools,.add-week,.ch-pop,template,script").forEach(n=>n.remove());
+    clone.querySelectorAll("[contenteditable]").forEach(el=>{ el.removeAttribute("contenteditable"); el.removeAttribute("data-ph"); });
+    clone.querySelectorAll("th:last-child, col.c-x").forEach(n=>n.remove());
+    const name = ($("#doc header small span").textContent + "-" + $("#doc header small span:nth-child(2)").textContent)
+      .toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+    const blob = new Blob(["<!DOCTYPE html>\n"+clone.outerHTML],{type:"text/html"});
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = "calendario-"+(name||"cliente")+".html"; a.click(); URL.revokeObjectURL(a.href);
+  };
+
+  /* ---------- Avvio ---------- */
+  let saved=null; try{ saved = JSON.parse(localStorage.getItem(KEY)); }catch(e){}
+  build(saved && saved.weeks ? saved.weeks : DEFAULT);
+  if(saved) restoreHeader(saved.head);
+})();
+</script>
+</body>
+</html>
