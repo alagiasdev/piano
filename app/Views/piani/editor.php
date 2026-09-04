@@ -234,7 +234,7 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
                 <button type="button" class="valore valore-data" title="Cambia la data">
                   <?= e(giorno_it($post['data'])) ?>
                 </button>
-                <?php if ($post['data'] === $oggi && $primo): ?><span class="segno-oggi">oggi</span><?php endif; ?>
+
                 <input type="date" class="campo-data" data-campo="data"
                        data-server="<?= e($post['data']) ?>" value="<?= e($post['data']) ?>" hidden>
 
@@ -253,9 +253,15 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
 
               <td data-etichetta="Contenuto">
                 <div class="copy" contenteditable data-campo="contenuto" data-server="<?= e($post['contenuto']) ?>" data-ph="Descrizione del contenuto"><?= e($post['contenuto']) ?></div>
-                <div class="visual <?= ($post['visual_url'] ?? '') !== '' ? 'pieno' : '' ?>">
-                  <span class="visual-etichetta">Visual</span>
-                  <span contenteditable data-campo="visual_url" data-server="<?= e($post['visual_url']) ?>" data-ph="incolla un link"><?= e($post['visual_url']) ?></span>
+                <?php /* «Visual» da solo non diceva niente, e per giunta si
+                         confondeva con le immagini vere degli esecutivi. Qui
+                         c'è solo il link al file grafico di riferimento: ora
+                         lo dicono l'etichetta, il segnaposto e il titolo. */ ?>
+                <div class="visual <?= ($post['visual_url'] ?? '') !== '' ? 'pieno' : '' ?>"
+                     title="Link al file grafico di riferimento: Drive, Canva, Dropbox. Le immagini vere si caricano nella schermata Esecutivi.">
+                  <span class="visual-etichetta">Link grafico</span>
+                  <span contenteditable data-campo="visual_url" data-server="<?= e($post['visual_url']) ?>"
+                        data-ph="Drive, Canva…"><?= e($post['visual_url']) ?></span>
                   <?php if (($post['visual_url'] ?? '') !== '' && filter_var($post['visual_url'], FILTER_VALIDATE_URL)): ?>
                     <a href="<?= e($post['visual_url']) ?>" target="_blank" rel="noopener noreferrer">apri</a>
                   <?php endif; ?>

@@ -310,18 +310,22 @@ tr.spento td{opacity:.6}
 
 .riga-vuota td{color:var(--ink-3);font-size:.8125rem;padding:12px 9px}
 
-/* Giorno e ora sulla STESSA riga: le misure dicono che in nove righe
-   su dodici era questa cella a dettare l'altezza della riga, non il
-   contenuto. Impilate su due righe tenevano alta tutta la tabella. */
-.cal td.day{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 6px}
-.cal td.day .campo-data,.cal td.day .campo-ora{flex:1 1 100%}
+/* Giorno e ora sulla STESSA riga: le misure dicono che era questa cella
+   a dettare l'altezza, non il contenuto.
+
+   In linea con display:inline-block, NON con flex sul <td>: un td reso
+   flex esce dal layout di tabella, smette di allungarsi fino al fondo
+   della riga, e il suo bordo inferiore finisce disegnato all'altezza del
+   proprio contenuto — una linea grigia spezzata a meta della riga. */
+.cal td.day .campo-data:not([hidden]),.cal td.day .campo-ora:not([hidden]){display:block;width:100%}
 
 /* Giorno e ora: testo compatto, il campo nativo compare al clic */
 .valore{
-  font:inherit;text-align:left;cursor:pointer;
+  display:inline-block;font:inherit;text-align:left;cursor:pointer;
   border:1px solid transparent;border-radius:4px;background:transparent;
-  padding:2px 4px;margin-left:-4px;
+  padding:2px 4px;margin-left:-4px;vertical-align:baseline;
 }
+.valore-ora{margin-left:2px}
 .valore:hover{border-color:var(--line);background:var(--surface)}
 .valore-data{font-size:.875rem;font-weight:700;white-space:nowrap}
 .valore-ora{font-size:.8125rem;color:var(--ink-2)}
@@ -351,7 +355,7 @@ tr:not(:hover) .valore-ora.vuoto{opacity:0}
    segnaposto "incolla un link" erano solo rumore. */
 .visual,.pilastro{font-size:.75rem;color:var(--ink-3);margin-top:3px}
 .visual{display:flex;gap:5px;align-items:baseline;flex-wrap:wrap}
-.visual-etichetta{font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:.6875rem}
+.visual-etichetta{font-weight:600;letter-spacing:.02em;font-size:.6875rem;white-space:nowrap}
 .visual [contenteditable]{flex:1 1 80px;min-width:50px}
 .pilastro.pieno{
   display:inline-block;background:var(--surface);border-radius:4px;
@@ -666,13 +670,14 @@ tr.urgente{background:#FFFBF3}
   .griglia-dashboard{grid-template-columns:1fr}
 }
 
-/* Riferimento a "oggi" nell'editor: si apre il piano e si vede dove si è */
-.cal tr.oggi td:first-child{box-shadow:inset 3px 0 0 var(--blue)}
-.segno-oggi{
-  display:inline-block;font-size:.625rem;font-weight:800;text-transform:uppercase;
-  letter-spacing:.05em;color:var(--blue);background:var(--blue-soft);
-  border-radius:3px;padding:1px 5px;margin-left:2px;vertical-align:2px;
-}
+/* Riferimento a "oggi" nell'editor.
+   Niente barretta a sinistra: cadeva esattamente sul bordo della tabella e
+   si vedevano due linee accostate, una grigia e una blu. E niente etichetta
+   "OGGI" nella cella del giorno: mandava l'ora a capo e faceva quella
+   riga piu alta di tutte le altre (55px contro 29). Restano una velatura
+   di fondo e il giorno in blu, che non possono sovrapporsi a niente. */
+.cal tr.oggi{background:rgba(36,71,214,.045)}
+.cal tr.oggi .valore-data{color:var(--blue)}
 .pill-corrente{
   font-size:.6875rem;font-weight:700;color:var(--blue);background:var(--blue-soft);
   border-radius:4px;padding:2px 7px;
@@ -759,7 +764,6 @@ tr.urgente{background:#FFFBF3}
   .valore{margin-left:0;padding:2px 4px}
   .valore-ora{margin-top:0}
   .campo-data,.campo-ora{width:auto;min-width:160px}
-  .segno-oggi{vertical-align:0}
 
   /* I campi secondari vuoti su mobile non si mostrano: non c'e' hover che
      li riveli e occuperebbero una riga a vuoto in ogni scheda. Se hanno un
@@ -1107,3 +1111,10 @@ tr:hover .apri-elenco{opacity:.6}
 .giorni-pop .voce-giorno:hover{background:var(--surface)}
 .giorni-pop .voce-giorno b{font-weight:700;margin-right:2px}
 .giorni-pop .voce-giorno.oggi{background:var(--blue-soft)}
+
+/* L'etichetta "oggi" resta solo nel pannello di scelta del giorno,
+   dove non ha vincoli di spazio e aiuta a orientarsi. */
+.giorni-pop .segno-oggi{
+  font-size:.625rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--blue);background:var(--blue-soft);border-radius:3px;padding:1px 5px;margin-left:4px;
+}

@@ -134,7 +134,7 @@ $oggi    = date('Y-m-d');
 
             <?php if (($post['visual_url'] ?? '') !== ''): ?>
               <p class="aiuto">
-                Visual indicato nel concept:
+                Link grafico indicato nel concept:
                 <?php if (filter_var($post['visual_url'], FILTER_VALIDATE_URL)): ?>
                   <a href="<?= e($post['visual_url']) ?>" target="_blank" rel="noopener noreferrer">apri il link</a>
                 <?php else: ?>
