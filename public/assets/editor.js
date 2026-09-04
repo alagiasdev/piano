@@ -333,6 +333,46 @@
     window.posizionaPannello(pulsante, pop);
   }
 
+  /* ------------------------------------- nuovo post: in quale giorno -- */
+
+  const GIORNI = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
+
+  /**
+   * "+ Post" chiede il giorno invece di mettere tutto sul lunedì.
+   *
+   * Prima ogni post nasceva sul primo giorno della settimana e la data
+   * andava corretta subito dopo: due passaggi in più per ognuno dei dodici
+   * post di un piano, sempre.
+   */
+  function apriGiorni(pulsante) {
+    let pop = pulsante.nextElementSibling;
+    if (!pop || !pop.classList.contains('giorni-pop')) {
+      pop = document.createElement('div');
+      pop.className = 'giorni-pop';
+      pulsante.after(pop);
+    }
+
+    const lunedi = pulsante.dataset.data;
+    const oggi = new Date().toISOString().slice(0, 10);
+
+    pop.innerHTML = GIORNI.map(function (nome, i) {
+      // Date in UTC: qui contano solo giorno e mese, non l'ora locale
+      const g = new Date(lunedi + 'T00:00:00Z');
+      g.setUTCDate(g.getUTCDate() + i);
+      const iso = g.toISOString().slice(0, 10);
+
+      return '<button type="button" class="voce-giorno' + (iso === oggi ? ' oggi' : '') + '"'
+        + ' data-data="' + iso + '">'
+        + '<b>' + nome + '</b> ' + g.getUTCDate()
+        + (iso === oggi ? ' <span class="segno-oggi">oggi</span>' : '')
+        + '</button>';
+    }).join('');
+
+    chiudiPopover(pop);
+    pop.classList.add('aperto');
+    window.posizionaPannello(pulsante, pop);
+  }
+
   /* --------------------------------- scelta rapida di formato e CTA -- */
 
   /**
@@ -378,7 +418,7 @@
   }
 
   function chiudiPopover(tranne) {
-    document.querySelectorAll('.ch-pop.aperto, .stato-pop.aperto, .elenco-pop.aperto')
+    document.querySelectorAll('.ch-pop.aperto, .stato-pop.aperto, .elenco-pop.aperto, .giorni-pop.aperto')
       .forEach(function (p) {
         if (p !== tranne) { p.classList.remove('aperto'); }
       });
@@ -465,10 +505,28 @@
       return;
     }
 
+    // Campi secondari della riga: visual e pilastro
+    const extra = e.target.closest('.azione-extra');
+    if (extra && riga) {
+      const acceso = riga.classList.toggle('mostra-extra');
+      if (acceso) {
+        const primo = riga.querySelector('.visual:not(.pieno) [contenteditable]');
+        if (primo) { primo.focus(); }
+      }
+      return;
+    }
+
     // Nuovo post nella settimana
     const aggiungi = e.target.closest('.azione-aggiungi');
     if (aggiungi) {
-      azione(urlNuovoPost(), { data: aggiungi.dataset.data });
+      apriGiorni(aggiungi);
+      return;
+    }
+
+    const voceGiorno = e.target.closest('.giorni-pop .voce-giorno');
+    if (voceGiorno) {
+      chiudiPopover();
+      azione(urlNuovoPost(), { data: voceGiorno.dataset.data });
       return;
     }
 
@@ -496,7 +554,8 @@
   document.addEventListener('click', function (e) {
     if (!e.target.closest('.ch-cell')
       && !e.target.closest('.stato-cella')
-      && !e.target.closest('.con-elenco')) {
+      && !e.target.closest('.con-elenco')
+      && !e.target.closest('.settimana-testa')) {
       chiudiPopover();
     }
   });

@@ -304,6 +304,10 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
                   <button type="button" class="azione-sposta" data-direzione="giu"
                           <?= $ultimo ? 'disabled' : '' ?> title="Sposta dopo, nello stesso giorno">↓</button>
                 <?php endif; ?>
+                <?php /* Mostra visual e pilastro, che se vuoti non
+                         occupano spazio: 22px per riga di troppo. */ ?>
+                <button type="button" class="azione-extra"
+                        title="Mostra visual e pilastro">⋯</button>
                 <button type="button" class="azione-duplica" title="Duplica il post in questo giorno">⧉</button>
                 <button type="button" class="azione-elimina" title="Elimina il post">✕</button>
               </td>

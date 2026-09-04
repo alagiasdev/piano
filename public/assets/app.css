@@ -310,15 +310,21 @@ tr.spento td{opacity:.6}
 
 .riga-vuota td{color:var(--ink-3);font-size:.8125rem;padding:12px 9px}
 
+/* Giorno e ora sulla STESSA riga: le misure dicono che in nove righe
+   su dodici era questa cella a dettare l'altezza della riga, non il
+   contenuto. Impilate su due righe tenevano alta tutta la tabella. */
+.cal td.day{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 6px}
+.cal td.day .campo-data,.cal td.day .campo-ora{flex:1 1 100%}
+
 /* Giorno e ora: testo compatto, il campo nativo compare al clic */
 .valore{
-  display:block;font:inherit;text-align:left;cursor:pointer;
+  font:inherit;text-align:left;cursor:pointer;
   border:1px solid transparent;border-radius:4px;background:transparent;
-  padding:2px 5px;margin-left:-5px;
+  padding:2px 4px;margin-left:-4px;
 }
 .valore:hover{border-color:var(--line);background:var(--surface)}
 .valore-data{font-size:.875rem;font-weight:700;white-space:nowrap}
-.valore-ora{font-size:.8125rem;color:var(--ink-2);margin-top:1px}
+.valore-ora{font-size:.8125rem;color:var(--ink-2)}
 .valore-ora.vuoto{color:var(--ink-3);font-style:italic}
 tr:not(:hover) .valore-ora.vuoto{opacity:0}
 
@@ -352,9 +358,13 @@ tr:not(:hover) .valore-ora.vuoto{opacity:0}
   padding:1px 6px;color:var(--ink-2);font-weight:600;
 }
 
-.visual:not(.pieno),.pilastro:not(.pieno){opacity:0;transition:opacity .15s}
-tr:hover .visual:not(.pieno),tr:hover .pilastro:not(.pieno),
-.visual:focus-within,.pilastro:focus{opacity:1}
+/* Vuoti non occupano spazio: a opacita zero restavano nel flusso e si
+   portavano via 22px per riga, cioe quattro righe di schermo su dodici
+   post. Si mostrano col pulsante ' dei campi secondari, non al passaggio
+   del mouse: cosi la tabella non balla mentre la si scorre. */
+.visual:not(.pieno),.pilastro:not(.pieno){display:none}
+tr.mostra-extra .visual:not(.pieno){display:flex}
+tr.mostra-extra .pilastro:not(.pieno){display:block}
 
 /* Su schermi senza mouse non c'e' hover: meglio mostrarli sempre */
 @media (hover:none){
@@ -1080,3 +1090,20 @@ tr:hover .apri-elenco{opacity:.6}
 .elenco-pop .voce-elenco.scelto{background:var(--blue-soft);font-weight:700}
 
 @media (hover:none){ .apri-elenco{opacity:.7} }
+
+/* Pannello dei giorni: "+ Post" chiede in quale giorno della settimana.
+   Prima ogni post nasceva sul lunedì e la data andava corretta subito
+   dopo — due passaggi in più per ognuno dei post di un piano. */
+.giorni-pop{
+  position:fixed;z-index:200;top:0;left:0;min-width:150px;
+  background:var(--paper);border:1px solid var(--line);border-radius:8px;
+  box-shadow:0 10px 30px rgba(24,34,48,.18);padding:5px;display:none;
+}
+.giorni-pop.aperto{display:block}
+.giorni-pop .voce-giorno{
+  display:block;width:100%;text-align:left;font:inherit;font-size:.8125rem;
+  border:0;background:none;padding:6px 8px;border-radius:5px;cursor:pointer;color:var(--ink);
+}
+.giorni-pop .voce-giorno:hover{background:var(--surface)}
+.giorni-pop .voce-giorno b{font-weight:700;margin-right:2px}
+.giorni-pop .voce-giorno.oggi{background:var(--blue-soft)}

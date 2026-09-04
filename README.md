@@ -229,6 +229,26 @@ Eliminando un post, un piano o un cliente i file delle immagini vengono tolti
 dal disco: le foreign key portano via le righe, non i file, quindi la pulizia è
 esplicita nei modelli.
 
+## Densità della riga nell'editor
+
+L'editor è una tabella che si scorre tutto il giorno, quindi quanti post
+stanno in una schermata conta. Misurando l'ingombro reale di ogni cella
+sono venute fuori due cose che a occhio non si vedevano:
+
+- **giorno e ora erano impilati** su due righe e tenevano alta tutta la
+  tabella; ora stanno sulla stessa riga (da ~50 a 29 px di ingombro);
+- **i campi secondari vuoti** (visual, pilastro) erano a opacità zero ma
+  restavano nel flusso: 22 px sprecati su **ogni** riga. Ora non occupano
+  spazio e si mostrano con il pulsante `⋯` della riga — non al passaggio
+  del mouse, altrimenti la tabella ballerebbe mentre la si scorre.
+
+Il risultato: pagina da 1645 a 1524 px con dodici post, e altezza minima
+di riga da 64 a 43 px. Quel che resta è dettato da contenuto vero.
+
+**`+ Post` chiede in quale giorno.** Prima ogni post nasceva sul lunedì
+della settimana e la data andava corretta subito dopo: due passaggi in
+più per ognuno dei dodici post di un piano, sempre.
+
 ## Scelte rapide di formato e call to action
 
 Accanto ai campi «Formato» e «Call to action» dell'editor c'è una
