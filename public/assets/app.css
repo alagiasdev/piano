@@ -246,7 +246,11 @@ tr.spento td{opacity:.6}
   flex-wrap:wrap;margin-bottom:16px;
 }
 .barra-piano-info h1{margin-bottom:4px}
-.barra-piano-info p{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+/* Non piu' legato al tag: sulla pagina del piano questa riga contiene
+   un modulo (il ritorno al concept), quindi e' un div e non un p. */
+.barra-piano-riga{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.fase-corrente{font-weight:700;color:var(--ink-2)}
+.fase-ritorno{margin:0;display:inline}
 .barra-piano-azioni{display:flex;gap:6px;flex-wrap:wrap}
 
 /* Pannello a fisarmonica con le impostazioni del piano */
@@ -755,7 +759,7 @@ tr.urgente{background:#FFFBF3}
 
   /* --- editor del piano --- */
   .barra-piano{gap:10px}
-  .barra-piano-info p{font-size:.75rem}
+  .barra-piano-riga{font-size:.75rem}
   .barra-piano-azioni{width:100%}
   .pannello > summary{padding:11px 14px}
   .pannello-corpo{padding:4px 14px 16px}

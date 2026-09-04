@@ -16,7 +16,7 @@ $oggi    = date('Y-m-d');
 <div class="barra-piano">
   <div class="barra-piano-info">
     <h1>Esecutivi</h1>
-    <p class="sfumato piccolo">
+    <p class="sfumato piccolo barra-piano-riga">
       <a href="<?= e(url('/piani/' . $idPiano)) ?>"><?= e($piano['titolo']) ?></a>
       · <?= e($piano['cliente_nome']) ?>
       · <span id="conteggio-approvati"><?= $conteggi['approvati'] ?></span>/<span id="conteggio-totali"><?= $conteggi['totali'] ?></span> approvati

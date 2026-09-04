@@ -21,12 +21,34 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
 <div class="barra-piano">
   <div class="barra-piano-info">
     <h1><?= e($piano['titolo']) ?></h1>
-    <p class="sfumato piccolo">
+    <?php /* Un <div> e non un <p>: qui dentro ci va un modulo, e un form
+             dentro un paragrafo lo chiude da solo, mandando a monte tutto
+             quello che segue. */ ?>
+    <div class="sfumato piccolo barra-piano-riga">
       <a href="<?= e(url('/clienti/' . $piano['cliente_id'] . '/piani')) ?>"><?= e($piano['cliente_nome']) ?></a>
       · <?= e(periodo_it($piano['data_inizio'], $piano['data_fine'])) ?>
       · <span class="stato-pill <?= e($piano['stato']) ?>"><?= e(Stati::etichettaPiano((string) $piano['stato'])) ?></span>
       · <span id="conteggio-approvati"><?= $approvati ?></span>/<span id="conteggio-totali"><?= $totali ?></span> approvati
-    </p>
+
+      <?php if ($fase === 'esecutivi'): ?>
+        <?php /* Si vede solo in questa fase, perche' e' l'unica in cui il
+                 cliente guarda una cosa diversa da questa pagina — e quindi
+                 l'unica in cui serve sapere come si torna indietro.
+
+                 La strada c'era gia': la tendina "Fase" nelle impostazioni
+                 del piano. Ma stava chiusa dentro un pannello a
+                 fisarmonica, mentre l'andata ha un avviso in chiaro sulla
+                 pagina degli esecutivi: si entrava da una porta e si usciva
+                 da una botola. */ ?>
+        · <span class="fase-corrente">Fase esecutivi</span>
+        <form method="post" action="<?= e(url('/piani/' . $idPiano . '/fase')) ?>" class="fase-ritorno">
+          <?= csrf_field() ?>
+          <input type="hidden" name="fase" value="concept">
+          <button type="submit" class="btn-testo"
+                  title="Il cliente torna a vedere le idee. Copy, immagini e approvazioni degli esecutivi restano dove sono.">Torna al concept</button>
+        </form>
+      <?php endif; ?>
+    </div>
   </div>
 
   <div class="barra-piano-azioni">

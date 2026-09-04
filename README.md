@@ -275,6 +275,26 @@ libera: il giorno che serve «Carosello 5 slide» lo si scrive e basta.
 L'elenco si personalizza da **Impostazioni → Scelte rapide dell'editor**,
 una voce per riga; svuotando la casella si torna alle voci di partenza.
 
+## Andare agli esecutivi e tornare indietro
+
+Le due fasi si cambiano dalla tendina **Fase** in «Impostazioni del
+piano», ma quella strada da sola non bastava: l'andata aveva un avviso
+in chiaro sulla pagina degli esecutivi, il ritorno stava chiuso dentro
+un pannello a fisarmonica. Si entrava da una porta e si usciva da una
+botola.
+
+Ora, **quando e solo quando** il piano è in fase esecutivi, la riga
+sotto il titolo lo dice — «Fase esecutivi» — e accanto c'è **Torna al
+concept**. In fase concept non compare niente: sarebbe rumore, perché
+è lo stato normale e il cliente vede già quello che c'è in pagina.
+
+Tornare indietro **non perde niente**: le due fasi hanno colonne
+separate (`stato` / `stato_esecutivo`, `commento_cliente` /
+`commento_esecutivo`, e così via — la mappa sta in `App\Support\Fasi`),
+quindi stati, commenti e approvazioni del concept restano dove sono, e
+copy e immagini degli esecutivi pure. Si può fare avanti e indietro
+quante volte serve.
+
 ## La testata del piano
 
 In chiaro restano le tre destinazioni che si aprono ogni giorno —
