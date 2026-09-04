@@ -1037,16 +1037,25 @@ tr.urgente{background:#FFFBF3}
 .stato-pop .stato-pill::after{content:none}
 
 /* Scelta rapida di formato e call to action: stesso pannello dello stato,
-   ma il campo resta a scrittura libera — sono elenchi aperti, non chiusi. */
-.con-elenco{position:relative}
-.apri-elenco{
-  position:absolute;top:5px;right:4px;
-  font:inherit;font-size:.75rem;line-height:1;cursor:pointer;
-  border:1px solid var(--line);background:var(--paper);color:var(--ink-3);
-  border-radius:4px;padding:2px 5px;opacity:0;transition:opacity .15s;
+   ma il campo resta a scrittura libera — sono elenchi aperti, non chiusi.
+
+   La freccetta sta attaccata al valore, come dentro la pillola dello stato:
+   prima era un pulsante in posizione assoluta in alto a destra della cella,
+   staccato dal testo e visivamente addosso alla colonna accanto. */
+.campo-con-elenco{
+  display:inline-flex;align-items:baseline;gap:1px;max-width:100%;
+  border-radius:4px;
 }
-tr:hover .apri-elenco{opacity:.7}
-.apri-elenco:hover{opacity:1;border-color:var(--blue);color:var(--blue)}
+.campo-con-elenco > [contenteditable]{min-width:1ch}
+tr:hover .campo-con-elenco{background:rgba(24,34,48,.03)}
+
+.apri-elenco{
+  flex:0 0 auto;font:inherit;font-size:.75rem;line-height:1;cursor:pointer;
+  border:0;background:none;color:var(--ink-3);padding:0 3px;
+  opacity:0;transition:opacity .15s,color .15s;
+}
+tr:hover .apri-elenco{opacity:.6}
+.apri-elenco:hover,.apri-elenco:focus-visible{opacity:1;color:var(--blue)}
 
 .elenco-pop{
   position:fixed;z-index:200;top:0;left:0;min-width:180px;

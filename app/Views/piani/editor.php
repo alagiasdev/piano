@@ -262,17 +262,23 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
               <?php /* La freccetta pesca da un elenco di uso frequente; il
                        campo resta comunque a scrittura libera. */ ?>
               <td class="fmt con-elenco" data-etichetta="Formato">
-                <div class="formato" contenteditable data-campo="formato" data-ph="formato"><?= e($post['formato']) ?></div>
-                <button type="button" class="apri-elenco" data-elenco="formati"
-                        title="Scegli fra i formati più usati">⌄</button>
+                <?php /* La freccetta sta attaccata al valore, come nello stato:
+                         un clic apre l'elenco, il testo resta modificabile. */ ?>
+                <span class="campo-con-elenco">
+                  <span class="formato" contenteditable data-campo="formato" data-ph="formato"><?= e($post['formato']) ?></span>
+                  <button type="button" class="apri-elenco" data-elenco="formati"
+                          title="Scegli fra i formati più usati">⌄</button>
+                </span>
                 <div class="pilastro <?= ($post['pilastro'] ?? '') !== '' ? 'pieno' : '' ?>"
                      contenteditable data-campo="pilastro" data-ph="pilastro"><?= e($post['pilastro']) ?></div>
               </td>
 
               <td class="cta con-elenco" data-etichetta="Call to action">
-                <div contenteditable data-campo="cta" data-ph="CTA"><?= e($post['cta']) ?></div>
-                <button type="button" class="apri-elenco" data-elenco="cta"
-                        title="Scegli fra le call to action più usate">⌄</button>
+                <span class="campo-con-elenco">
+                  <span contenteditable data-campo="cta" data-ph="CTA"><?= e($post['cta']) ?></span>
+                  <button type="button" class="apri-elenco" data-elenco="cta"
+                          title="Scegli fra le call to action più usate">⌄</button>
+                </span>
               </td>
 
               <td class="stato-cella" data-etichetta="Stato">

@@ -350,7 +350,8 @@
       pulsante.after(pop);
     }
 
-    const campo = pulsante.closest('td').querySelector('[data-campo]');
+    // dentro il gruppo, non nella cella: quella del formato contiene anche il pilastro
+    const campo = pulsante.closest('.campo-con-elenco').querySelector('[data-campo]');
     const attuale = campo.textContent.trim();
 
     pop.innerHTML = voci.map(function (v) {
@@ -414,9 +415,9 @@
 
     const voceElenco = e.target.closest('.elenco-pop .voce-elenco');
     if (voceElenco) {
-      const cella = voceElenco.closest('td');
-      const campo = cella.querySelector('[data-campo]');
-      const rigaEl = cella.closest('tr[data-post]');
+      const gruppo = voceElenco.closest('.con-elenco').querySelector('.campo-con-elenco');
+      const campo = gruppo.querySelector('[data-campo]');
+      const rigaEl = voceElenco.closest('tr[data-post]');
       const prima = campo.textContent.trim();
       const scelto = voceElenco.dataset.valore;
 
