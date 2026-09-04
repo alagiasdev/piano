@@ -275,6 +275,23 @@ libera: il giorno che serve «Carosello 5 slide» lo si scrive e basta.
 L'elenco si personalizza da **Impostazioni → Scelte rapide dell'editor**,
 una voce per riga; svuotando la casella si torna alle voci di partenza.
 
+## La testata del piano
+
+In chiaro restano le tre destinazioni che si aprono ogni giorno —
+**Calendario**, **Esecutivi**, **Anteprima cliente** — e le altre
+quattro stanno dietro un «…»: Copia link pubblico, PDF, ICS, Duplica.
+
+Prima erano sette pulsanti in fila con le stesse identiche sembianze:
+nessuno spiccava e sugli schermi stretti la riga andava a capo.
+
+Il menù sta in `app.js` e non in `editor.js` perché la testata è fuori
+da `#editor`, e perché un menù così può servire in qualunque pagina:
+basta un `.menu-azioni` con dentro un `.apri-menu` e un `.menu-pop`.
+Si chiude da solo al clic fuori, con Esc, scorrendo e ridimensionando —
+come tutti gli altri pannelli. L'unica eccezione è «Copia link
+pubblico», che lo lascia aperto: scrive «Copiato» su se stesso per un
+secondo e mezzo, e chiudendo subito quella conferma non si vedrebbe mai.
+
 ## L'anteprima non ritaglia le immagini
 
 Il riquadro dell'anteprima cliente imponeva una forma — quadrata, o

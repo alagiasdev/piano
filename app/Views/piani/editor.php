@@ -35,19 +35,32 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
        href="<?= e(url('/piani/' . $idPiano . '/esecutivi')) ?>">Esecutivi<?php
        ?><?= $mediaTotali > 0 ? ' · ' . $mediaTotali : '' ?></a>
     <a class="btn btn-piccolo" href="<?= e(url('/piani/' . $idPiano . '/anteprima')) ?>" target="_blank" rel="noopener">Anteprima cliente</a>
-    <?php if ($linkPubblico !== null): ?>
-      <button type="button" class="btn btn-piccolo" data-copia="<?= e($linkPubblico) ?>">Copia link pubblico</button>
-    <?php endif; ?>
-    <a class="btn btn-piccolo" href="<?= e(url('/piani/' . $idPiano . '/pdf')) ?>" target="_blank" rel="noopener">PDF</a>
-    <a class="btn btn-piccolo" href="<?= e(url('/piani/' . $idPiano . '/ics')) ?>">ICS</a>
 
-    <?php /* Duplica a un clic con i valori di default; le opzioni stanno
-             nel pannello delle impostazioni qui sotto. */ ?>
-    <form method="post" action="<?= e(url('/piani/' . $idPiano . '/duplica')) ?>" style="display:inline"
-          data-conferma="Duplicare il piano spostando tutto di 4 settimane?">
-      <?= csrf_field() ?>
-      <button type="submit" class="btn btn-piccolo" title="Copia il piano 4 settimane più avanti">Duplica</button>
-    </form>
+    <?php /* Restano in chiaro le tre destinazioni che si aprono ogni giorno.
+             Le altre quattro stavano in fila con le stesse identiche
+             sembianze: sette pulsanti dello stesso peso, dove nessuno
+             spiccava e la riga andava a capo sugli schermi stretti. */ ?>
+    <div class="menu-azioni">
+      <button type="button" class="btn btn-piccolo apri-menu"
+              aria-haspopup="true" aria-expanded="false" title="Altre azioni">⋯</button>
+
+      <div class="menu-pop" hidden>
+        <?php if ($linkPubblico !== null): ?>
+          <button type="button" class="voce-menu" data-copia="<?= e($linkPubblico) ?>">Copia link pubblico</button>
+        <?php endif; ?>
+
+        <a class="voce-menu" href="<?= e(url('/piani/' . $idPiano . '/pdf')) ?>" target="_blank" rel="noopener">PDF</a>
+        <a class="voce-menu" href="<?= e(url('/piani/' . $idPiano . '/ics')) ?>">ICS</a>
+
+        <?php /* Duplica a un clic con i valori di default; le opzioni stanno
+                 nel pannello delle impostazioni qui sotto. */ ?>
+        <form method="post" action="<?= e(url('/piani/' . $idPiano . '/duplica')) ?>"
+              data-conferma="Duplicare il piano spostando tutto di 4 settimane?">
+          <?= csrf_field() ?>
+          <button type="submit" class="voce-menu" title="Copia il piano 4 settimane più avanti">Duplica</button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 

@@ -384,6 +384,25 @@ tr.mostra-extra .pilastro:not(.pieno){display:block}
    angoli arrotondati e taglierebbe il pannello. Da fisso il contenitore
    e' il viewport, quindi nessun antenato lo ritaglia; le coordinate le
    calcola editor.js, che lo ribalta se non c'e' spazio sotto. */
+/* --------------------------------- menu delle azioni secondarie del piano -- */
+
+/* Niente 'display' dichiarato: il pannello si apre e si chiude con
+   l'attributo hidden, e una regola di display qui lo vincerebbe. */
+.menu-azioni{position:relative;display:inline-flex}
+.apri-menu{line-height:1;letter-spacing:.08em;padding-left:10px;padding-right:10px}
+.menu-pop{
+  position:fixed;z-index:200;top:0;left:0;min-width:190px;
+  background:var(--paper);border:1px solid var(--line);border-radius:8px;
+  box-shadow:0 10px 30px rgba(24,34,48,.18);padding:5px;
+}
+.menu-pop form{margin:0}
+.voce-menu{
+  display:block;width:100%;box-sizing:border-box;text-align:left;
+  font:inherit;font-size:.8125rem;color:var(--ink);text-decoration:none;
+  border:0;background:none;padding:7px 9px;border-radius:5px;cursor:pointer;
+}
+.voce-menu:hover,.voce-menu:focus-visible{background:var(--surface)}
+
 .ch-pop{
   position:fixed;z-index:200;top:0;left:0;min-width:168px;
   background:var(--paper);border:1px solid var(--line);border-radius:8px;

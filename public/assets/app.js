@@ -156,6 +156,65 @@
     }
   };
 
+  /* ------------------------------------------ menu delle azioni secondarie -- */
+
+  /* In testa al piano i pulsanti erano sette, tutti con le stesse
+     sembianze: nessuno spiccava, e sugli schermi stretti la riga andava a
+     capo. Restano in chiaro i tre che si aprono ogni giorno; gli altri
+     stanno dietro un "...".
+
+     Sta qui e non in editor.js perche' la testata e' fuori da #editor, e
+     perche' un menu del genere puo' servire in qualunque pagina. */
+
+  function chiudiMenu(tranne) {
+    document.querySelectorAll('.menu-pop:not([hidden])').forEach(function (pop) {
+      if (pop === tranne) { return; }
+      pop.hidden = true;
+      const apri = pop.parentElement.querySelector('.apri-menu');
+      if (apri) { apri.setAttribute('aria-expanded', 'false'); }
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    const apri = e.target.closest('.apri-menu');
+    if (apri) {
+      const pop = apri.parentElement.querySelector('.menu-pop');
+      if (!pop) { return; }
+
+      const eraAperto = !pop.hidden;
+      chiudiMenu();
+      if (eraAperto) { return; }
+
+      // Prima si mostra, poi si posiziona: da nascosto non si puo' misurare
+      pop.hidden = false;
+      apri.setAttribute('aria-expanded', 'true');
+      window.posizionaPannello(apri, pop);
+      return;
+    }
+
+    const voce = e.target.closest('.voce-menu');
+    if (voce) {
+      /* Il "copia link" scrive "Copiato" su se stesso per un secondo e
+         mezzo: chiudere subito il menu vorrebbe dire non far vedere mai la
+         conferma. Quella voce lascia il menu aperto, le altre no. */
+      if (voce.dataset.copia === undefined) { chiudiMenu(); }
+      return;
+    }
+
+    if (!e.target.closest('.menu-pop')) { chiudiMenu(); }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { chiudiMenu(); }
+  });
+
+  // Come gli altri pannelli fissi: seguono la pagina solo se si chiudono
+  window.addEventListener('scroll', function (e) {
+    if (e.target instanceof Element && e.target.closest('.menu-pop')) { return; }
+    chiudiMenu();
+  }, true);
+  window.addEventListener('resize', function () { chiudiMenu(); });
+
   // Gli avvisi di conferma spariscono da soli; quelli di errore restano.
   document.querySelectorAll('.avviso:not(.errore):not(.attenzione):not(.fisso)').forEach(function (el) {
     setTimeout(function () {
