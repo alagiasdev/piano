@@ -52,6 +52,21 @@ Su Windows gli eseguibili di XAMPP sono `C:\xampp\php\php.exe` e
 8. **Verifica**: `php database/verifica.php`. Se il Terminal non c'è, entra
    come amministratore e apri **Impostazioni → Verifica installazione**.
 
+### Senza Terminal
+
+Su parecchi piani cPanel non c'è né SSH né Terminal, quindi i passi 4 e 5
+non si possono eseguire. In quel caso metti nel `.env` una riga
+`SETUP_TOKEN` con una stringa lunga a caso e apri **`/installazione`**:
+una pagina che applica le migrazioni e crea il primo amministratore dal
+browser.
+
+È chiusa da due lati insieme: esiste solo finché non c'è nessun account
+(dopo risponde 404 per sempre) e chiede il valore di `SETUP_TOKEN`, che
+conosce solo chi ha accesso ai file del server. Il secondo controllo copre
+la finestra fra il primo deploy e la creazione dell'account, che
+altrimenti sarebbe aperta a chiunque conoscesse l'indirizzo. A
+installazione fatta puoi togliere la riga dal `.env`.
+
 ## Verifica dell'installazione
 
 ```bash
@@ -87,11 +102,12 @@ app/
   Core/          Router, Request, Response, View, Db, Session, Csrf, Auth,
                  Config, Controller
   Controllers/   Auth, Dashboard, Clienti, Piani, Post (JSON), Pubblico,
-                 Export, Media, Utenti, Impostazioni, Verifica
+                 Export, Media, Utenti, Impostazioni, Verifica,
+                 Installazione
   Models/        Utente, Cliente, Piano, Post, Media, Impostazione
   Views/         layout admin / pubblico / stampa, una cartella per sezione
   Support/       Canali, Stati, Fasi, Periodo, Upload, Ics, DatiPiano,
-                 Diagnostica, helpers
+                 Diagnostica, Migratore, helpers
 database/
   migrations/    file SQL numerati
   migrate.php    applica le migrazioni non ancora eseguite

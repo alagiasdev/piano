@@ -13,6 +13,7 @@ use App\Controllers\ClientiController;
 use App\Controllers\DashboardController;
 use App\Controllers\ExportController;
 use App\Controllers\ImpostazioniController;
+use App\Controllers\InstallazioneController;
 use App\Controllers\MediaController;
 use App\Controllers\PianiController;
 use App\Controllers\PostController;
@@ -26,6 +27,11 @@ use App\Core\Session;
 Session::start();
 
 $router = new Router();
+
+/* ------------------------------------------- primo avvio (senza login) -- */
+// Esiste solo finche non c'e nessun utente e solo con SETUP_TOKEN nel .env.
+$router->get('/installazione', [InstallazioneController::class, 'mostra']);
+$router->post('/installazione', [InstallazioneController::class, 'esegui']);
 
 /* --------------------------------------------------------------- accesso -- */
 $router->get('/login', [AuthController::class, 'mostraLogin']);

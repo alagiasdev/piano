@@ -7,8 +7,11 @@
 <p class="sfumato">Gestionale dei piani editoriali</p>
 
 <?php if ($senzaUtenti): ?>
-  <p class="avviso attenzione">
-    Non esiste ancora nessun utente. Crealo da riga di comando:<br>
+  <p class="avviso attenzione fisso">
+    Non esiste ancora nessun account.
+    <?php /* Sugli hosting senza Terminal l'unica via è la pagina di primo avvio. */ ?>
+    <a href="<?= e(url('/installazione')) ?>">Apri l'installazione</a>,
+    oppure da riga di comando:<br>
     <code>php database/crea-admin.php tua@email.it "password"</code>
   </p>
 <?php endif; ?>

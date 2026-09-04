@@ -19,7 +19,13 @@ final class AuthController extends Controller
         }
 
         // Prima installazione: senza utenti il login sarebbe un vicolo cieco.
-        $senzaUtenti = Utente::conteggio() === 0;
+        // Alla primissima visita le tabelle non esistono ancora e la query
+        // fallisce: vale come "nessun utente", non come errore da mostrare.
+        try {
+            $senzaUtenti = Utente::conteggio() === 0;
+        } catch (\Throwable) {
+            $senzaUtenti = true;
+        }
 
         $this->vista('auth/login', [
             'titolo'      => 'Accedi',
