@@ -185,6 +185,52 @@ if (!function_exists('token_casuale')) {
     }
 }
 
+if (!function_exists('dimensioni_immagine')) {
+    /**
+     * Larghezza e altezza di un'immagine caricata, o null.
+     *
+     * Il risultato si tiene in memoria: la stessa immagine viene chiesta
+     * due volte per ogni post — una per la misura scritta sulla miniatura,
+     * una per decidere la cornice dell'anteprima — e non ha senso aprire
+     * il file due volte a testa.
+     *
+     * @param string $percorso relativo a public/, come sta in database
+     * @return array{0:int,1:int}|null
+     */
+    function dimensioni_immagine(string $percorso): ?array
+    {
+        static $viste = [];
+
+        if (array_key_exists($percorso, $viste)) {
+            return $viste[$percorso];
+        }
+
+        $viste[$percorso] = null;
+
+        $file = BASE_PATH . '/public/' . ltrim($percorso, '/');
+        if (!is_file($file)) {
+            return null;
+        }
+
+        $dati = @getimagesize($file);
+        if ($dati === false || $dati[0] <= 0 || $dati[1] <= 0) {
+            return null;
+        }
+
+        return $viste[$percorso] = [(int) $dati[0], (int) $dati[1]];
+    }
+}
+
+if (!function_exists('proporzione_immagine')) {
+    /** Larghezza diviso altezza, per decidere la cornice dell'anteprima. */
+    function proporzione_immagine(string $percorso): ?float
+    {
+        $dimensioni = dimensioni_immagine($percorso);
+
+        return $dimensioni === null ? null : $dimensioni[0] / $dimensioni[1];
+    }
+}
+
 if (!function_exists('misura_immagine')) {
     /**
      * Dimensioni di un'immagine caricata, per la miniatura: «2161×2700 · 4:5».
@@ -202,17 +248,12 @@ if (!function_exists('misura_immagine')) {
      */
     function misura_immagine(string $percorso): ?string
     {
-        $file = BASE_PATH . '/public/' . ltrim($percorso, '/');
-        if (!is_file($file)) {
+        $dimensioni = dimensioni_immagine($percorso);
+        if ($dimensioni === null) {
             return null;
         }
 
-        $dati = @getimagesize($file);
-        if ($dati === false || $dati[0] <= 0 || $dati[1] <= 0) {
-            return null;
-        }
-
-        [$larghezza, $altezza] = $dati;
+        [$larghezza, $altezza] = $dimensioni;
         $misura = $larghezza . '×' . $altezza;
 
         $note = ['1:1' => 1, '4:5' => 0.8, '3:4' => 0.75, '2:3' => 2 / 3,

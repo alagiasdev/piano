@@ -284,9 +284,31 @@ metà: di una grafica 4:5 dichiarata «Reel» sparivano i due lati, logo
 compreso. E il ritaglio non era nemmeno quello vero del social: era
 una nostra invenzione.
 
-Ora è l'immagine a dettare la forma del riquadro: si vede intera,
-sempre, sia nell'anteprima cliente sia nelle miniature interne. Chi
-approva deve vedere il file che gli abbiamo mandato, non una sua fetta.
+Ora la grafica si vede **intera, sempre**: sia nell'anteprima cliente sia
+nelle miniature interne. Chi approva deve vedere il file che gli abbiamo
+mandato, non una sua fetta.
+
+La cornice però continua a seguire la tipologia di post — un reel si vede
+alto e stretto come un reel — e quando la grafica non la riempie restano
+delle bande. Le bande *sono* il messaggio: dicono che il file non ha la
+forma giusta per dove andrà. Proprio per questo devono comparire solo
+quando è vero, altrimenti diventano rumore. La regola sta in
+`App\Support\Formati` e non è «un formato, una proporzione»:
+
+- **storie e reel** occupano lo schermo intero, e lì 9:16 è esatto:
+  qualunque altra forma è un errore e le bande ci vogliono;
+- **nel feed** non esiste una forma giusta sola. Instagram pubblica senza
+  toccare niente tutto quello che sta fra 4:5 e 1.91:1, quindi dentro
+  quell'intervallo la cornice segue la grafica e non c'è nessuna banda.
+  Fuori — una 9:16 dichiarata «Foto singola», una panoramica troppo larga
+  — la cornice è 4:5 e le bande dicono che qualcosa non torna;
+- i formati che **non c'entrano con le immagini** (Diretta, Sondaggio) e
+  quelli **inventati dallo studio** non impongono niente: comanda la
+  grafica.
+
+I formati sono testo libero, quindi si riconoscono per parola contenuta e
+non per uguaglianza: «Reel», «reel 30s» e «Reel + storia» sono tutti
+verticali.
 
 Siccome così una grafica della forma sbagliata non salta più all'occhio,
 ogni miniatura in **Esecutivi** porta la misura vera del file

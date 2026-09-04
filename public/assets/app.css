@@ -965,6 +965,13 @@ tr.urgente{background:#FFFBF3}
   flex:0 0 100%;scroll-snap-align:center;
   width:100%;height:auto;max-height:80vh;object-fit:contain;display:block;
 }
+
+/* Con una cornice dichiarata l'altezza la detta la tipologia di post: un
+   reel si vede alto e stretto come un reel. La grafica ci sta dentro
+   intera lo stesso ('contain', mai 'cover'), e le bande che restano
+   quando non la riempie sono il punto, non un effetto collaterale: dicono
+   che il file non ha la forma giusta per dove andra'. */
+.scheda-feed-media.con-cornice img{aspect-ratio:var(--cornice);max-height:none}
 .scheda-feed-conta{font-size:.75rem;color:var(--ink-3);padding:6px 12px 0}
 
 .scheda-feed-testo{padding:12px;font-size:.875rem;line-height:1.55}
@@ -1021,6 +1028,7 @@ tr.urgente{background:#FFFBF3}
   .scheda-feed{break-inside:avoid;page-break-inside:avoid;margin-bottom:12px}
   .scheda-feed-media{overflow:hidden}
   .scheda-feed-media img{max-height:12cm}      /* i vh sulla carta non dicono niente */
+  .scheda-feed-media.con-cornice img{aspect-ratio:auto}  /* sulla carta comanda il tetto */
   .scheda-feed-media img ~ img{display:none}   /* in stampa basta la prima */
   .feed{max-width:none}
   .riga-preparazione{break-inside:avoid}

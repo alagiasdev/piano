@@ -2,6 +2,7 @@
 
 use App\Models\Post;
 use App\Support\Canali;
+use App\Support\Formati;
 use App\Support\Stati;
 
 /**
@@ -45,6 +46,14 @@ $iniziale = mb_strtoupper(mb_substr((string) $piano['cliente_nome'], 0, 1));
   $agibile = in_array($stato, ['da_approvare', 'da_rivedere'], true);
   $media   = $post['media'] ?? [];
   $copy    = trim((string) ($post['copy_finale'] ?? ''));
+
+  /* La cornice segue la tipologia di post, ma non ritaglia mai: la
+     grafica ci sta dentro intera, e se non la riempie restano delle
+     bande. Sono quelle a dire che il file non ha la forma giusta per
+     dove andrà. Basta la prima immagine: in un carosello devono avere
+     tutte la stessa proporzione comunque. */
+  $propria = $media === [] ? null : proporzione_immagine((string) $media[0]['percorso']);
+  $cornice = Formati::cornice((string) $post['formato'], $propria);
   ?>
   <article class="scheda-feed" data-post="<?= (int) $post['id'] ?>">
 
@@ -65,9 +74,8 @@ $iniziale = mb_strtoupper(mb_substr((string) $piano['cliente_nome'], 0, 1));
     </header>
 
     <?php if ($media !== []): ?>
-      <?php /* Nessuna forma imposta: la grafica si vede intera, come
-               ce l'ha mandata chi l'ha fatta. Vedi app.css. */ ?>
-      <div class="scheda-feed-media">
+      <div class="scheda-feed-media<?= $cornice !== null ? ' con-cornice' : '' ?>"
+           <?= $cornice !== null ? 'style="--cornice:' . e($cornice) . '"' : '' ?>>
         <?php foreach ($media as $immagine): ?>
           <img src="<?= e(url('/' . $immagine['percorso'])) ?>" alt="" loading="lazy">
         <?php endforeach; ?>
