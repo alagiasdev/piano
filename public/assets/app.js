@@ -69,6 +69,36 @@
   };
 
   /**
+   * Posiziona un pannello a comparsa sotto l'elemento che lo ha aperto.
+   *
+   * I pannelli sono position:fixed — dentro le tabelle, che hanno
+   * overflow:hidden, un absolute verrebbe ritagliato. Da fissi il
+   * contenitore è la finestra, quindi le coordinate vanno calcolate qui,
+   * ribaltando sopra o rientrando da destra quando lo spazio non basta.
+   */
+  window.posizionaPannello = function (ancoraElemento, pannello) {
+    const ancora = ancoraElemento.getBoundingClientRect();
+    const misura = pannello.getBoundingClientRect();
+    const margine = 8;
+
+    let sinistra = ancora.left;
+    if (sinistra + misura.width > window.innerWidth - margine) {
+      sinistra = Math.max(margine, window.innerWidth - misura.width - margine);
+    }
+
+    let alto = ancora.bottom + 4;
+    if (alto + misura.height > window.innerHeight - margine) {
+      const sopra = ancora.top - misura.height - 4;
+      alto = sopra >= margine
+        ? sopra
+        : Math.max(margine, window.innerHeight - misura.height - margine);
+    }
+
+    pannello.style.left = Math.round(sinistra) + 'px';
+    pannello.style.top = Math.round(alto) + 'px';
+  };
+
+  /**
    * Due persone hanno modificato lo stesso campo.
    *
    * Non si sceglie per loro: si mostrano tutti e due i valori e si lascia

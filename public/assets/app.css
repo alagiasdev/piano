@@ -1008,3 +1008,30 @@ tr.urgente{background:#FFFBF3}
 }
 .conflitto-pulsanti{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
 .conflitto-pulsanti .btn{margin-top:0}
+
+/* ==========================================================================
+   Pannello di scelta dello stato.
+   Stesso meccanismo del selettore canali: quattro voci fra cui scegliere
+   invece del clic ciclico, che per arrivare all'ultimo stato ne chiedeva
+   tre e non permetteva di tornare indietro se non rifacendo il giro.
+   ========================================================================== */
+
+.stato-pop{
+  position:fixed;z-index:200;top:0;left:0;min-width:170px;
+  background:var(--paper);border:1px solid var(--line);border-radius:8px;
+  box-shadow:0 10px 30px rgba(24,34,48,.18);padding:5px;display:none;
+}
+.stato-pop.aperto{display:block}
+
+.stato-pop .voce-stato{
+  display:block;width:100%;text-align:left;
+  border:0;background:none;padding:5px 6px;border-radius:5px;cursor:pointer;
+}
+.stato-pop .voce-stato:hover{background:var(--surface)}
+.stato-pop .voce-stato .stato-pill{border:0;cursor:pointer}
+.stato-pop .voce-stato.scelto{background:var(--blue-soft)}
+.stato-pop .voce-stato.scelto::after{
+  content:"✓";float:right;color:var(--blue);font-weight:800;font-size:.8125rem;
+}
+/* Dentro il pannello la freccetta non serve: quelle sono scelte, non menu */
+.stato-pop .stato-pill::after{content:none}

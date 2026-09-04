@@ -191,22 +191,66 @@ final class Diagnostica
     private function database(): void
     {
         try {
-            $pdo = Db::pdo();
-            $versione = (string) $pdo->getAttribute(PDO::ATTR_SERVER_VERSION);
-            $charset = (string) Db::value("SELECT @@character_set_database");
-
-            if (!str_starts_with($charset, 'utf8mb4')) {
-                $this->avviso('Database', "Connesso a {$versione}, charset {$charset}",
-                    'Con un charset diverso da utf8mb4 le emoji nei post vengono perse.');
-
-                return;
-            }
-
-            $this->ok('Database', "Connesso · {$versione} · {$charset}");
+            $versione = (string) Db::pdo()->getAttribute(PDO::ATTR_SERVER_VERSION);
+            $this->ok('Database', "Connesso · {$versione}");
         } catch (Throwable $e) {
             $this->ko('Database', 'Connessione fallita: ' . $e->getMessage(),
                 'Controlla i valori DB_* nel file .env e che l\'utente abbia i privilegi sul database.');
+
+            return;
         }
+
+        $this->charset();
+    }
+
+    /**
+     * Quello che conta per le emoji sono le colonne, non il default del
+     * database: le migrazioni dichiarano utf8mb4 tabella per tabella,
+     * quindi un database creato in latin1 va bene lo stesso. Guardare
+     * @@character_set_database dava un falso allarme.
+     */
+    private function charset(): void
+    {
+        try {
+            $sbagliate = Db::all(
+                "SELECT CONCAT(TABLE_NAME, '.', COLUMN_NAME) AS colonna, CHARACTER_SET_NAME AS charset
+                 FROM information_schema.COLUMNS
+                 WHERE TABLE_SCHEMA = DATABASE()
+                   AND CHARACTER_SET_NAME IS NOT NULL
+                   AND CHARACTER_SET_NAME <> 'utf8mb4'
+                 ORDER BY TABLE_NAME, COLUMN_NAME
+                 LIMIT 5"
+            );
+        } catch (Throwable) {
+            return;   // niente permessi su information_schema: non e un problema
+        }
+
+        if ($sbagliate !== []) {
+            $elenco = implode(', ', array_map(
+                static fn (array $r) => $r['colonna'] . ' (' . $r['charset'] . ')',
+                $sbagliate
+            ));
+
+            $this->avviso('Charset delle colonne', 'Non in utf8mb4: ' . $elenco,
+                'Su queste colonne le emoji e alcuni accenti andrebbero persi. '
+                . 'Si convertono con ALTER TABLE ... CONVERT TO CHARACTER SET utf8mb4.');
+
+            return;
+        }
+
+        $default = (string) Db::value('SELECT @@character_set_database');
+
+        if (!str_starts_with($default, 'utf8mb4')) {
+            // Informativo, non un problema: le tabelle dell'app sono a posto.
+            $this->info('Charset delle colonne', 'Tutte in utf8mb4',
+                "Il database ha come default {$default}, ma le tabelle dell'app "
+                . 'dichiarano utf8mb4 una per una, quindi emoji e accenti sono al sicuro. '
+                . 'Vale solo per eventuali tabelle create a mano senza indicarlo.');
+
+            return;
+        }
+
+        $this->ok('Charset delle colonne', 'Tutte in utf8mb4');
     }
 
     private function migrazioni(): void

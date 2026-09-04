@@ -129,27 +129,70 @@
 
   /* ---------------------------------------------- stato del esecutivo -- */
 
-  radice.addEventListener('click', function (e) {
-    const pulsante = e.target.closest('.azione-stato-esecutivo');
-    if (!pulsante) { return; }
+  function disegnaStato(pulsante, codice) {
+    pulsante.dataset.stato = codice;
+    pulsante.textContent = ETICHETTE[codice] || codice;
+    pulsante.className = 'stato-pill ' + codice + ' azione-stato-esecutivo';
+  }
 
-    const prima = pulsante.dataset.stato;
-    const attuale = STATI.indexOf(prima);
-    const nuovo = STATI[(attuale < 0 ? 0 : attuale + 1) % STATI.length];
+  function chiudiStato(tranne) {
+    document.querySelectorAll('.stato-pop.aperto').forEach(function (p) {
+      if (p !== tranne) { p.classList.remove('aperto'); }
+    });
+  }
 
-    function disegna(codice) {
-      pulsante.dataset.stato = codice;
-      pulsante.textContent = ETICHETTE[codice] || codice;
-      pulsante.className = 'stato-pill ' + codice + ' azione-stato-esecutivo';
+  /** I quattro stati in un pannello, come per i canali nell'editor. */
+  function apriStato(pulsante) {
+    let pop = pulsante.nextElementSibling;
+    if (!pop || !pop.classList.contains('stato-pop')) {
+      pop = document.createElement('div');
+      pop.className = 'stato-pop';
+      pulsante.after(pop);
     }
 
-    disegna(nuovo);
-    salva(pulsante.closest('[data-post]').dataset.post, 'stato_esecutivo', nuovo, {
+    const attuale = pulsante.dataset.stato;
+    pop.innerHTML = STATI.map(function (codice) {
+      return '<button type="button" class="voce-stato' + (codice === attuale ? ' scelto' : '')
+        + '" data-stato="' + codice + '">'
+        + '<span class="stato-pill ' + codice + '">' + ETICHETTE[codice] + '</span></button>';
+    }).join('');
+
+    chiudiStato(pop);
+    pop.classList.add('aperto');
+    window.posizionaPannello(pulsante, pop);
+  }
+
+  radice.addEventListener('click', function (e) {
+    const pulsante = e.target.closest('.azione-stato-esecutivo');
+    if (pulsante) { apriStato(pulsante); return; }
+
+    const voce = e.target.closest('.stato-pop .voce-stato');
+    if (!voce) { return; }
+
+    const pop = voce.closest('.stato-pop');
+    const bottone = pop.previousElementSibling;
+    const prima = bottone.dataset.stato;
+    const scelto = voce.dataset.stato;
+
+    chiudiStato();
+    if (scelto === prima) { return; }
+
+    disegnaStato(bottone, scelto);
+    salva(bottone.closest('[data-post]').dataset.post, 'stato_esecutivo', scelto, {
       atteso: prima,
-      elemento: pulsante,
-      applica: disegna,
+      elemento: bottone,
+      applica: function (codice) { disegnaStato(bottone, codice); },
     });
   });
+
+  // Clic fuori, Esc, scorrimento: il pannello si chiude
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.creativo-testa')) { chiudiStato(); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { chiudiStato(); }
+  });
+  window.addEventListener('scroll', function () { chiudiStato(); }, true);
 
   /* ------------------------------------------------------- immagini -- */
 

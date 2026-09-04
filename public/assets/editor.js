@@ -297,36 +297,47 @@
     }
   }
 
+  /* ------------------------------------------------ pannello dello stato -- */
+
+  function disegnaStato(pulsante, codice) {
+    const voce = CICLO.find(function (s) { return s.codice === codice; });
+    pulsante.dataset.stato = codice;
+    pulsante.textContent = voce ? voce.etichetta : codice;
+    pulsante.className = 'stato-pill ' + codice + ' azione-stato';
+  }
+
   /**
-   * Il pannello è position:fixed, quindi le coordinate vanno calcolate qui.
-   * Si apre sotto le etichette del canale e si ribalta sopra (o rientra da
-   * destra) quando lo spazio non basta: nelle ultime righe della pagina
-   * altrimenti finirebbe fuori dallo schermo.
+   * Quattro stati in un pannello, come per i canali.
+   * Prima era un clic ciclico: per arrivare a "Pubblicato" ne servivano
+   * tre, e sbagliando bisognava rifare tutto il giro.
    */
+  function apriStato(pulsante, riga) {
+    let pop = pulsante.nextElementSibling;
+    if (!pop || !pop.classList.contains('stato-pop')) {
+      pop = document.createElement('div');
+      pop.className = 'stato-pop';
+      pulsante.after(pop);
+    }
+
+    const attuale = pulsante.dataset.stato;
+    pop.innerHTML = CICLO.map(function (s) {
+      return '<button type="button" class="voce-stato' + (s.codice === attuale ? ' scelto' : '')
+        + '" data-stato="' + s.codice + '">'
+        + '<span class="stato-pill ' + s.codice + '">' + s.etichetta + '</span></button>';
+    }).join('');
+
+    chiudiPopover(pop);
+    pop.classList.add('aperto');
+    window.posizionaPannello(pulsante, pop);
+  }
+
+  /** Il posizionamento sta in app.js: lo usano canali e stato. */
   function posizionaPopover(cella, pop) {
-    const ancora = cella.querySelector('.tags').getBoundingClientRect();
-    const misura = pop.getBoundingClientRect();
-    const margine = 8;
-
-    let sinistra = ancora.left;
-    if (sinistra + misura.width > window.innerWidth - margine) {
-      sinistra = Math.max(margine, window.innerWidth - misura.width - margine);
-    }
-
-    let alto = ancora.bottom + 4;
-    if (alto + misura.height > window.innerHeight - margine) {
-      const sopra = ancora.top - misura.height - 4;
-      alto = sopra >= margine
-        ? sopra
-        : Math.max(margine, window.innerHeight - misura.height - margine);
-    }
-
-    pop.style.left = Math.round(sinistra) + 'px';
-    pop.style.top = Math.round(alto) + 'px';
+    window.posizionaPannello(cella.querySelector('.tags'), pop);
   }
 
   function chiudiPopover(tranne) {
-    document.querySelectorAll('.ch-pop.aperto').forEach(function (p) {
+    document.querySelectorAll('.ch-pop.aperto, .stato-pop.aperto').forEach(function (p) {
       if (p !== tranne) { p.classList.remove('aperto'); }
     });
   }
@@ -353,27 +364,32 @@
       apriPopover(tags.closest('.ch-cell'));
       return;
     }
-    if (!e.target.closest('.ch-pop')) { chiudiPopover(); }
+    if (!e.target.closest('.ch-pop') && !e.target.closest('.stato-pop')) { chiudiPopover(); }
 
-    // Stato: clic ciclico
+    // Stato: si apre il pannello con i quattro stati
     const pulsanteStato = e.target.closest('.azione-stato');
     if (pulsanteStato && riga) {
-      const attuale = pulsanteStato.dataset.stato;
-      const indice = CICLO.findIndex(function (s) { return s.codice === attuale; });
-      const prossimo = CICLO[(indice + 1 + CICLO.length) % CICLO.length];
+      apriStato(pulsanteStato, riga);
+      return;
+    }
 
-      function disegnaStato(codice) {
-        const voce = CICLO.find(function (s) { return s.codice === codice; });
-        pulsanteStato.dataset.stato = codice;
-        pulsanteStato.textContent = voce ? voce.etichetta : codice;
-        pulsanteStato.className = 'stato-pill ' + codice + ' azione-stato';
-      }
+    // Scelta di uno stato dal pannello
+    const voceStato = e.target.closest('.stato-pop .voce-stato');
+    if (voceStato) {
+      const pannello = voceStato.closest('.stato-pop');
+      const pulsante = pannello.previousElementSibling;
+      const rigaStato = pannello.closest('tr[data-post]');
+      const attuale = pulsante.dataset.stato;
+      const scelto = voceStato.dataset.stato;
 
-      disegnaStato(prossimo.codice);
-      salva(riga.dataset.post, 'stato', prossimo.codice, {
+      chiudiPopover();
+      if (scelto === attuale) { return; }
+
+      disegnaStato(pulsante, scelto);
+      salva(rigaStato.dataset.post, 'stato', scelto, {
         atteso: attuale,
-        elemento: pulsanteStato,
-        applica: disegnaStato,
+        elemento: pulsante,
+        applica: function (codice) { disegnaStato(pulsante, codice); },
       });
       return;
     }
@@ -405,8 +421,11 @@
     }
   });
 
+  // Clic fuori: si chiude qualunque pannello aperto, canali o stato
   document.addEventListener('click', function (e) {
-    if (!e.target.closest('.ch-cell')) { chiudiPopover(); }
+    if (!e.target.closest('.ch-cell') && !e.target.closest('.stato-cella')) {
+      chiudiPopover();
+    }
   });
 
   /* ------------------------------------------------- copia negli appunti -- */
