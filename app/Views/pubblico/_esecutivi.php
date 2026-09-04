@@ -45,9 +45,6 @@ $iniziale = mb_strtoupper(mb_substr((string) $piano['cliente_nome'], 0, 1));
   $agibile = in_array($stato, ['da_approvare', 'da_rivedere'], true);
   $media   = $post['media'] ?? [];
   $copy    = trim((string) ($post['copy_finale'] ?? ''));
-
-  // Storie e reel sono verticali, il resto quadrato come nel feed
-  $verticale = (bool) preg_match('/stori|reel|tiktok|short/i', (string) $post['formato']);
   ?>
   <article class="scheda-feed" data-post="<?= (int) $post['id'] ?>">
 
@@ -68,7 +65,9 @@ $iniziale = mb_strtoupper(mb_substr((string) $piano['cliente_nome'], 0, 1));
     </header>
 
     <?php if ($media !== []): ?>
-      <div class="scheda-feed-media <?= $verticale ? 'verticale' : '' ?>">
+      <?php /* Nessuna forma imposta: la grafica si vede intera, come
+               ce l'ha mandata chi l'ha fatta. Vedi app.css. */ ?>
+      <div class="scheda-feed-media">
         <?php foreach ($media as $immagine): ?>
           <img src="<?= e(url('/' . $immagine['percorso'])) ?>" alt="" loading="lazy">
         <?php endforeach; ?>

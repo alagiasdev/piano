@@ -185,6 +185,50 @@ if (!function_exists('token_casuale')) {
     }
 }
 
+if (!function_exists('misura_immagine')) {
+    /**
+     * Dimensioni di un'immagine caricata, per la miniatura: «2161×2700 · 4:5».
+     *
+     * Serve a vedere subito la forma del file, che e' l'unica cosa che
+     * l'anteprima non puo' piu' dire da sola: da quando non ritaglia piu',
+     * una grafica sbagliata si vede intera invece che tagliata, il che va
+     * benissimo per il cliente ma toglie a noi il campanello d'allarme.
+     *
+     * La proporzione si scrive per esteso solo quando cade su una di quelle
+     * che si usano davvero: ridurre 2161×2700 col massimo comun divisore
+     * darebbe «2161:2700», che non dice niente a nessuno.
+     *
+     * @param string $percorso relativo a public/, come sta in database
+     */
+    function misura_immagine(string $percorso): ?string
+    {
+        $file = BASE_PATH . '/public/' . ltrim($percorso, '/');
+        if (!is_file($file)) {
+            return null;
+        }
+
+        $dati = @getimagesize($file);
+        if ($dati === false || $dati[0] <= 0 || $dati[1] <= 0) {
+            return null;
+        }
+
+        [$larghezza, $altezza] = $dati;
+        $misura = $larghezza . '×' . $altezza;
+
+        $note = ['1:1' => 1, '4:5' => 0.8, '3:4' => 0.75, '2:3' => 2 / 3,
+                 '9:16' => 0.5625, '16:9' => 16 / 9, '4:3' => 4 / 3, '3:2' => 1.5];
+
+        $propria = $larghezza / $altezza;
+        foreach ($note as $etichetta => $valore) {
+            if (abs($propria - $valore) / $valore < 0.02) {
+                return $misura . ' · ' . $etichetta;
+            }
+        }
+
+        return $misura;
+    }
+}
+
 if (!function_exists('slugify')) {
     function slugify(string $testo): string
     {

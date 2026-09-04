@@ -275,6 +275,24 @@ libera: il giorno che serve «Carosello 5 slide» lo si scrive e basta.
 L'elenco si personalizza da **Impostazioni → Scelte rapide dell'editor**,
 una voce per riga; svuotando la casella si torna alle voci di partenza.
 
+## L'anteprima non ritaglia le immagini
+
+Il riquadro dell'anteprima cliente imponeva una forma — quadrata, o
+9/16 per storie e reel — e ci faceva entrare l'esecutivo ritagliandolo.
+Quando il file non aveva già quella proporzione il cliente ne vedeva
+metà: di una grafica 4:5 dichiarata «Reel» sparivano i due lati, logo
+compreso. E il ritaglio non era nemmeno quello vero del social: era
+una nostra invenzione.
+
+Ora è l'immagine a dettare la forma del riquadro: si vede intera,
+sempre, sia nell'anteprima cliente sia nelle miniature interne. Chi
+approva deve vedere il file che gli abbiamo mandato, non una sua fetta.
+
+Siccome così una grafica della forma sbagliata non salta più all'occhio,
+ogni miniatura in **Esecutivi** porta la misura vera del file
+(`2161×2700 · 4:5`). Nessun giudizio: il dato, accanto al formato
+dichiarato, così la differenza si nota prima di mandarlo al cliente.
+
 ## Due persone sullo stesso piano
 
 L'editor salva un campo alla volta, quindi due collaboratori sullo stesso

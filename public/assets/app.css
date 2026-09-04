@@ -874,7 +874,22 @@ tr.urgente{background:#FFFBF3}
   gap:8px;align-items:start;
 }
 .media{position:relative;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
-.media img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover}
+/* Riquadri tutti uguali, cosi la griglia resta ordinata, ma 'contain' e
+   non 'cover': una miniatura ritagliata nasconderebbe a noi lo stesso
+   difetto che il cliente poi vede a schermo intero. */
+.media img{
+  display:block;width:100%;aspect-ratio:1/1;object-fit:contain;
+  background:var(--surface);
+}
+/* La misura vera del file, sopra la miniatura. Da quando l'anteprima
+   non ritaglia piu', una grafica della forma sbagliata si vede intera
+   invece che tagliata: giusto per il cliente, ma a noi toglieva il
+   campanello d'allarme. Questo lo rimette, senza dare giudizi. */
+.media-misura{
+  position:absolute;top:4px;left:4px;padding:1px 5px;border-radius:4px;
+  font-size:.625rem;line-height:1.6;font-variant-numeric:tabular-nums;
+  background:rgba(24,34,48,.62);color:#fff;pointer-events:none;
+}
 .media figcaption{
   display:flex;gap:3px;justify-content:center;padding:4px;
   background:var(--paper);border-top:1px solid var(--line);
@@ -934,14 +949,22 @@ tr.urgente{background:#FFFBF3}
 .scheda-feed-capo .canali{display:block;margin-top:2px}
 
 /* Piu immagini: si scorre di lato, una alla volta, senza JS */
+/* La grafica si vede INTERA, sempre.
+   Prima il riquadro imponeva una forma — quadrata, o 9/16 per storie e
+   reel — e ci faceva entrare l'immagine ritagliandola. Quando il file non
+   aveva gia' quella proporzione il cliente ne vedeva meta': di un
+   esecutivo verticale sparivano i due lati, logo compreso. E il ritaglio
+   non era nemmeno vero, era una nostra invenzione: chi approva deve
+   vedere il file che gli abbiamo mandato, non una sua fetta.
+   Adesso e' l'immagine a dettare la forma del riquadro. */
 .scheda-feed-media{
-  display:flex;overflow-x:auto;scroll-snap-type:x mandatory;background:var(--surface);
+  display:flex;align-items:center;overflow-x:auto;scroll-snap-type:x mandatory;
+  background:var(--surface);
 }
 .scheda-feed-media img{
   flex:0 0 100%;scroll-snap-align:center;
-  width:100%;aspect-ratio:1/1;object-fit:cover;display:block;
+  width:100%;height:auto;max-height:80vh;object-fit:contain;display:block;
 }
-.scheda-feed-media.verticale img{aspect-ratio:9/16}
 .scheda-feed-conta{font-size:.75rem;color:var(--ink-3);padding:6px 12px 0}
 
 .scheda-feed-testo{padding:12px;font-size:.875rem;line-height:1.55}
@@ -997,6 +1020,7 @@ tr.urgente{background:#FFFBF3}
 @media print{
   .scheda-feed{break-inside:avoid;page-break-inside:avoid;margin-bottom:12px}
   .scheda-feed-media{overflow:hidden}
+  .scheda-feed-media img{max-height:12cm}      /* i vh sulla carta non dicono niente */
   .scheda-feed-media img ~ img{display:none}   /* in stampa basta la prima */
   .feed{max-width:none}
   .riga-preparazione{break-inside:avoid}

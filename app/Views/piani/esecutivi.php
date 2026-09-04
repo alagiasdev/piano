@@ -107,8 +107,12 @@ $oggi    = date('Y-m-d');
 
             <div class="griglia-media">
               <?php foreach ($media as $indice => $immagine): ?>
+                <?php $misura = misura_immagine((string) $immagine['percorso']); ?>
                 <figure class="media" data-media="<?= (int) $immagine['id'] ?>">
                   <img src="<?= e(url('/' . $immagine['percorso'])) ?>" alt="" loading="lazy">
+                  <?php if ($misura !== null): ?>
+                    <span class="media-misura" title="Dimensioni del file caricato"><?= e($misura) ?></span>
+                  <?php endif; ?>
                   <figcaption>
                     <button type="button" class="azione-media-su" <?= $indice === 0 ? 'disabled' : '' ?>
                             title="Sposta prima">↑</button>
@@ -129,7 +133,7 @@ $oggi    = date('Y-m-d');
 
             <p class="aiuto">
               JPG, PNG, WebP o GIF, massimo 5 MB ciascuna.
-              Per i video usa il campo «visual» nell'editor del piano con un link a Drive o YouTube.
+              Per i video usa «Link grafico» nell'editor del piano, con un link a Drive o YouTube.
             </p>
 
             <?php if (($post['visual_url'] ?? '') !== ''): ?>
