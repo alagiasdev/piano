@@ -152,6 +152,38 @@
 
   // Invio esce dal campo invece di andare a capo (tranne nel contenuto).
   editor.addEventListener('keydown', function (e) {
+    /* Campi con elenco: la tastiera deve poterci navigare, altrimenti
+       il pannello resta una cosa da mouse e chi scrive lo ignora. */
+    if (e.target.isContentEditable && e.target.matches('.campo-con-elenco [data-campo]')) {
+      const pop = elencoAperto(e.target);
+
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (!pop) { apriElenco(e.target, false); return; }
+        const passo = e.key === 'ArrowDown' ? 1 : -1;
+        const ora = indiceEvidenziato(pop);
+        evidenzia(pop, ora === -1 ? (passo === 1 ? 0 : -1) : ora + passo);
+        return;
+      }
+
+      if (e.key === 'Enter' && pop) {
+        const voce = pop.querySelector('.voce-elenco.evidenziata');
+        if (voce) {
+          e.preventDefault();
+          scegliVoce(e.target, voce.dataset.valore);
+          return;
+        }
+      }
+
+      /* Il primo Esc chiude solo l'elenco e lascia il testo scritto; il
+         secondo annulla la modifica, come in tutti gli altri campi. */
+      if (e.key === 'Escape' && pop) {
+        e.preventDefault();
+        chiudiPopover();
+        return;
+      }
+    }
+
     if (e.key === 'Enter' && e.target.isContentEditable && !e.target.classList.contains('copy')) {
       e.preventDefault();
       e.target.blur();
@@ -375,42 +407,159 @@
 
   /* --------------------------------- scelta rapida di formato e CTA -- */
 
-  /**
-   * Formato e call to action non sono un insieme chiuso come i canali:
-   * il pannello serve a pescare in fretta il valore che si usa quasi
-   * sempre, ma il campo resta a scrittura libera. Gli elenchi arrivano
-   * dalle impostazioni, così il vocabolario è dello studio.
-   */
-  function apriElenco(pulsante) {
-    const voci = dati[pulsante.dataset.elenco] || [];
-    if (voci.length === 0) { return; }
+  /* Formato e call to action non sono un insieme chiuso come i canali:
+     il vocabolario arriva dalle impostazioni, ma capita di dover
+     scrivere qualcosa che in elenco non c'e'. Campo libero ed elenco
+     quindi convivono — ma devono darsi ragione a vicenda, altrimenti
+     l'uno dice "scrivi quello che vuoi" e l'altro "scegli fra questi".
 
-    let pop = pulsante.nextElementSibling;
-    if (!pop || !pop.classList.contains('elenco-pop')) {
+     Percio': quello che si scrive filtra l'elenco invece di essere
+     ignorato, e quando non corrisponde a niente il pannello lo dice,
+     invece di restare li' a proporre undici voci che non c'entrano. */
+
+  const senzaSegni = (s) => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const semplice = (s) => senzaSegni(s).toLowerCase().trim();
+
+  /** Il campo di testo del gruppo: la cella del formato contiene anche il pilastro. */
+  function campoDelGruppo(nodo) {
+    const gruppo = nodo.closest('.campo-con-elenco');
+    return gruppo ? gruppo.querySelector('[data-campo]') : null;
+  }
+
+  function vociDelCampo(campo) {
+    const bottone = campo.closest('.campo-con-elenco').querySelector('.apri-elenco');
+    return bottone ? (dati[bottone.dataset.elenco] || []) : [];
+  }
+
+  function pannelloDi(campo) {
+    const gruppo = campo.closest('.campo-con-elenco');
+    let pop = gruppo.querySelector('.elenco-pop');
+    if (!pop) {
       pop = document.createElement('div');
       pop.className = 'elenco-pop';
-      pulsante.after(pop);
+      gruppo.appendChild(pop);
+    }
+    return pop;
+  }
+
+  function elencoAperto(campo) {
+    const gruppo = campo ? campo.closest('.campo-con-elenco') : null;
+    return gruppo ? gruppo.querySelector('.elenco-pop.aperto') : null;
+  }
+
+  function evidenzia(pop, indice) {
+    const voci = [...pop.querySelectorAll('.voce-elenco')];
+    if (voci.length === 0) { return; }
+    const i = ((indice % voci.length) + voci.length) % voci.length;
+    voci.forEach(function (b, n) { b.classList.toggle('evidenziata', n === i); });
+    voci[i].scrollIntoView({ block: 'nearest' });
+  }
+
+  function indiceEvidenziato(pop) {
+    return [...pop.querySelectorAll('.voce-elenco')]
+      .findIndex(function (b) { return b.classList.contains('evidenziata'); });
+  }
+
+  /**
+   * Ridisegna le voci.
+   *
+   * `filtra` distingue i due momenti: appena si entra nel campo l'elenco
+   * si vede tutto, perche' il valore gia' scritto non e' una ricerca e
+   * mostrarne una voce sola impedirebbe di vedere le altre. Da quando si
+   * digita, invece, l'elenco segue quello che si sta scrivendo.
+   */
+  function disegnaElenco(campo, pop) {
+    const voci = vociDelCampo(campo);
+    const scritto = campo.textContent.trim();
+    const filtra = pop.dataset.filtra === '1' && scritto !== '';
+    const cerca = semplice(scritto);
+    const trovate = filtra ? voci.filter((v) => semplice(v).indexOf(cerca) !== -1) : voci;
+
+    pop.textContent = '';
+
+    if (trovate.length === 0) {
+      const nota = document.createElement('p');
+      nota.className = 'elenco-nota';
+      const forte = document.createElement('b');
+      forte.textContent = scritto;   // testo scritto da una persona: mai innerHTML
+      nota.append('Non è in elenco. Resta ', forte);
+      pop.appendChild(nota);
+      return;
     }
 
-    // dentro il gruppo, non nella cella: quella del formato contiene anche il pilastro
-    const campo = pulsante.closest('.campo-con-elenco').querySelector('[data-campo]');
-    const attuale = campo.textContent.trim();
-
-    pop.innerHTML = voci.map(function (v) {
-      const scelto = v === attuale ? ' scelto' : '';
-      return '<button type="button" class="voce-elenco' + scelto + '"></button>';
-    }).join('');
-
-    // textContent per ogni voce: sono testi scritti dall'utente
-    pop.querySelectorAll('.voce-elenco').forEach(function (b, i) {
-      b.textContent = voci[i];
-      b.dataset.valore = voci[i];
+    trovate.forEach(function (v) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'voce-elenco' + (v === scritto ? ' scelto' : '');
+      b.dataset.valore = v;
+      b.textContent = v;
+      pop.appendChild(b);
     });
 
+    /* Con l'elenco filtrato Invio prende la voce evidenziata: si scrive
+       "car", si vede evidenziato "Carosello", si preme Invio. Senza
+       filtro no: li' Invio deve continuare a confermare quello che si e'
+       scritto, come in ogni altro campo della tabella. */
+    if (filtra) { evidenzia(pop, 0); }
+  }
+
+  function apriElenco(campo, filtra) {
+    if (!campo || vociDelCampo(campo).length === 0) { return null; }
+    const pop = pannelloDi(campo);
+    pop.dataset.filtra = filtra ? '1' : '0';
+    disegnaElenco(campo, pop);
     chiudiPopover(pop);
     pop.classList.add('aperto');
-    window.posizionaPannello(pulsante, pop);
+    window.posizionaPannello(campo.closest('.campo-con-elenco'), pop);
+    return pop;
   }
+
+  /** Applica una voce scelta: la scrive, la salva, chiude il pannello. */
+  function scegliVoce(campo, valore) {
+    const riga = campo.closest('tr[data-post]');
+    const prima = campo.textContent.trim();
+
+    chiudiPopover();
+    if (valore === prima || !riga) { return; }
+
+    campo.textContent = valore;
+
+    /* Il salvataggio lo fa questa funzione. Senza allineare anche il
+       valore di partenza, uscendo poi dal campo focusout vedrebbe una
+       differenza e salverebbe una seconda volta la stessa cosa. */
+    valoreIniziale = valore;
+
+    salva(riga.dataset.post, campo.dataset.campo, valore, {
+      atteso: atteso(campo),
+      elemento: campo,
+      applica: function (v) { campo.textContent = v; },
+      ricorda: ricordaServer(campo),
+    });
+  }
+
+  const CAMPO_CON_ELENCO = '.campo-con-elenco [data-campo]';
+
+  // Entrare nel campo apre l'elenco: sono la stessa cosa, non due.
+  editor.addEventListener('focusin', function (e) {
+    if (e.target.matches(CAMPO_CON_ELENCO)) { apriElenco(e.target, false); }
+  });
+
+  // Da qui in poi l'elenco segue quello che si scrive.
+  editor.addEventListener('input', function (e) {
+    if (!e.target.matches(CAMPO_CON_ELENCO)) { return; }
+    const campo = e.target;
+    const pop = elencoAperto(campo) || apriElenco(campo, true);
+    if (!pop) { return; }
+    pop.dataset.filtra = '1';
+    disegnaElenco(campo, pop);
+    window.posizionaPannello(campo.closest('.campo-con-elenco'), pop);
+  });
+
+  /* Il clic su una voce non deve togliere il fuoco dal campo: focusout
+     salverebbe il testo digitato prima che la scelta venga applicata. */
+  editor.addEventListener('mousedown', function (e) {
+    if (e.target.closest('.elenco-pop .voce-elenco')) { e.preventDefault(); }
+  });
 
   /** Il posizionamento sta in app.js: lo usano canali e stato. */
   function posizionaPopover(cella, pop) {
@@ -456,33 +605,23 @@
       apriPopover(tags.closest('.ch-cell'));
       return;
     }
-    if (!e.target.closest('.ch-pop') && !e.target.closest('.stato-pop')) { chiudiPopover(); }
+    /* L'elenco di formato/CTA non rientra qui: si apre col fuoco nel
+       campo, e il clic che ce lo mette lo richiuderebbe all'istante. */
+    if (!e.target.closest('.ch-pop, .stato-pop, .elenco-pop, .campo-con-elenco')) { chiudiPopover(); }
 
     // Scelta rapida di formato / call to action
     const apriEl = e.target.closest('.apri-elenco');
     if (apriEl) {
-      apriElenco(apriEl);
+      // Il chevron mostra sempre l'elenco intero, anche a campo pieno:
+      // serve proprio a vedere le voci diverse da quella scritta.
+      const campo = campoDelGruppo(apriEl);
+      if (campo) { campo.focus(); apriElenco(campo, false); }
       return;
     }
 
     const voceElenco = e.target.closest('.elenco-pop .voce-elenco');
     if (voceElenco) {
-      const gruppo = voceElenco.closest('.con-elenco').querySelector('.campo-con-elenco');
-      const campo = gruppo.querySelector('[data-campo]');
-      const rigaEl = voceElenco.closest('tr[data-post]');
-      const prima = campo.textContent.trim();
-      const scelto = voceElenco.dataset.valore;
-
-      chiudiPopover();
-      if (scelto === prima) { return; }
-
-      campo.textContent = scelto;
-      salva(rigaEl.dataset.post, campo.dataset.campo, scelto, {
-        atteso: atteso(campo),
-        elemento: campo,
-        applica: function (v) { campo.textContent = v; },
-        ricorda: ricordaServer(campo),
-      });
+      scegliVoce(campoDelGruppo(voceElenco), voceElenco.dataset.valore);
       return;
     }
 

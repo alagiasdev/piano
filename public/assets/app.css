@@ -1097,6 +1097,14 @@ tr:hover .apri-elenco{opacity:.6}
 }
 .elenco-pop .voce-elenco:hover{background:var(--surface)}
 .elenco-pop .voce-elenco.scelto{background:var(--blue-soft);font-weight:700}
+/* Due segni diversi per due cose diverse: 'scelto' e' il valore salvato,
+   'evidenziata' e' dove si trova la tastiera in questo momento. */
+.elenco-pop .voce-elenco.evidenziata{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+.elenco-pop .voce-elenco.scelto.evidenziata{background:var(--blue-soft);box-shadow:inset 0 0 0 1px var(--blue)}
+/* Quando non corrisponde nessuna voce il pannello non resta muto: dice
+   che il testo scritto va bene lo stesso e verra' tenuto cosi'. */
+.elenco-nota{margin:0;padding:7px 9px;font-size:.8125rem;line-height:1.45;color:var(--ink-2);max-width:240px}
+.elenco-nota b{color:var(--ink);font-weight:700;overflow-wrap:anywhere}
 
 @media (hover:none){ .apri-elenco{opacity:.7} }
 

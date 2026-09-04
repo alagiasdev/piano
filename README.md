@@ -251,9 +251,24 @@ più per ognuno dei dodici post di un piano, sempre.
 
 ## Scelte rapide di formato e call to action
 
-Accanto ai campi «Formato» e «Call to action» dell'editor c'è una
-freccetta che apre un elenco di voci usate spesso: un clic invece di
-riscrivere ogni volta «Carosello» o «Scrivici in DM».
+I campi «Formato» e «Call to action» sono caselle di testo *e* elenco
+insieme. Tenerli separati era contraddittorio: il campo diceva «scrivi
+quello che vuoi» e l'elenco «scegli fra questi», e mentre si scriveva a
+mano restava lì a proporre voci che non c'entravano niente.
+
+Ora si danno ragione a vicenda:
+
+- entrare nel campo apre l'elenco **intero**, con la voce già salvata
+  segnata come scelta;
+- da quando si digita, quello che si scrive **filtra** l'elenco, senza
+  badare a maiuscole e accenti e cercando ovunque nella parola;
+- se non corrisponde nessuna voce il pannello lo dice — *«Non è in
+  elenco. Resta …»* — invece di restare muto o fuorviante;
+- frecce ↑ ↓ per scorrere, Invio per prendere la voce evidenziata, Esc
+  per chiudere l'elenco tenendo il testo scritto (un secondo Esc annulla
+  la modifica, come in ogni altro campo);
+- la freccetta a destra mostra sempre l'elenco intero, anche a campo
+  pieno: serve proprio a vedere le voci diverse da quella scritta.
 
 Non sono un insieme chiuso come i canali, e i campi restano a scrittura
 libera: il giorno che serve «Carosello 5 slide» lo si scrive e basta.

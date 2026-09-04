@@ -276,7 +276,7 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
                 <span class="campo-con-elenco">
                   <span class="formato" contenteditable data-campo="formato" data-server="<?= e($post['formato']) ?>" data-ph="formato"><?= e($post['formato']) ?></span>
                   <button type="button" class="apri-elenco" data-elenco="formati"
-                          title="Scegli fra i formati più usati">⌄</button>
+                          title="Scrivi per filtrare, oppure apri l&rsquo;elenco dei formati">⌄</button>
                 </span>
                 <div class="pilastro <?= ($post['pilastro'] ?? '') !== '' ? 'pieno' : '' ?>"
                      contenteditable data-campo="pilastro" data-server="<?= e($post['pilastro']) ?>" data-ph="pilastro"><?= e($post['pilastro']) ?></div>
@@ -286,7 +286,7 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
                 <span class="campo-con-elenco">
                   <span contenteditable data-campo="cta" data-server="<?= e($post['cta']) ?>" data-ph="CTA"><?= e($post['cta']) ?></span>
                   <button type="button" class="apri-elenco" data-elenco="cta"
-                          title="Scegli fra le call to action più usate">⌄</button>
+                          title="Scrivi per filtrare, oppure apri l&rsquo;elenco delle call to action">⌄</button>
                 </span>
               </td>
 
