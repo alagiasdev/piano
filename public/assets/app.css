@@ -998,6 +998,14 @@ tr.urgente{background:#FFFBF3}
   background:var(--ambra-soft);border:1px solid rgba(183,105,11,.28);
   border-radius:6px;color:var(--ink);
 }
+
+/* Come gli altri pannelli: fluttua accanto al campo. Dentro una colonna
+   larga centoventi pixel il messaggio andava a capo ogni due parole. */
+.conflitto-pannello{
+  position:fixed;z-index:210;top:0;left:0;
+  width:300px;max-width:calc(100vw - 16px);margin-top:0;
+  box-shadow:0 10px 30px rgba(24,34,48,.22);
+}
 .conflitto-chi{margin-bottom:6px;color:var(--ambra)}
 .conflitto-riga{margin:2px 0;display:flex;gap:6px;align-items:baseline}
 .conflitto-riga span{color:var(--ink-3);flex:0 0 auto;font-size:.75rem}

@@ -70,7 +70,8 @@ $oggi    = date('Y-m-d');
           </div>
 
           <button type="button" class="stato-pill <?= e($statoCre) ?> azione-stato-esecutivo"
-                  data-stato="<?= e($statoCre) ?>" title="Clic per passare allo stato successivo">
+                  data-stato="<?= e($statoCre) ?>" data-server="<?= e($statoCre) ?>"
+                  title="Scegli lo stato">
             <?= e(Stati::etichettaPost($statoCre)) ?>
           </button>
         </header>
@@ -96,6 +97,7 @@ $oggi    = date('Y-m-d');
           <div class="esecutivo-copy">
             <label for="copy-<?= $idPost ?>">Copy finale</label>
             <textarea id="copy-<?= $idPost ?>" class="campo-copy" data-campo="copy_finale" rows="7"
+                      data-server="<?= e($post['copy_finale']) ?>"
                       placeholder="Il testo esatto che verrà pubblicato: a capo, emoji e hashtag compresi."><?= e($post['copy_finale']) ?></textarea>
             <p class="aiuto">Si salva da solo. <span class="conta-caratteri"></span></p>
           </div>

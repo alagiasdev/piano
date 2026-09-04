@@ -84,6 +84,7 @@
       applica: extra.applica,
       ricorda: extra.ricorda,
       avvisa: mostra,
+      ancora: extra.elemento,
       riSalva: function (attesoNuovo) {
         salva(id, campo, mioValore, Object.assign({}, extra, { atteso: attesoNuovo }));
       },
@@ -112,15 +113,21 @@
   // Il valore all'ingresso, per salvare solo se e' cambiato davvero.
   let valoreIniziale = null;
 
-  // Il valore di partenza dei campi che non sono contenteditable
-  const precedenti = new WeakMap();
+  /*
+   * Il valore che il server ci ha mandato, campo per campo, in data-server.
+   *
+   * Prima lo si fotografava al focusin, ma con i selettori nativi di data e
+   * ora gli eventi di fuoco arrivano anche dopo che il valore e gia
+   * cambiato: il valore atteso finiva per essere quello nuovo, e il
+   * confronto scattava contro se stesso segnalando conflitti inesistenti.
+   * data-server invece cambia solo quando il server conferma un
+   * salvataggio, quindi e sempre quello vero.
+   */
+  const atteso = (el) => (el.dataset.server !== undefined ? el.dataset.server : undefined);
+  const ricordaServer = (el) => (v) => { el.dataset.server = Array.isArray(v) ? v.join(',') : v; };
 
   editor.addEventListener('focusin', function (e) {
-    if (e.target.isContentEditable) {
-      valoreIniziale = e.target.textContent;
-    } else if (e.target.matches('.campo-data, .campo-ora')) {
-      precedenti.set(e.target, e.target.value);
-    }
+    if (e.target.isContentEditable) { valoreIniziale = e.target.textContent; }
   });
 
   editor.addEventListener('focusout', function (e) {
@@ -135,9 +142,10 @@
     const riga = el.closest('tr[data-post]');
     if (riga) {
       salva(riga.dataset.post, el.dataset.campo, valore, {
-        atteso: partenza,
+        atteso: atteso(el),
         elemento: el,
         applica: function (v) { el.textContent = v; },
+        ricorda: ricordaServer(el),
       });
     }
   });
@@ -230,10 +238,10 @@
 
     if (el.classList.contains('campo-data') || el.classList.contains('campo-ora')) {
       salva(riga.dataset.post, el.dataset.campo, el.value, {
-        atteso: precedenti.has(el) ? precedenti.get(el) : undefined,
+        atteso: atteso(el),
         elemento: el,
         applica: function (v) { el.value = v; chiudiCampo(el); },
-        ricorda: function (v) { precedenti.set(el, v); },
+        ricorda: ricordaServer(el),
       });
       return;
     }
@@ -242,7 +250,7 @@
     if (el.matches('.ch-pop input')) {
       const cella = el.closest('.ch-cell');
       const scelti = Array.from(cella.querySelectorAll('.ch-pop input:checked')).map(function (i) { return i.value; });
-      const prima = precedenti.has(cella) ? precedenti.get(cella) : null;
+      const prima = cella.dataset.server;
 
       cella.dataset.ch = scelti.join(',');
       disegnaTag(cella);
@@ -250,14 +258,14 @@
       posizionaPopover(cella, cella.querySelector('.ch-pop'));
 
       salva(riga.dataset.post, 'canali', scelti, {
-        atteso: prima === null ? undefined : prima,
+        atteso: prima === undefined ? undefined : prima.split(',').filter(Boolean),
         elemento: cella,
         applica: function (v) {
           cella.dataset.ch = (v || []).join(',');
           disegnaTag(cella);
           chiudiPopover();
         },
-        ricorda: function (v) { precedenti.set(cella, v); },
+        ricorda: ricordaServer(cella),
       });
     }
   });
@@ -289,12 +297,6 @@
     chiudiPopover(pop);
     pop.classList.add('aperto');
     posizionaPopover(cella, pop);
-
-    // Il pannello resta aperto per piu spunte di fila: il valore di
-    // partenza va fotografato ora, non a ogni casella.
-    if (!precedenti.has(cella)) {
-      precedenti.set(cella, scelti.slice());
-    }
   }
 
   /* ------------------------------------------------ pannello dello stato -- */
@@ -426,9 +428,10 @@
 
       campo.textContent = scelto;
       salva(rigaEl.dataset.post, campo.dataset.campo, scelto, {
-        atteso: prima,
+        atteso: atteso(campo),
         elemento: campo,
         applica: function (v) { campo.textContent = v; },
+        ricorda: ricordaServer(campo),
       });
       return;
     }
@@ -454,9 +457,10 @@
 
       disegnaStato(pulsante, scelto);
       salva(rigaStato.dataset.post, 'stato', scelto, {
-        atteso: attuale,
+        atteso: atteso(pulsante),
         elemento: pulsante,
         applica: function (codice) { disegnaStato(pulsante, codice); },
+        ricorda: ricordaServer(pulsante),
       });
       return;
     }

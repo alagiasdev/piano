@@ -147,6 +147,13 @@
     });
 
     contenitore.appendChild(box);
+
+    // Come gli altri pannelli: fluttua accanto al campo invece di stare
+    // schiacciato dentro una colonna larga centoventi pixel.
+    if (opzioni.ancora) {
+      box.classList.add('conflitto-pannello');
+      window.posizionaPannello(opzioni.ancora, box);
+    }
   };
 
   // Gli avvisi di conferma spariscono da soli; quelli di errore restano.

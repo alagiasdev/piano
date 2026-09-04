@@ -62,6 +62,7 @@
           applica: extra.applica,
           ricorda: extra.ricorda,
           avvisa: mostra,
+          ancora: extra.elemento,
           riSalva: function (attesoNuovo) {
             salva(id, campo, valore, Object.assign({}, extra, { atteso: attesoNuovo }));
           },
@@ -92,13 +93,12 @@
   /* --------------------------------------------------------- copy -- */
 
   const timer = new WeakMap();
-  const precedenti = new WeakMap();
 
-  // Il testo di partenza si fotografa quando si entra nel campo
-  radice.addEventListener('focusin', function (e) {
-    const campo = e.target.closest('.campo-copy');
-    if (campo && !precedenti.has(campo)) { precedenti.set(campo, campo.value); }
-  });
+  /* Il valore atteso arriva da data-server, aggiornato solo quando il
+     server conferma: fotografarlo agli eventi di fuoco dava conflitti
+     inesistenti, perche il fuoco puo arrivare a valore gia cambiato. */
+  const atteso = (el) => (el.dataset.server !== undefined ? el.dataset.server : undefined);
+  const ricordaServer = (el) => (v) => { el.dataset.server = v; };
 
   radice.addEventListener('input', function (e) {
     const campo = e.target.closest('.campo-copy');
@@ -110,10 +110,10 @@
     clearTimeout(timer.get(campo));
     timer.set(campo, setTimeout(function () {
       salva(campo.closest('[data-post]').dataset.post, 'copy_finale', campo.value, {
-        atteso: precedenti.has(campo) ? precedenti.get(campo) : undefined,
+        atteso: atteso(campo),
         elemento: campo,
         applica: function (v) { campo.value = v; contaCaratteri(campo); },
-        ricorda: function (v) { precedenti.set(campo, v); },
+        ricorda: ricordaServer(campo),
       });
     }, 700));
   });
@@ -179,15 +179,16 @@
 
     disegnaStato(bottone, scelto);
     salva(bottone.closest('[data-post]').dataset.post, 'stato_esecutivo', scelto, {
-      atteso: prima,
+      atteso: atteso(bottone),
       elemento: bottone,
       applica: function (codice) { disegnaStato(bottone, codice); },
+      ricorda: ricordaServer(bottone),
     });
   });
 
   // Clic fuori, Esc, scorrimento: il pannello si chiude
   document.addEventListener('click', function (e) {
-    if (!e.target.closest('.creativo-testa')) { chiudiStato(); }
+    if (!e.target.closest('.esecutivo-testa')) { chiudiStato(); }
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') { chiudiStato(); }

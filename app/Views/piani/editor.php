@@ -235,24 +235,27 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
                   <?= e(giorno_it($post['data'])) ?>
                 </button>
                 <?php if ($post['data'] === $oggi && $primo): ?><span class="segno-oggi">oggi</span><?php endif; ?>
-                <input type="date" class="campo-data" data-campo="data" value="<?= e($post['data']) ?>" hidden>
+                <input type="date" class="campo-data" data-campo="data"
+                       data-server="<?= e($post['data']) ?>" value="<?= e($post['data']) ?>" hidden>
 
                 <button type="button" class="valore valore-ora <?= $ora === '' ? 'vuoto' : '' ?>" title="Cambia l'ora">
                   <?= $ora === '' ? 'ora' : e($ora) ?>
                 </button>
-                <input type="time" class="campo-ora" data-campo="ora" value="<?= e($ora) ?>" hidden>
+                <input type="time" class="campo-ora" data-campo="ora"
+                       data-server="<?= e($ora) ?>" value="<?= e($ora) ?>" hidden>
               </td>
 
-              <td class="ch-cell" data-etichetta="Canali" data-ch="<?= e(implode(',', $post['canali'])) ?>">
+              <td class="ch-cell" data-etichetta="Canali" data-ch="<?= e(implode(',', $post['canali'])) ?>"
+                  data-server="<?= e(implode(',', $post['canali'])) ?>">
                 <span class="tags"><?= Canali::tag($post['canali']) ?: '<span class="scegli">Scegli canale</span>' ?></span>
                 <div class="ch-pop"></div>
               </td>
 
               <td data-etichetta="Contenuto">
-                <div class="copy" contenteditable data-campo="contenuto" data-ph="Descrizione del contenuto"><?= e($post['contenuto']) ?></div>
+                <div class="copy" contenteditable data-campo="contenuto" data-server="<?= e($post['contenuto']) ?>" data-ph="Descrizione del contenuto"><?= e($post['contenuto']) ?></div>
                 <div class="visual <?= ($post['visual_url'] ?? '') !== '' ? 'pieno' : '' ?>">
                   <span class="visual-etichetta">Visual</span>
-                  <span contenteditable data-campo="visual_url" data-ph="incolla un link"><?= e($post['visual_url']) ?></span>
+                  <span contenteditable data-campo="visual_url" data-server="<?= e($post['visual_url']) ?>" data-ph="incolla un link"><?= e($post['visual_url']) ?></span>
                   <?php if (($post['visual_url'] ?? '') !== '' && filter_var($post['visual_url'], FILTER_VALIDATE_URL)): ?>
                     <a href="<?= e($post['visual_url']) ?>" target="_blank" rel="noopener noreferrer">apri</a>
                   <?php endif; ?>
@@ -265,17 +268,17 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
                 <?php /* La freccetta sta attaccata al valore, come nello stato:
                          un clic apre l'elenco, il testo resta modificabile. */ ?>
                 <span class="campo-con-elenco">
-                  <span class="formato" contenteditable data-campo="formato" data-ph="formato"><?= e($post['formato']) ?></span>
+                  <span class="formato" contenteditable data-campo="formato" data-server="<?= e($post['formato']) ?>" data-ph="formato"><?= e($post['formato']) ?></span>
                   <button type="button" class="apri-elenco" data-elenco="formati"
                           title="Scegli fra i formati più usati">⌄</button>
                 </span>
                 <div class="pilastro <?= ($post['pilastro'] ?? '') !== '' ? 'pieno' : '' ?>"
-                     contenteditable data-campo="pilastro" data-ph="pilastro"><?= e($post['pilastro']) ?></div>
+                     contenteditable data-campo="pilastro" data-server="<?= e($post['pilastro']) ?>" data-ph="pilastro"><?= e($post['pilastro']) ?></div>
               </td>
 
               <td class="cta con-elenco" data-etichetta="Call to action">
                 <span class="campo-con-elenco">
-                  <span contenteditable data-campo="cta" data-ph="CTA"><?= e($post['cta']) ?></span>
+                  <span contenteditable data-campo="cta" data-server="<?= e($post['cta']) ?>" data-ph="CTA"><?= e($post['cta']) ?></span>
                   <button type="button" class="apri-elenco" data-elenco="cta"
                           title="Scegli fra le call to action più usate">⌄</button>
                 </span>
@@ -283,6 +286,7 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
 
               <td class="stato-cella" data-etichetta="Stato">
                 <button type="button" class="stato-pill <?= e($post['stato']) ?> azione-stato" data-stato="<?= e($post['stato']) ?>"
+                        data-server="<?= e($post['stato']) ?>"
                         title="Clic per passare allo stato successivo"><?= e(Stati::etichettaPost((string) $post['stato'])) ?></button>
                 <?php if (($post['commento_cliente'] ?? '') !== ''): ?>
                   <p class="commento">
