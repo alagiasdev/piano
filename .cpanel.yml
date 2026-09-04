@@ -6,8 +6,8 @@
 #
 # DEPLOYPATH è la cartella dell'applicazione, NON quella pubblica: il
 # document root del sottodominio deve puntare a $DEPLOYPATH/public,
-# cioè /home/vpsalagias/apps/piano/public. Se puntasse un livello più su,
-# il file .env con le credenziali del database sarebbe scaricabile.
+# cioè /home/vpsalagias/piano.alagias.com/public. Se puntasse un livello
+# più su, il file .env con le credenziali del database sarebbe scaricabile.
 #
 # Nota importante: public/uploads/ non viene mai toccato. Ci stanno i
 # loghi dei clienti e le immagini dei post, che sono dati e non codice:
@@ -15,7 +15,7 @@
 
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/vpsalagias/apps/piano
+    - export DEPLOYPATH=/home/vpsalagias/piano.alagias.com
 
     - /bin/mkdir -p $DEPLOYPATH/app
     - /bin/mkdir -p $DEPLOYPATH/database
