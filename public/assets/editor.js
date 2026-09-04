@@ -331,15 +331,54 @@
     window.posizionaPannello(pulsante, pop);
   }
 
+  /* --------------------------------- scelta rapida di formato e CTA -- */
+
+  /**
+   * Formato e call to action non sono un insieme chiuso come i canali:
+   * il pannello serve a pescare in fretta il valore che si usa quasi
+   * sempre, ma il campo resta a scrittura libera. Gli elenchi arrivano
+   * dalle impostazioni, così il vocabolario è dello studio.
+   */
+  function apriElenco(pulsante) {
+    const voci = dati[pulsante.dataset.elenco] || [];
+    if (voci.length === 0) { return; }
+
+    let pop = pulsante.nextElementSibling;
+    if (!pop || !pop.classList.contains('elenco-pop')) {
+      pop = document.createElement('div');
+      pop.className = 'elenco-pop';
+      pulsante.after(pop);
+    }
+
+    const campo = pulsante.closest('td').querySelector('[data-campo]');
+    const attuale = campo.textContent.trim();
+
+    pop.innerHTML = voci.map(function (v) {
+      const scelto = v === attuale ? ' scelto' : '';
+      return '<button type="button" class="voce-elenco' + scelto + '"></button>';
+    }).join('');
+
+    // textContent per ogni voce: sono testi scritti dall'utente
+    pop.querySelectorAll('.voce-elenco').forEach(function (b, i) {
+      b.textContent = voci[i];
+      b.dataset.valore = voci[i];
+    });
+
+    chiudiPopover(pop);
+    pop.classList.add('aperto');
+    window.posizionaPannello(pulsante, pop);
+  }
+
   /** Il posizionamento sta in app.js: lo usano canali e stato. */
   function posizionaPopover(cella, pop) {
     window.posizionaPannello(cella.querySelector('.tags'), pop);
   }
 
   function chiudiPopover(tranne) {
-    document.querySelectorAll('.ch-pop.aperto, .stato-pop.aperto').forEach(function (p) {
-      if (p !== tranne) { p.classList.remove('aperto'); }
-    });
+    document.querySelectorAll('.ch-pop.aperto, .stato-pop.aperto, .elenco-pop.aperto')
+      .forEach(function (p) {
+        if (p !== tranne) { p.classList.remove('aperto'); }
+      });
   }
 
   // Da fisso il pannello non segue lo scorrimento: meglio chiuderlo.
@@ -365,6 +404,33 @@
       return;
     }
     if (!e.target.closest('.ch-pop') && !e.target.closest('.stato-pop')) { chiudiPopover(); }
+
+    // Scelta rapida di formato / call to action
+    const apriEl = e.target.closest('.apri-elenco');
+    if (apriEl) {
+      apriElenco(apriEl);
+      return;
+    }
+
+    const voceElenco = e.target.closest('.elenco-pop .voce-elenco');
+    if (voceElenco) {
+      const cella = voceElenco.closest('td');
+      const campo = cella.querySelector('[data-campo]');
+      const rigaEl = cella.closest('tr[data-post]');
+      const prima = campo.textContent.trim();
+      const scelto = voceElenco.dataset.valore;
+
+      chiudiPopover();
+      if (scelto === prima) { return; }
+
+      campo.textContent = scelto;
+      salva(rigaEl.dataset.post, campo.dataset.campo, scelto, {
+        atteso: prima,
+        elemento: campo,
+        applica: function (v) { campo.textContent = v; },
+      });
+      return;
+    }
 
     // Stato: si apre il pannello con i quattro stati
     const pulsanteStato = e.target.closest('.azione-stato');
@@ -421,9 +487,11 @@
     }
   });
 
-  // Clic fuori: si chiude qualunque pannello aperto, canali o stato
+  // Clic fuori: si chiude qualunque pannello aperto
   document.addEventListener('click', function (e) {
-    if (!e.target.closest('.ch-cell') && !e.target.closest('.stato-cella')) {
+    if (!e.target.closest('.ch-cell')
+      && !e.target.closest('.stato-cella')
+      && !e.target.closest('.con-elenco')) {
       chiudiPopover();
     }
   });

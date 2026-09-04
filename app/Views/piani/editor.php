@@ -2,6 +2,7 @@
 
 use App\Core\Auth;
 use App\Support\Canali;
+use App\Support\Elenchi;
 use App\Support\Fasi;
 use App\Support\Stati;
 
@@ -258,13 +259,21 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
                 </div>
               </td>
 
-              <td class="fmt" data-etichetta="Formato">
+              <?php /* La freccetta pesca da un elenco di uso frequente; il
+                       campo resta comunque a scrittura libera. */ ?>
+              <td class="fmt con-elenco" data-etichetta="Formato">
                 <div class="formato" contenteditable data-campo="formato" data-ph="formato"><?= e($post['formato']) ?></div>
+                <button type="button" class="apri-elenco" data-elenco="formati"
+                        title="Scegli fra i formati più usati">⌄</button>
                 <div class="pilastro <?= ($post['pilastro'] ?? '') !== '' ? 'pieno' : '' ?>"
                      contenteditable data-campo="pilastro" data-ph="pilastro"><?= e($post['pilastro']) ?></div>
               </td>
 
-              <td class="cta" data-etichetta="Call to action" contenteditable data-campo="cta" data-ph="CTA"><?= e($post['cta']) ?></td>
+              <td class="cta con-elenco" data-etichetta="Call to action">
+                <div contenteditable data-campo="cta" data-ph="CTA"><?= e($post['cta']) ?></div>
+                <button type="button" class="apri-elenco" data-elenco="cta"
+                        title="Scegli fra le call to action più usate">⌄</button>
+              </td>
 
               <td class="stato-cella" data-etichetta="Stato">
                 <button type="button" class="stato-pill <?= e($post['stato']) ?> azione-stato" data-stato="<?= e($post['stato']) ?>"
@@ -312,7 +321,9 @@ $datiEditor = [
         static fn (string $codice) => ['codice' => $codice, 'etichetta' => Canali::etichetta($codice)],
         Canali::codici()
     ),
-    'ciclo'  => array_map(
+    'formati' => Elenchi::formati(),
+    'cta'     => Elenchi::cta(),
+    'ciclo'   => array_map(
         static fn (string $stato) => ['codice' => $stato, 'etichetta' => Stati::etichettaPost($stato)],
         Stati::CICLO_POST
     ),

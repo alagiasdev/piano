@@ -106,8 +106,8 @@ app/
                  Installazione
   Models/        Utente, Cliente, Piano, Post, Media, Impostazione
   Views/         layout admin / pubblico / stampa, una cartella per sezione
-  Support/       Canali, Stati, Fasi, Periodo, Upload, Ics, DatiPiano,
-                 Diagnostica, Migratore, helpers
+  Support/       Canali, Stati, Fasi, Elenchi, Periodo, Upload, Ics,
+                 DatiPiano, Diagnostica, Migratore, helpers
 database/
   migrations/    file SQL numerati
   migrate.php    applica le migrazioni non ancora eseguite
@@ -228,6 +228,17 @@ GIF fino a 5 MB, salvate in `public/uploads/post/{id}/`.
 Eliminando un post, un piano o un cliente i file delle immagini vengono tolti
 dal disco: le foreign key portano via le righe, non i file, quindi la pulizia è
 esplicita nei modelli.
+
+## Scelte rapide di formato e call to action
+
+Accanto ai campi «Formato» e «Call to action» dell'editor c'è una
+freccetta che apre un elenco di voci usate spesso: un clic invece di
+riscrivere ogni volta «Carosello» o «Scrivici in DM».
+
+Non sono un insieme chiuso come i canali, e i campi restano a scrittura
+libera: il giorno che serve «Carosello 5 slide» lo si scrive e basta.
+L'elenco si personalizza da **Impostazioni → Scelte rapide dell'editor**,
+una voce per riga; svuotando la casella si torna alle voci di partenza.
 
 ## Due persone sullo stesso piano
 

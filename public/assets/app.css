@@ -1035,3 +1035,31 @@ tr.urgente{background:#FFFBF3}
 }
 /* Dentro il pannello la freccetta non serve: quelle sono scelte, non menu */
 .stato-pop .stato-pill::after{content:none}
+
+/* Scelta rapida di formato e call to action: stesso pannello dello stato,
+   ma il campo resta a scrittura libera — sono elenchi aperti, non chiusi. */
+.con-elenco{position:relative}
+.apri-elenco{
+  position:absolute;top:5px;right:4px;
+  font:inherit;font-size:.75rem;line-height:1;cursor:pointer;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink-3);
+  border-radius:4px;padding:2px 5px;opacity:0;transition:opacity .15s;
+}
+tr:hover .apri-elenco{opacity:.7}
+.apri-elenco:hover{opacity:1;border-color:var(--blue);color:var(--blue)}
+
+.elenco-pop{
+  position:fixed;z-index:200;top:0;left:0;min-width:180px;
+  max-height:min(320px, calc(100vh - 16px));overflow-y:auto;
+  background:var(--paper);border:1px solid var(--line);border-radius:8px;
+  box-shadow:0 10px 30px rgba(24,34,48,.18);padding:5px;display:none;
+}
+.elenco-pop.aperto{display:block}
+.elenco-pop .voce-elenco{
+  display:block;width:100%;text-align:left;font:inherit;font-size:.8125rem;
+  border:0;background:none;padding:6px 8px;border-radius:5px;cursor:pointer;color:var(--ink);
+}
+.elenco-pop .voce-elenco:hover{background:var(--surface)}
+.elenco-pop .voce-elenco.scelto{background:var(--blue-soft);font-weight:700}
+
+@media (hover:none){ .apri-elenco{opacity:.7} }

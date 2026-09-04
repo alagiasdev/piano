@@ -14,7 +14,11 @@ use App\Models\Utente;
 final class ImpostazioniController extends Controller
 {
     /** Chiavi gestite da questa schermata. */
-    private const CHIAVI = ['nome_studio', 'firma', 'nota_standard'];
+    private const CHIAVI = [
+        'nome_studio', 'firma', 'nota_standard',
+        // Suggerimenti per i campi formato e call to action dell'editor
+        'elenco_formati', 'elenco_cta',
+    ];
 
     public function index(): void
     {

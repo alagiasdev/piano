@@ -1,6 +1,7 @@
 <?php
 
 use App\Core\Auth;
+use App\Support\Elenchi;
 
 /** @var array<string,string> $valori */
 /** @var array<string,mixed> $utente */
@@ -48,6 +49,28 @@ $amministratore = Auth::amministratore();
         Usata in cima alla pagina di approvazione quando il piano non ha
         una nota sua. Tipicamente tempi di consegna e regole di feedback.
       </p>
+    </div>
+
+    <hr class="separatore">
+
+    <h2>Scelte rapide dell'editor</h2>
+    <p class="sfumato piccolo">
+      Le voci che compaiono cliccando la freccetta accanto a «Formato» e
+      «Call to action». Una per riga. I campi restano comunque a scrittura
+      libera: l'elenco serve solo a fare prima.
+      Lasciando vuota una casella si torna alle voci di partenza.
+    </p>
+
+    <div class="campo">
+      <label for="elenco_formati">Formati</label>
+      <textarea id="elenco_formati" name="elenco_formati" rows="6"
+                placeholder="<?= e(Elenchi::formatiPredefiniti()) ?>"><?= e($valori['elenco_formati'] ?? '') ?></textarea>
+    </div>
+
+    <div class="campo">
+      <label for="elenco_cta">Call to action</label>
+      <textarea id="elenco_cta" name="elenco_cta" rows="6"
+                placeholder="<?= e(Elenchi::ctaPredefinite()) ?>"><?= e($valori['elenco_cta'] ?? '') ?></textarea>
     </div>
 
     <button type="submit" class="btn btn-primario">Salva impostazioni</button>
