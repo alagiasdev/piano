@@ -417,6 +417,9 @@
     window.posizionaPannello(cella.querySelector('.tags'), pop);
   }
 
+  /** I pannelli a comparsa dell'editor, in un posto solo. */
+  const PANNELLI = '.ch-pop, .stato-pop, .elenco-pop, .giorni-pop';
+
   function chiudiPopover(tranne) {
     document.querySelectorAll('.ch-pop.aperto, .stato-pop.aperto, .elenco-pop.aperto, .giorni-pop.aperto')
       .forEach(function (p) {
@@ -424,8 +427,15 @@
       });
   }
 
-  // Da fisso il pannello non segue lo scorrimento: meglio chiuderlo.
-  window.addEventListener('scroll', function () { chiudiPopover(); }, true);
+  /* Da fisso il pannello non segue lo scorrimento della pagina: meglio
+     chiuderlo. Ma lo scorrimento DENTRO un pannello non e' un motivo per
+     chiuderlo, e l'ascolto e' in cattura, quindi arriva qui anche quello.
+     Succedeva con l'elenco dei formati: si provava a scendere fino alle
+     ultime voci e il pannello spariva. */
+  window.addEventListener('scroll', function (e) {
+    if (e.target instanceof Element && e.target.closest(PANNELLI)) { return; }
+    chiudiPopover();
+  }, true);
   window.addEventListener('resize', function () { chiudiPopover(); });
 
   /* ------------------------------------------------------------- clic -- */

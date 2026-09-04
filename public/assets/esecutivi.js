@@ -193,7 +193,11 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') { chiudiStato(); }
   });
-  window.addEventListener('scroll', function () { chiudiStato(); }, true);
+  window.addEventListener('scroll', function (e) {
+    // Non se si sta scorrendo dentro il pannello stesso: vedi editor.js
+    if (e.target instanceof Element && e.target.closest('.stato-pop')) { return; }
+    chiudiStato();
+  }, true);
 
   /* ------------------------------------------------------- immagini -- */
 

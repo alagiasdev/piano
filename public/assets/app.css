@@ -1079,9 +1079,14 @@ tr:hover .campo-con-elenco{background:rgba(24,34,48,.03)}
 tr:hover .apri-elenco{opacity:.6}
 .apri-elenco:hover,.apri-elenco:focus-visible{opacity:1;color:var(--blue)}
 
+/* Come il pannello dei canali e quello dello stato: l'elenco si vede
+   tutto intero, senza barra propria. Il tetto di 320px lo costringeva a
+   scorrere dentro di se, e scorrere dentro il pannello lo faceva
+   chiudere. Resta solo il limite dell'altezza della finestra, che su uno
+   schermo basso e' l'unica alternativa a tagliare via le ultime voci. */
 .elenco-pop{
   position:fixed;z-index:200;top:0;left:0;min-width:180px;
-  max-height:min(320px, calc(100vh - 16px));overflow-y:auto;
+  max-height:calc(100vh - 16px);overflow-y:auto;
   background:var(--paper);border:1px solid var(--line);border-radius:8px;
   box-shadow:0 10px 30px rgba(24,34,48,.18);padding:5px;display:none;
 }
