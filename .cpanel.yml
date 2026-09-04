@@ -1,0 +1,37 @@
+---
+# Deploy automatico di cPanel (Git Version Control).
+#
+# cPanel clona il repository in ~/repositories/piano e, premendo "Deploy
+# HEAD Commit", esegue queste istruzioni dentro quella copia.
+#
+# DA CAMBIARE: la riga DEPLOYPATH qui sotto, con il tuo utente cPanel.
+# Il percorso è la cartella dell'applicazione, NON quella pubblica: il
+# document root del sottodominio punterà a $DEPLOYPATH/public.
+#
+# Nota importante: public/uploads/ non viene mai toccato. Ci stanno i
+# loghi dei clienti e le immagini dei post, che sono dati e non codice:
+# un deploy non deve poterli cancellare.
+
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/UTENTE_CPANEL/apps/piano
+
+    - /bin/mkdir -p $DEPLOYPATH/app
+    - /bin/mkdir -p $DEPLOYPATH/database
+    - /bin/mkdir -p $DEPLOYPATH/public/assets
+    - /bin/mkdir -p $DEPLOYPATH/public/uploads
+
+    # Codice dell'applicazione
+    - /bin/cp -R app/. $DEPLOYPATH/app/
+    - /bin/cp -R database/. $DEPLOYPATH/database/
+    - /bin/cp composer.json $DEPLOYPATH/composer.json
+
+    # Parte pubblica, file per file: così uploads/ resta dov'è
+    - /bin/cp -R public/assets/. $DEPLOYPATH/public/assets/
+    - /bin/cp public/index.php $DEPLOYPATH/public/index.php
+    - /bin/cp public/.htaccess $DEPLOYPATH/public/.htaccess
+    - /bin/cp public/uploads/.htaccess $DEPLOYPATH/public/uploads/.htaccess
+
+    # Riferimento per chi installa da zero
+    - /bin/cp .env.example $DEPLOYPATH/.env.example
+    - /bin/cp README.md $DEPLOYPATH/README.md
