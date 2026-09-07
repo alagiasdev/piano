@@ -148,6 +148,9 @@ final class PianiController extends Controller
             'piano'     => $piano,
             'settimane' => Periodo::settimane((string) $piano['data_inizio'], (string) $piano['data_fine'], $post),
             'errori'    => $this->errori(),
+            // Sette colonne dense: qui il contenitore stretto non serve a
+            // leggere meglio, serve solo a far andare a capo le colonne.
+            'largo'     => true,
         ]);
     }
 

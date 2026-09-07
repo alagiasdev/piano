@@ -249,6 +249,32 @@ di riga da 64 a 43 px. Quel che resta è dettato da contenuto vero.
 della settimana e la data andava corretta subito dopo: due passaggi in
 più per ognuno dei dodici post di un piano, sempre.
 
+## Larghezza della tabella del piano
+
+La pagina del piano usa un contenitore da **1440px** invece dei 1180 di
+tutto il resto (`.contenitore.largo`). Millecentottanta è la larghezza
+giusta per leggere un testo; non lo è per una tabella di sette colonne
+dense, dove diventa solo il motivo per cui le colonne vanno a capo.
+
+Ci sono arrivato misurando, e la prima risposta era sbagliata: avevo
+provato a togliere spazio alle colonne con dell'avanzo per darlo ai
+canali. Non ce n'era abbastanza — servivano 53px, l'avanzo vero di
+**tutte** le altre colonne messe insieme era 48 — e stringendo la
+colonna del giorno le righe sono peggiorate, da 42–63px a 58–68.
+Lo spazio non era dentro la tabella: era fuori dal contenitore.
+
+Con il contenitore largo, canali a 170px e call to action a 186px, sul
+piano di esempio le righe passano da 42–63px a **42px tutte**, e la
+pagina da 1437 a 1281.
+
+**Sotto i 1280px le due colonne tornano strette** (`@media
+(max-width:1279px)`): lì il contenitore largo non c'è comunque, e due
+colonne generose sarebbero pagate dal contenuto. Misurato a 1024px:
+con le colonne larghe le righe vanno da 161 a 1014 pixel, con quelle
+strette da 63 a 100. Sotto la soglia le pastiglie dei canali si
+reincolonnano, cioè fanno esattamente quello che facevano prima:
+il guadagno è sopra i 1280, e sotto non ci perde nessuno.
+
 ## Scelte rapide di formato e call to action
 
 I campi «Formato» e «Call to action» sono caselle di testo *e* elenco

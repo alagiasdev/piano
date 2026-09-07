@@ -70,7 +70,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
 .uscita{display:flex;align-items:center;gap:12px}
 .chi{font-size:.8125rem;color:var(--ink-3);font-weight:600}
 
+/* 1180px e' la larghezza giusta per leggere. Non lo e' per la tabella
+   del piano, che ha sette colonne dense: li dentro lo spazio che manca
+   non si trova togliendolo a un'altra colonna -- l'ho misurato, non ce
+   n'e' abbastanza -- ma c'e' tutto fuori dal contenitore. */
 .contenitore{max-width:1180px;margin:0 auto;padding:28px 24px 64px}
+.contenitore.largo{max-width:1440px}
 
 .pie{
   max-width:1180px;margin:0 auto;padding:0 24px 32px;
@@ -307,14 +312,28 @@ tr.spento td{opacity:.6}
 .cal td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
 .cal tr:last-child td{border-bottom:0}
 .cal col.c-day{width:128px}
-.cal col.c-ch{width:112px}
+.cal col.c-ch{width:170px}   /* misurato: due pastiglie affiancate ne chiedono 165 */
 .cal col.c-fmt{width:112px}
-.cal col.c-cta{width:122px}
+.cal col.c-cta{width:186px}  /* «Iscriviti alla newsletter» ne chiede 179 */
 .cal col.c-st{width:120px}
 /* Larga da tenere tutti e quattro i comandi (su, giu, duplica, elimina)
    sulla stessa riga: la tabella ha overflow:hidden e quello che sborda
    diventa irraggiungibile, non solo invisibile. */
 .cal col.c-x{width:120px}
+
+/* Sotto i 1280px il contenitore largo non c'e' piu' -- lo schermo non
+   glielo consente -- e allora due colonne generose diventano un lusso
+   pagato dal contenuto, che si stringe e va a capo molte volte.
+
+   Misurato su questo piano: a 1024px con le colonne larghe le righe
+   vanno da 161 a 1014 pixel, con quelle strette da 63 a 100. Quindi
+   sotto la soglia si torna alle strette: le pastiglie dei canali si
+   reincolonnano, ma e' esattamente quello che facevano prima, e nessuno
+   ci perde niente rispetto a oggi. */
+@media (max-width:1279px){
+  .cal col.c-ch{width:112px}
+  .cal col.c-cta{width:122px}
+}
 
 /* I post dello stesso giorno stanno in un blocco: la linea piu marcata
    segna dove comincia un giorno nuovo. E' anche la chiave per capire il

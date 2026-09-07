@@ -45,7 +45,7 @@ $utente = Auth::utente();
   <?php endif; ?>
 </header>
 
-<main class="contenitore">
+<main class="contenitore<?= !empty($largo) ? ' largo' : '' ?>">
   <?php foreach ($flash ?? [] as $messaggio): ?>
     <p class="avviso <?= e($messaggio['tipo']) ?>"><?= e($messaggio['testo']) ?></p>
   <?php endforeach; ?>
