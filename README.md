@@ -6,6 +6,10 @@ approvare tramite un link pubblico, senza login per il cliente.
 PHP senza framework, MVC scritto a mano, MySQL/MariaDB via PDO, un solo file
 CSS e JS vanilla. Nessun build step, nessuna dipendenza obbligatoria.
 
+Questo file spiega **come è fatto**: installazione, endpoint, decisioni di
+implementazione. Per **cosa fa** visto da chi lo usa, cosa manca di proposito e
+quali sviluppi varrebbe la pena valutare, vedi **[`SVILUPPI.md`](SVILUPPI.md)**.
+
 ## Requisiti
 
 - PHP 8.2 o superiore (testato su 8.2 in locale, previsto 8.4 in produzione)

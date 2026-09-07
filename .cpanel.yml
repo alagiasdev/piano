@@ -45,3 +45,4 @@ deployment:
     # Riferimento per chi installa da zero
     - /bin/cp .env.example $DEPLOYPATH/.env.example
     - /bin/cp README.md $DEPLOYPATH/README.md
+    - /bin/cp SVILUPPI.md $DEPLOYPATH/SVILUPPI.md
