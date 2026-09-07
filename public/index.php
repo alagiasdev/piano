@@ -100,6 +100,7 @@ $router->post('/utenti/{id}/elimina', [UtentiController::class, 'elimina']);
 
 /* ------------------------------------- verifica installazione (admin) -- */
 $router->get('/verifica', [VerificaController::class, 'index']);
+$router->post('/verifica/migra', [VerificaController::class, 'migra']);
 
 /* ---------------------------------------------------------- impostazioni -- */
 $router->get('/impostazioni', [ImpostazioniController::class, 'index']);

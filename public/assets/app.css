@@ -222,6 +222,10 @@ input[type=file]{
 .elenco-spunte .spunta{display:flex;align-items:flex-start}
 .elenco-spunte .spunta input{margin-top:2px;flex:0 0 auto}
 
+/* I file di migrazione in sospeso sulla pagina di verifica. */
+.elenco-migrazioni{margin:10px 0 14px;padding-left:20px;font-size:.8125rem;line-height:1.7}
+.elenco-migrazioni code{font-size:.8125rem}
+
 .barra-azioni{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px}
 
 .scheda.pericolo{

@@ -40,9 +40,10 @@ Su Windows gli eseguibili di XAMPP sono `C:\xampp\php\php.exe` e
    `DB_*` e `APP_URL` (con `https://`, senza slash finale). `APP_URL` serve a
    costruire i link pubblici da mandare ai clienti: se è sbagliato, i link
    sono sbagliati.
-4. **Migrazioni**: da *Terminal*, `php database/migrate.php`. Se il terminale
-   non è disponibile, importa a mano da phpMyAdmin i file di
-   `database/migrations/` in ordine numerico.
+4. **Migrazioni**: da *Terminal*, `php database/migrate.php`. Senza Terminal,
+   entra come amministratore e apri **`/verifica`**: quando ci sono
+   migrazioni in sospeso compare il pulsante **Applica le migrazioni**
+   (vedi *Aggiornare il database dopo un deploy*).
 5. **Utente**: `php database/crea-admin.php ...` da Terminal, oppure inserisci
    a mano una riga in `utenti` con un hash generato da
    `php -r 'echo password_hash("...", PASSWORD_DEFAULT);'`.
@@ -93,6 +94,33 @@ Due controlli valgono da soli il resto:
 
 Poiché esce con codice 1 in caso di errore, si può incatenare a un comando di
 deploy: `php database/migrate.php && php database/verifica.php`.
+
+## Aggiornare il database dopo un deploy
+
+Quando un deploy porta con sé una migrazione, il codice è aggiornato ma il
+database no: le pagine che usano le tabelle nuove danno errore finché non
+la applichi. Su questo hosting non ci sono né SSH né Terminal, quindi:
+
+1. lancia **Deploy HEAD Commit** da *Git Version Control*;
+2. entra come amministratore e apri **`/verifica`**;
+3. se c'è qualcosa in sospeso trovi in cima un riquadro con l'elenco dei
+   file e il pulsante **Applica le migrazioni**;
+4. premilo, e ricontrolla che la riga «Migrazioni» dica *nessuna in sospeso*.
+
+Il pulsante compare **solo** quando serve davvero, ed esegue lo stesso
+`App\Support\Migratore` di `database/migrate.php`: stesso codice, stesso
+registro, nessuna seconda logica che possa divergere. Le migrazioni già
+applicate vengono saltate, quindi premerlo due volte non fa danni.
+
+Prima esisteva solo la pagina `/installazione`, che sa migrare ma si chiude
+per sempre appena esiste un account: ogni migrazione successiva restava da
+incollare a mano in phpMyAdmin, ricordandosi anche di aggiungere la riga
+nella tabella `migrazioni` — che è il pezzo che si dimentica, e che al giro
+dopo fa ritentare una migrazione già fatta.
+
+Se preferisci farlo a mano da phpMyAdmin, servono **due** cose e non una:
+il contenuto del file `.sql`, e poi
+`INSERT INTO migrazioni (file) VALUES ('nome-del-file.sql');`
 
 ## Struttura
 

@@ -2,6 +2,7 @@
 /** @var array<int,array<string,string>> $esiti */
 /** @var int $errori */
 /** @var int $avvisi */
+/** @var array<int,string> $inSospeso */
 
 $etichette = [
     'ok'     => 'ok',
@@ -31,6 +32,38 @@ $etichette = [
   </p>
 <?php else: ?>
   <p class="avviso fisso">Tutto a posto: l'installazione è pronta.</p>
+<?php endif; ?>
+
+<?php /* Il pulsante c'è solo quando c'è davvero qualcosa da applicare: su
+         questo hosting non ci sono né SSH né Terminal, e ogni migrazione
+         dopo la prima installazione restava da incollare a mano in
+         phpMyAdmin — ricordandosi anche la riga nel registro, che è il
+         pezzo che si dimentica e che fa ripartire tutto da capo. */ ?>
+<?php if ($inSospeso !== []): ?>
+  <div class="scheda" style="border-color:rgba(183,105,11,.35)">
+    <h2 style="margin-top:0">
+      <?= count($inSospeso) === 1 ? 'Una migrazione da applicare' : count($inSospeso) . ' migrazioni da applicare' ?>
+    </h2>
+    <p class="sfumato piccolo">
+      Il database non è ancora aggiornato al codice appena messo online.
+      Finché non le applichi, le pagine che usano le tabelle nuove daranno errore.
+    </p>
+    <ul class="elenco-migrazioni">
+      <?php foreach ($inSospeso as $file): ?>
+        <li><code><?= e($file) ?></code></li>
+      <?php endforeach; ?>
+    </ul>
+    <form method="post" action="<?= e(url('/verifica/migra')) ?>"
+          data-conferma="Applicare le migrazioni al database? Fai prima un backup se il piano contiene dati veri.">
+      <?= csrf_field() ?>
+      <button type="submit" class="btn btn-primario">Applica le migrazioni</button>
+    </form>
+    <p class="aiuto">
+      Fa esattamente quello che farebbe <code>php database/migrate.php</code>:
+      stesso codice, stesso registro. Le migrazioni già applicate vengono saltate,
+      quindi premerlo due volte non fa danni.
+    </p>
+  </div>
 <?php endif; ?>
 
 <div class="scheda" style="padding:0;overflow:hidden">
