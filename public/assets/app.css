@@ -207,6 +207,16 @@ input[type=file]{
 }
 .spunta input{accent-color:var(--blue);width:16px;height:16px}
 
+/* Elenco dei clienti assegnabili a un collaboratore. A colonne, perche'
+   con venti clienti una lista verticale diventa una pagina di scorrimento
+   e non si vede piu' quali sono spuntati. */
+.elenco-spunte{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:8px 16px;margin-top:8px;
+}
+.elenco-spunte .spunta{display:flex;align-items:flex-start}
+.elenco-spunte .spunta input{margin-top:2px;flex:0 0 auto}
+
 .barra-azioni{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:4px}
 
 .scheda.pericolo{

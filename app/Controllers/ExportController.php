@@ -26,7 +26,7 @@ final class ExportController extends Controller
     {
         $this->richiediLogin();
 
-        $piano = Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $piano = $this->piano((int) $id);
         $dati  = DatiPiano::perVista($piano, '', true, true);
 
         $html = View::cattura('pubblico/piano', $dati, 'layouts/stampa');
@@ -43,7 +43,7 @@ final class ExportController extends Controller
     {
         $this->richiediLogin();
 
-        $piano = Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $piano = $this->piano((int) $id);
         $post  = Post::perPiano((int) $id);
 
         $dominio = parse_url((string) \App\Core\Config::get('APP_URL', 'piano.local'), PHP_URL_HOST) ?: 'piano.local';

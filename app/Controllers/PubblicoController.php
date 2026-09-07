@@ -30,12 +30,19 @@ final class PubblicoController extends Controller
         $this->rendiPiano($piano, $token, false);
     }
 
-    /** Stessa pagina vista dall'admin, con le azioni disattivate. */
+    /*
+     * Stessa pagina vista dall'admin, con le azioni disattivate.
+     *
+     * Sta in questo controller ma NON e' una pagina pubblica: chiede il
+     * login, quindi passa dal caricatore che autorizza, come tutte le
+     * altre dell'area riservata. Le pagine col token qui sotto no: li'
+     * non c'e' nessun utente da autorizzare, e non deve essercene.
+     */
     public function anteprima(string $id): void
     {
         $this->richiediLogin();
 
-        $piano = Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $piano = $this->piano((int) $id);
 
         $this->rendiPiano($piano, (string) ($piano['token_pubblico'] ?? ''), true);
     }

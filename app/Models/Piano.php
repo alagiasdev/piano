@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Core\Db;
+use App\Support\Ambito;
 use App\Support\Fasi;
 use App\Support\Periodo;
 use App\Support\Stati;
@@ -31,12 +32,18 @@ final class Piano
         $sql = 'SELECT p.*, c.nome AS cliente_nome, c.logo_path AS cliente_logo, ' . self::CONTEGGI . '
                 FROM piani p
                 JOIN clienti c ON c.id = p.cliente_id';
+        $sql .= ' WHERE 1 = 1';
         $parametri = [];
 
         if ($clienteId !== null) {
-            $sql .= ' WHERE p.cliente_id = ?';
+            $sql .= ' AND p.cliente_id = ?';
             $parametri[] = $clienteId;
         }
+
+        // I piani dei clienti non assegnati non compaiono nemmeno in elenco
+        [$filtro, $suoi] = Ambito::filtroSql('p.cliente_id');
+        $sql .= $filtro;
+        $parametri = array_merge($parametri, $suoi);
 
         $sql .= ' ORDER BY p.data_inizio DESC, p.id DESC';
 

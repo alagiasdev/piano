@@ -20,13 +20,21 @@ final class ClientiController extends Controller
 
         $this->vista('clienti/index', [
             'titolo'  => 'Clienti',
-            'clienti' => Cliente::elenco(),
+            'clienti' => Cliente::elenco(),   // gia filtrato sull'ambito, vedi il modello
         ]);
     }
 
+    /*
+     * Creare un cliente e' cosa da amministratore, come eliminarlo.
+     * Da quando i collaboratori vedono solo i clienti assegnati, uno
+     * che ne creasse uno nuovo si troverebbe davanti a un cliente che
+     * non puo' vedere: o glielo si assegna d'ufficio, o si ammette che
+     * prendere un cliente e' una decisione di chi gestisce lo studio.
+     * La seconda e' piu' onesta.
+     */
     public function nuovo(): void
     {
-        $this->richiediLogin();
+        $this->richiediAmministratore();
 
         $this->vista('clienti/form', [
             'titolo'  => 'Nuovo cliente',
@@ -37,7 +45,7 @@ final class ClientiController extends Controller
 
     public function crea(): void
     {
-        $this->richiediLogin();
+        $this->richiediAmministratore();
         $this->verificaCsrf();
 
         $dati = $this->leggiModulo();
@@ -65,7 +73,7 @@ final class ClientiController extends Controller
     {
         $this->richiediLogin();
 
-        $cliente = Cliente::trova((int) $id) ?? $this->nonTrovato('Cliente non trovato.');
+        $cliente = $this->cliente((int) $id);
 
         $this->vista('clienti/form', [
             'titolo'  => $cliente['nome'],
@@ -80,7 +88,7 @@ final class ClientiController extends Controller
         $this->verificaCsrf();
 
         $idCliente = (int) $id;
-        $cliente = Cliente::trova($idCliente) ?? $this->nonTrovato('Cliente non trovato.');
+        $cliente = $this->cliente($idCliente);
 
         $dati = $this->leggiModulo();
         $errori = $this->valida($dati);
@@ -124,7 +132,7 @@ final class ClientiController extends Controller
         $this->richiediAmministratore();
         $this->verificaCsrf();
 
-        $cliente = Cliente::trova((int) $id) ?? $this->nonTrovato('Cliente non trovato.');
+        $cliente = $this->cliente((int) $id);
 
         Upload::elimina($cliente['logo_path']);
         Cliente::elimina((int) $id);

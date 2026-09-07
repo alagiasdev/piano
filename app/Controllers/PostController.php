@@ -27,10 +27,7 @@ final class PostController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        $piano = Piano::trova((int) $pianoId);
-        if ($piano === null) {
-            Response::jsonError('Piano non trovato.', 404);
-        }
+        $piano = $this->piano((int) $pianoId);
 
         $dati = $this->request->json();
         $data = (string) ($dati['data'] ?? '');
@@ -53,10 +50,7 @@ final class PostController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        $post = Post::conPiano((int) $id);
-        if ($post === null) {
-            Response::jsonError('Post non trovato.', 404);
-        }
+        $post = $this->post((int) $id);
 
         $dati  = $this->request->json();
         $campo = (string) ($dati['campo'] ?? '');
@@ -105,10 +99,7 @@ final class PostController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        $post = Post::conPiano((int) $id);
-        if ($post === null) {
-            Response::jsonError('Post non trovato.', 404);
-        }
+        $post = $this->post((int) $id);
 
         Post::elimina((int) $id);
 
@@ -120,10 +111,7 @@ final class PostController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        $post = Post::conPiano((int) $id);
-        if ($post === null) {
-            Response::jsonError('Post non trovato.', 404);
-        }
+        $post = $this->post((int) $id);
 
         Post::duplica((int) $id);
 
@@ -135,10 +123,7 @@ final class PostController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        $post = Post::conPiano((int) $id);
-        if ($post === null) {
-            Response::jsonError('Post non trovato.', 404);
-        }
+        $post = $this->post((int) $id);
 
         $direzione = ($this->request->json()['direzione'] ?? '') === 'su' ? 'su' : 'giu';
         $spostato  = Post::sposta((int) $id, $direzione);
@@ -149,7 +134,7 @@ final class PostController extends Controller
     /** Conteggi da aggiornare nella barra in alto dopo ogni modifica. */
     private function riepilogoPiano(int $pianoId): array
     {
-        $piano = Piano::trova($pianoId);
+        $piano = $this->piano($pianoId);
 
         return [
             'stato'      => $piano['stato'] ?? '',

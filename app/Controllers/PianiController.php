@@ -12,6 +12,7 @@ use App\Models\Media;
 use App\Models\Piano;
 use App\Models\Post;
 use App\Support\Fasi;
+use App\Support\Ambito;
 use App\Support\Periodo;
 use RuntimeException;
 
@@ -34,7 +35,7 @@ final class PianiController extends Controller
     {
         $this->richiediLogin();
 
-        $cliente = Cliente::trova((int) $clienteId) ?? $this->nonTrovato('Cliente non trovato.');
+        $cliente = $this->cliente((int) $clienteId);
 
         $this->vista('piani/index', [
             'titolo'  => 'Piani di ' . $cliente['nome'],
@@ -96,7 +97,11 @@ final class PianiController extends Controller
         }
 
         $errori = [];
-        if (Cliente::trova($clienteId) === null) {
+        /* Anche il cliente va verificato sull'ambito: la tendina mostra
+           solo i clienti assegnati, ma un modulo si manomette in due
+           secondi. Stesso messaggio in entrambi i casi, cosi non si
+           scopre dall'errore se un cliente esiste o no. */
+        if (Cliente::trova($clienteId) === null || !Ambito::permette($clienteId)) {
             $errori['cliente_id'] = 'Scegli un cliente.';
         }
         if ($titolo === '') {
@@ -135,7 +140,7 @@ final class PianiController extends Controller
     {
         $this->richiediLogin();
 
-        $piano = Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $piano = $this->piano((int) $id);
         $post  = Post::perPiano((int) $id);
 
         $this->vista('piani/editor', [
@@ -157,7 +162,7 @@ final class PianiController extends Controller
     {
         $this->richiediLogin();
 
-        $piano = Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $piano = $this->piano((int) $id);
         $post  = Post::perPiano((int) $id);
 
         $this->vista('piani/esecutivi', [
@@ -174,7 +179,7 @@ final class PianiController extends Controller
     {
         $this->richiediLogin();
 
-        $piano = Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $piano = $this->piano((int) $id);
         $post  = Post::perPiano((int) $id);
 
         // Un post per giorno, raggruppato per data
@@ -196,7 +201,7 @@ final class PianiController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        $piano = Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $piano = $this->piano((int) $id);
 
         $titolo = trim((string) $this->request->input('titolo', ''));
         $inizio = (string) $this->request->input('data_inizio', '');
@@ -233,17 +238,14 @@ final class PianiController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $this->piano((int) $id);
 
         $stato = (string) $this->request->input('stato', '');
         Piano::cambiaStato((int) $id, $stato);
 
-        $piano = Piano::trova((int) $id);
-        if ($stato === 'inviato' && $piano !== null) {
-            Session::flash('Piano segnato come inviato. Copia il link e mandalo al cliente.');
-        } else {
-            Session::flash('Stato aggiornato.');
-        }
+        Session::flash($stato === 'inviato'
+            ? 'Piano segnato come inviato. Copia il link e mandalo al cliente.'
+            : 'Stato aggiornato.');
 
         Response::redirect('/piani/' . (int) $id);
     }
@@ -260,7 +262,7 @@ final class PianiController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        $piano = Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $piano = $this->piano((int) $id);
 
         $fase = Fasi::normalizza($this->request->input('fase'));
         Piano::cambiaFase((int) $id, $fase);
@@ -298,7 +300,7 @@ final class PianiController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $this->piano((int) $id);
         Piano::rigeneraToken((int) $id);
 
         Session::flash('Nuovo link generato: quello precedente non funziona più.');
@@ -314,7 +316,7 @@ final class PianiController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        $piano = Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $piano = $this->piano((int) $id);
 
         $modo      = $this->request->input('modo') === 'mesi' ? 'mesi' : 'settimane';
         $quantita  = (int) ($this->request->input('quantita') ?? ($modo === 'mesi' ? 1 : 4));
@@ -356,7 +358,7 @@ final class PianiController extends Controller
         $this->richiediAmministratore();
         $this->verificaCsrf();
 
-        $piano = Piano::trova((int) $id) ?? $this->nonTrovato('Piano non trovato.');
+        $piano = $this->piano((int) $id);
         Piano::elimina((int) $id);
 
         Session::flash('Piano eliminato.');

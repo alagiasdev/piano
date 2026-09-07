@@ -1,17 +1,25 @@
 <?php
 
+use App\Core\Auth;
 use App\Support\Canali;
 
 /** @var array<int,array<string,mixed>> $clienti */
 ?>
 <div class="intestazione-pagina">
   <h1>Clienti</h1>
-  <a class="btn btn-primario" style="margin-top:0" href="<?= e(url('/clienti/nuovo')) ?>">Nuovo cliente</a>
+  <?php /* Prendere un cliente e' decisione di chi gestisce lo studio: il
+           pulsante non c'e' per i collaboratori, e la rotta lo rifiuta
+           comunque. Nascondere senza chiudere sarebbe finta sicurezza. */ ?>
+  <?php if (Auth::amministratore()): ?>
+    <a class="btn btn-primario" style="margin-top:0" href="<?= e(url('/clienti/nuovo')) ?>">Nuovo cliente</a>
+  <?php endif; ?>
 </div>
 
 <div class="scheda" style="padding:0;overflow:hidden">
 <?php if ($clienti === []): ?>
-  <p class="vuoto">Nessun cliente. Comincia da <a href="<?= e(url('/clienti/nuovo')) ?>">Nuovo cliente</a>.</p>
+  <p class="vuoto"><?= Auth::amministratore()
+    ? 'Nessun cliente. Comincia da <a href="' . e(url('/clienti/nuovo')) . '">Nuovo cliente</a>.'
+    : 'Nessun cliente assegnato a te. Chiedi a chi gestisce il gestionale.' ?></p>
 <?php else: ?>
   <table class="tabella">
     <thead>

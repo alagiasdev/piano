@@ -3,6 +3,8 @@
 /** @var int $ioSono */
 /** @var array<string,string> $errori */
 /** @var array<string,mixed> $vecchi */
+/** @var array<int,array<string,mixed>> $clienti */
+/** @var array<int,int> $assegnati */
 
 $sonoIo = (int) $utente['id'] === $ioSono;
 $v = static fn (string $campo, mixed $default) => $vecchi[$campo] ?? $default;
@@ -72,6 +74,46 @@ $v = static fn (string $campo, mixed $default) => $vecchi[$campo] ?? $default;
       </p>
     </div>
   <?php endif; ?>
+
+  <hr class="separatore">
+
+  <?php /* Le assegnazioni si mostrano anche agli amministratori, che tanto
+           vedono tutto: così restano scritte, e il giorno che uno torna
+           collaboratore non si ritrova di colpo senza nessun cliente. */ ?>
+  <div class="campo">
+    <label>Clienti su cui può lavorare</label>
+
+    <?php if ((int) $utente['amministratore'] === 1): ?>
+      <p class="aiuto">
+        È un amministratore: vede <strong>tutti</strong> i clienti, presenti e futuri,
+        qualunque cosa sia spuntata qui sotto. Le spunte tornano a contare se un
+        giorno lo riporti a collaboratore.
+      </p>
+    <?php elseif ($clienti === []): ?>
+      <p class="aiuto">Non c'è ancora nessun cliente da assegnare.</p>
+    <?php else: ?>
+      <p class="aiuto">
+        Vede solo questi, e solo i loro piani. Senza nessuna spunta non vede niente.
+      </p>
+    <?php endif; ?>
+
+    <?php if ($clienti !== []): ?>
+      <div class="elenco-spunte">
+        <?php foreach ($clienti as $unCliente): ?>
+          <label class="spunta">
+            <input type="checkbox" name="clienti[]" value="<?= (int) $unCliente['id'] ?>"
+              <?= in_array((int) $unCliente['id'], $assegnati, true) ? 'checked' : '' ?>>
+            <span>
+              <?= e($unCliente['nome']) ?>
+              <?php if ((int) $unCliente['attivo'] !== 1): ?>
+                <span class="sfumato piccolo">(non attivo)</span>
+              <?php endif; ?>
+            </span>
+          </label>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
+  </div>
 
   <button type="submit" class="btn btn-primario">Salva</button>
 </form>

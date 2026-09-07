@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Core\Db;
+use App\Support\Ambito;
 use App\Support\Canali;
 
 final class Cliente
@@ -17,15 +18,22 @@ final class Cliente
      */
     public static function elenco(bool $soloAttivi = false): array
     {
+        /* Il filtro sta qui e non nel controller: un elenco di clienti
+           che dimentica l'ambito mostra nomi di clienti altrui, e i punti
+           da cui si chiede questo elenco sono piu' di uno. Meglio che sia
+           il modello a non saperli restituire. */
+        [$filtro, $parametri] = Ambito::filtroSql('c.id');
+
         $sql = 'SELECT c.*,
                        (SELECT COUNT(*) FROM piani p WHERE p.cliente_id = c.id) AS piani_totali
-                FROM clienti c';
+                FROM clienti c
+                WHERE 1 = 1';
         if ($soloAttivi) {
-            $sql .= ' WHERE c.attivo = 1';
+            $sql .= ' AND c.attivo = 1';
         }
-        $sql .= ' ORDER BY c.attivo DESC, c.nome';
+        $sql .= $filtro . ' ORDER BY c.attivo DESC, c.nome';
 
-        return array_map([self::class, 'espandi'], Db::all($sql));
+        return array_map([self::class, 'espandi'], Db::all($sql, $parametri));
     }
 
     public static function trova(int $id): ?array

@@ -56,6 +56,26 @@ final class Media
         return Db::first('SELECT * FROM post_media WHERE id = ?', [$id]);
     }
 
+    /**
+     * L'immagine con il cliente a cui appartiene, per i controlli di
+     * accesso: dal media al cliente si passa per il post e per il piano,
+     * e farlo con tre query separate nel controller e' il modo migliore
+     * per saltarne una.
+     *
+     * @return array<string,mixed>|null
+     */
+    public static function conCliente(int $id): ?array
+    {
+        return Db::first(
+            'SELECT m.*, s.piano_id, p.cliente_id
+             FROM post_media m
+             JOIN post s ON s.id = m.post_id
+             JOIN piani p ON p.id = s.piano_id
+             WHERE m.id = ?',
+            [$id]
+        );
+    }
+
     public static function conta(int $postId): int
     {
         return (int) Db::value('SELECT COUNT(*) FROM post_media WHERE post_id = ?', [$postId]);

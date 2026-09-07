@@ -25,10 +25,7 @@ final class MediaController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        $post = Post::trova((int) $idPost);
-        if ($post === null) {
-            Response::jsonError('Post non trovato.', 404);
-        }
+        $post = $this->post((int) $idPost);
 
         $file = $this->fileCaricati();
         if ($file === []) {
@@ -68,9 +65,7 @@ final class MediaController extends Controller
         $this->richiediLogin();
         $this->verificaCsrf();
 
-        if (Media::trova((int) $id) === null) {
-            Response::jsonError('Immagine non trovata.', 404);
-        }
+        $this->media((int) $id);
 
         Media::elimina((int) $id);
 
@@ -81,6 +76,11 @@ final class MediaController extends Controller
     {
         $this->richiediLogin();
         $this->verificaCsrf();
+
+        /* Qui non si controllava niente, nemmeno che l'immagine
+           esistesse: bastava un id per riordinare le immagini di
+           chiunque. Il caricatore chiude il buco. */
+        $this->media((int) $id);
 
         $direzione = ($this->request->json()['direzione'] ?? '') === 'su' ? 'su' : 'giu';
         $spostata = Media::sposta((int) $id, $direzione);

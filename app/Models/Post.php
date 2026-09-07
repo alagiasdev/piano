@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Core\Conflitto;
 use App\Core\Db;
+use App\Support\Ambito;
 use App\Support\Canali;
 use App\Support\Fasi;
 use App\Support\Stati;
@@ -382,6 +383,11 @@ final class Post
      */
     public static function prossimi(int $giorni = 7): array
     {
+        /* La dashboard aggrega su tutti i clienti: senza filtro un
+           collaboratore leggerebbe proprio qui i contenuti dei clienti
+           che non gli sono stati assegnati. */
+        [$filtro, $suoi] = Ambito::filtroSql('p.cliente_id');
+
         return array_map(
             [self::class, 'espandi'],
             Db::all(
@@ -390,9 +396,10 @@ final class Post
                  JOIN piani p ON p.id = s.piano_id
                  JOIN clienti c ON c.id = p.cliente_id
                  WHERE c.attivo = 1
-                   AND s.data BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL ? DAY)
+                   AND s.data BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL ? DAY)'
+                 . $filtro . '
                  ORDER BY s.data, s.ordine, s.id',
-                [$giorni]
+                array_merge([$giorni], $suoi)
             )
         );
     }
@@ -405,6 +412,8 @@ final class Post
      */
     public static function novita(int $limite = 12): array
     {
+        [$filtro, $suoi] = Ambito::filtroSql('p.cliente_id');
+
         return array_map(
             [self::class, 'espandi'],
             Db::all(
@@ -413,9 +422,11 @@ final class Post
                  FROM post s
                  JOIN piani p ON p.id = s.piano_id
                  JOIN clienti c ON c.id = p.cliente_id
-                 WHERE s.approvato_il IS NOT NULL OR s.commento_il IS NOT NULL
+                 WHERE (s.approvato_il IS NOT NULL OR s.commento_il IS NOT NULL)'
+                 . $filtro . '
                  ORDER BY quando DESC
-                 LIMIT ' . max(1, min(50, $limite))
+                 LIMIT ' . max(1, min(50, $limite)),
+                $suoi
             )
         );
     }

@@ -383,11 +383,51 @@ togliere l'accesso a una sola persona. I livelli sono due, senza sfumature.
 
 | | Amministratore | Collaboratore |
 |---|---|---|
-| Clienti, piani, post, export | sì | sì |
+| Quali clienti vede | tutti | **solo quelli assegnati** |
+| Piani, post, export | di tutti | solo dei clienti assegnati |
+| Prendere un cliente nuovo | sì | no |
+| Modificare un cliente | sì | sì, se assegnato |
 | Eliminare clienti e piani | sì | no |
 | Impostazioni dello studio | sì | no |
 | Gestire i collaboratori | sì | no |
 | Cambiare la propria password | sì | sì |
+
+### Clienti assegnati
+
+Un collaboratore vede solo i clienti che gli sono stati assegnati, dal suo
+modulo in **Collaboratori**. Non è un filtro sull'interfaccia: i piani, i post
+e le immagini degli altri clienti rispondono **403**, e non compaiono nemmeno
+negli elenchi né nella dashboard.
+
+La distinzione più delicata sta in `App\Support\Ambito`, ed è scritta lì
+apposta perché sbagliarla è un buco e non un difetto qualsiasi:
+
+- `null` = **nessun limite**, li vede tutti (amministratore);
+- `[]` = **nessun cliente**, non vede niente (collaboratore senza assegnazioni).
+
+Si somigliano da vicino e vogliono dire il contrario, quindi non si scrive mai
+`if (!$clienti)`: si confronta sempre con `=== null`. Gli amministratori non
+stanno in `utente_cliente`, altrimenti bisognerebbe aggiornarli a ogni nuovo
+cliente e prima o poi dimenticarsene.
+
+Il controllo non è sparso per i controller: sta in quattro metodi della classe
+base — `cliente()`, `piano()`, `post()`, `media()` — che **caricano e
+autorizzano insieme**. Un controllo separato da aggiungere in trenta punti è un
+controllo che prima o poi si dimentica in uno; se invece l'unico modo di avere
+in mano un piano è `$this->piano($id)`, il permesso non si può saltare senza
+saltare anche il caricamento. Nei controller dell'area riservata non si chiamano
+più `Cliente::trova`, `Piano::trova`, `Post::conPiano` e `Media::trova`: fanno
+eccezione le pagine col token, dove non c'è nessun utente da autorizzare.
+
+`php prove/permessi.php` percorre ogni rotta che porta un id come collaboratore
+ristretto e pretende 403 su tutto quello che è di un altro cliente: cinquanta
+controlli, che si creano e si cancellano i dati da soli. Va eseguita su
+un'installazione di prova, non in produzione.
+
+**Passando alla versione con i clienti assegnati non cambia niente per
+nessuno:** la migrazione assegna a ogni collaboratore esistente tutti i clienti
+di allora. Le assegnazioni si stringono dopo, con calma. Il contrario — partire
+da zero — avrebbe chiuso fuori tutti al primo accesso, senza preavviso.
 
 Le eliminazioni sono riservate perché cancellano a cascata: un cliente porta
 via tutti i suoi piani e post, senza recupero. Chi non collabora più va

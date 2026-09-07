@@ -26,7 +26,9 @@ $fraTreGiorni = date('Y-m-d', strtotime('+3 days'));
     <h2 class="testa-scheda">Clienti e piano del periodo</h2>
 
     <?php if ($righe === []): ?>
-      <p class="vuoto">Nessun cliente attivo. Comincia da <a href="<?= e(url('/clienti/nuovo')) ?>">Nuovo cliente</a>.</p>
+      <p class="vuoto"><?= Auth::amministratore()
+        ? 'Nessun cliente attivo. Comincia da <a href="' . e(url('/clienti/nuovo')) . '">Nuovo cliente</a>.'
+        : 'Nessun cliente assegnato a te. Chiedi a chi gestisce il gestionale.' ?></p>
     <?php else: ?>
       <table class="tabella">
         <tbody>

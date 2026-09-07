@@ -8,7 +8,9 @@ use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Response;
 use App\Core\Session;
+use App\Models\Cliente;
 use App\Models\Utente;
+use App\Support\Ambito;
 
 /**
  * Gestione dei collaboratori. Tutto riservato agli amministratori.
@@ -56,8 +58,19 @@ final class UtentiController extends Controller
             $this->tornaIndietro($errori, $dati);
         }
 
-        Utente::crea($dati);
-        Session::flash('Collaboratore aggiunto: comunicagli email e password.');
+        $idNuovo = Utente::crea($dati);
+
+        /* Un collaboratore nuovo non ha ancora nessun cliente, quindi entra
+           e non vede niente. Meglio dirlo qui e portarcelo direttamente,
+           che lasciarlo scoprire a lui con una dashboard vuota. */
+        if (!$dati['amministratore']) {
+            Session::flash('Collaboratore aggiunto: comunicagli email e password. '
+                . 'Ora scegli su quali clienti può lavorare: finché non ne assegni nessuno non vede niente.');
+
+            Response::redirect('/utenti/' . $idNuovo);
+        }
+
+        Session::flash('Amministratore aggiunto: comunicagli email e password. Vede tutti i clienti.');
 
         Response::redirect('/utenti');
     }
@@ -69,11 +82,15 @@ final class UtentiController extends Controller
         $utente = Utente::trova((int) $id) ?? $this->nonTrovato('Utente non trovato.');
 
         $this->vista('utenti/form', [
-            'titolo' => $utente['nome'],
-            'utente' => $utente,
-            'ioSono' => (int) Auth::utente()['id'],
-            'errori' => $this->errori(),
-            'vecchi' => $this->vecchiValori(),
+            'titolo'    => $utente['nome'],
+            'utente'    => $utente,
+            'ioSono'    => (int) Auth::utente()['id'],
+            'errori'    => $this->errori(),
+            'vecchi'    => $this->vecchiValori(),
+            // Qui ci arriva solo un amministratore, quindi Cliente::elenco()
+            // non e' ristretto e li mostra davvero tutti.
+            'clienti'   => Cliente::elenco(),
+            'assegnati' => Ambito::assegnati((int) $utente['id']),
         ]);
     }
 
@@ -108,6 +125,12 @@ final class UtentiController extends Controller
         }
 
         Utente::aggiorna($idUtente, $dati);
+
+        /* Le assegnazioni si salvano sempre, anche per un amministratore
+           che tanto vede tutto: cosi il giorno che lo si riporta a
+           collaboratore non si ritrova di colpo senza nessun cliente. */
+        Ambito::assegna($idUtente, $this->request->inputArray('clienti'));
+
         Session::flash('Modifiche salvate.');
 
         Response::redirect('/utenti/' . $idUtente);
