@@ -350,6 +350,13 @@ tr:not(:hover) .valore-ora.vuoto{opacity:0}
 [contenteditable]:focus{outline:2px solid var(--blue);background:var(--blue-soft)}
 [contenteditable]:empty::before{content:attr(data-ph);color:var(--ink-3);font-weight:400}
 
+/* Contenuto e pilastro sulla stessa riga: il pilastro sta in coda,
+   allineato a destra, e forma una colonnina leggibile senza costare
+   una riga di altezza. Il flex sta su questo div e non sul <td>:
+   un td flex esce dal layout di tabella (vedi editor.php). */
+.contenuto-riga{display:flex;align-items:flex-start;gap:10px}
+.contenuto-riga .copy{flex:1 1 auto;min-width:0}
+.contenuto-riga .pilastro{flex:0 0 auto}
 .copy{line-height:1.45;min-height:1.4em}
 .fmt{font-size:.8125rem;color:var(--ink-2)}
 .cta{font-size:.8125rem;color:var(--ink-2)}
@@ -783,6 +790,10 @@ tr.urgente{background:#FFFBF3}
   .cal tr.oggi{box-shadow:inset 3px 0 0 var(--blue)}
 
   /* Giorno, badge "oggi" e ora sulla stessa riga */
+  /* Su schermo stretto il contenuto ha gia' poco spazio: il pilastro
+     va sotto invece di rubargliene. */
+  .contenuto-riga{flex-wrap:wrap}
+  .contenuto-riga .copy{flex:1 1 100%}
   .cal td.day{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px}
   .valore{margin-left:0;padding:2px 4px}
   .valore-ora{margin-top:0}

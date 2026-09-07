@@ -287,7 +287,22 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
               </td>
 
               <td data-etichetta="Contenuto">
-                <div class="copy" contenteditable data-campo="contenuto" data-server="<?= e($post['contenuto']) ?>" data-ph="Descrizione del contenuto"><?= e($post['contenuto']) ?></div>
+                <?php /* Il pilastro sta qui e non nella colonna Formato: è una
+                         classificazione dell'idea, non del formato, e là stava
+                         incolonnato sotto il formato in centododici pixel di
+                         larghezza, facendo alta tutta la riga. Qui sta in fondo
+                         alla stessa riga del contenuto, che di spazio ne ha.
+
+                         Il contenitore è un div interno e non il <td> reso flex:
+                         un td flex esce dal layout di tabella e il suo bordo
+                         inferiore finisce disegnato all'altezza del contenuto
+                         invece che della riga, cioè una linea grigia spezzata a
+                         metà. È già successo una volta. */ ?>
+                <div class="contenuto-riga">
+                  <div class="copy" contenteditable data-campo="contenuto" data-server="<?= e($post['contenuto']) ?>" data-ph="Descrizione del contenuto"><?= e($post['contenuto']) ?></div>
+                  <div class="pilastro <?= ($post['pilastro'] ?? '') !== '' ? 'pieno' : '' ?>"
+                       contenteditable data-campo="pilastro" data-server="<?= e($post['pilastro']) ?>" data-ph="pilastro"><?= e($post['pilastro']) ?></div>
+                </div>
                 <?php /* «Visual» da solo non diceva niente, e per giunta si
                          confondeva con le immagini vere degli esecutivi. Qui
                          c'è solo il link al file grafico di riferimento: ora
@@ -313,8 +328,6 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
                   <button type="button" class="apri-elenco" data-elenco="formati"
                           title="Scrivi per filtrare, oppure apri l&rsquo;elenco dei formati">⌄</button>
                 </span>
-                <div class="pilastro <?= ($post['pilastro'] ?? '') !== '' ? 'pieno' : '' ?>"
-                     contenteditable data-campo="pilastro" data-server="<?= e($post['pilastro']) ?>" data-ph="pilastro"><?= e($post['pilastro']) ?></div>
               </td>
 
               <td class="cta con-elenco" data-etichetta="Call to action">
