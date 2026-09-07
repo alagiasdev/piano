@@ -93,7 +93,7 @@ $iniziale = mb_strtoupper(mb_substr((string) $piano['cliente_nome'], 0, 1));
       <p class="scheda-feed-cta"><?= e($post['cta']) ?></p>
     <?php endif; ?>
 
-    <div class="scheda-feed-azioni doc-azioni">
+    <div class="scheda-feed-azioni">
       <span class="stato-pill <?= e($stato) ?> etichetta-stato"><?= e(Stati::etichettaPost($stato)) ?></span>
 
       <?php if ($stato === 'approvato' && ($post['approvato_esecutivo_il'] ?? null) !== null): ?>

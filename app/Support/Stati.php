@@ -62,11 +62,4 @@ final class Stati
         return $statoPost === 'approvato' || $statoPost === 'pubblicato';
     }
 
-    public static function prossimoPost(string $stato): string
-    {
-        $i = array_search($stato, self::CICLO_POST, true);
-        $i = $i === false ? 0 : ((int) $i + 1) % count(self::CICLO_POST);
-
-        return self::CICLO_POST[$i];
-    }
 }

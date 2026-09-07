@@ -12,6 +12,15 @@
 # Nota importante: public/uploads/ non viene mai toccato. Ci stanno i
 # loghi dei clienti e le immagini dei post, che sono dati e non codice:
 # un deploy non deve poterli cancellare.
+#
+# ATTENZIONE, l'altra faccia della stessa scelta: `cp` aggiunge e
+# sovrascrive, ma non cancella mai. Un file tolto o rinominato nel
+# repository resta sul server per sempre. Finora non e' mai successo, ma
+# il giorno che capita va rimosso a mano da File Manager -- e il caso da
+# ricordare e' database/migrations/: una migrazione rimasta li' verrebbe
+# vista come "in sospeso" e riapplicata. Il rimedio automatico sarebbe
+# rsync --delete, ma un solo --exclude sbagliato cancellerebbe le immagini
+# dei clienti: meglio una nota che una scorciatoia pericolosa.
 
 deployment:
   tasks:

@@ -173,7 +173,7 @@ foreach ($settimane as $settimana) {
 
             <td class="doc-secondario" data-etichetta="Call to action"><?= e($post['cta']) ?></td>
 
-            <td class="doc-azioni" data-etichetta="Stato">
+            <td data-etichetta="Stato">
               <span class="stato-pill <?= e($post['stato']) ?> etichetta-stato"><?= e(Stati::etichettaPost((string) $post['stato'])) ?></span>
 
               <?php if (($post['commento_cliente'] ?? '') !== ''): ?>

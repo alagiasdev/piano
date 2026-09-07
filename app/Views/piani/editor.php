@@ -350,7 +350,7 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
               <td class="stato-cella" data-etichetta="Stato">
                 <button type="button" class="stato-pill <?= e($post['stato']) ?> azione-stato" data-stato="<?= e($post['stato']) ?>"
                         data-server="<?= e($post['stato']) ?>"
-                        title="Clic per passare allo stato successivo"><?= e(Stati::etichettaPost((string) $post['stato'])) ?></button>
+                        title="Clic per scegliere lo stato"><?= e(Stati::etichettaPost((string) $post['stato'])) ?></button>
                 <?php if (($post['commento_cliente'] ?? '') !== ''): ?>
                   <p class="commento">
                     <strong>Cliente:</strong> <?= e($post['commento_cliente']) ?>

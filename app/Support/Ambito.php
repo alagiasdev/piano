@@ -52,12 +52,6 @@ final class Ambito
         return self::assegnati((int) $utente['id']);
     }
 
-    /** Vero quando l'utente corrente vede solo una parte dei clienti. */
-    public static function limitato(): bool
-    {
-        return self::clienti() !== null;
-    }
-
     /** Puo l'utente corrente lavorare su questo cliente? */
     public static function permette(int $clienteId): bool
     {
