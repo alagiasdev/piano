@@ -209,6 +209,12 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
 </details>
 
 <div id="editor" data-piano="<?= $idPiano ?>">
+<?php /* Le intestazioni di colonna si scrivono solo sopra la prima settimana.
+         Ripeterle cinque volte costava una trentina di pixel a testa per dire
+         una cosa che si legge una volta sola, e le colonne restano allineate
+         lo stesso perché le larghezze le fissa il <colgroup>, che c'è in ogni
+         tabella. */ ?>
+<?php $primaSettimana = true; ?>
 <?php foreach ($settimane as $settimana): ?>
   <section class="settimana">
     <div class="settimana-testa">
@@ -228,12 +234,15 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
         <col class="c-day"><col class="c-ch"><col><col class="c-fmt">
         <col class="c-cta"><col class="c-st"><col class="c-x">
       </colgroup>
-      <thead>
-        <tr>
-          <th>Giorno</th><th>Canali</th><th>Contenuto</th><th>Formato</th>
-          <th>Call to action</th><th>Stato</th><th></th>
-        </tr>
-      </thead>
+      <?php if ($primaSettimana): ?>
+        <thead>
+          <tr>
+            <th>Giorno</th><th>Canali</th><th>Contenuto</th><th>Formato</th>
+            <th>Call to action</th><th>Stato</th><th></th>
+          </tr>
+        </thead>
+      <?php endif; ?>
+      <?php $primaSettimana = false; ?>
       <tbody>
       <?php if ($settimana['post'] === []): ?>
         <tr class="riga-vuota">
@@ -351,6 +360,13 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
               </td>
 
               <td class="riga-strumenti">
+                <?php /* I pulsanti stanno in un div e non direttamente nel <td>:
+                         fra un elemento in linea e l'altro l'a capo del sorgente
+                         conta come uno spazio, e tre pulsanti che ci starebbero
+                         andavano a capo per otto pixel di spazi invisibili.
+                         Il flex qui va, sul <td> no: un td flex esce dal layout
+                         di tabella e spezza il bordo inferiore. */ ?>
+                <div class="strumenti-riga">
                 <?php if ($quantiQuelGiorno > 1): ?>
                   <?php /* Solo dove c'e' davvero qualcosa da riordinare. */ ?>
                   <button type="button" class="azione-sposta" data-direzione="su"
@@ -362,8 +378,28 @@ $linkPubblico = $piano['token_pubblico'] !== null ? url_assoluta('p/' . $piano['
                          occupano spazio: 22px per riga di troppo. */ ?>
                 <button type="button" class="azione-extra"
                         title="Mostra visual e pilastro">⋯</button>
-                <button type="button" class="azione-duplica" title="Duplica il post in questo giorno">⧉</button>
-                <button type="button" class="azione-elimina" title="Elimina il post">✕</button>
+                <?php /* Icone disegnate e non i caratteri ⧉ e ✕ presi in
+                         prestito: quelli hanno peso e dimensione decisi dal
+                         font, cambiano da macchina a macchina, e accanto al
+                         ⋯ non stavano mai allineati. */ ?>
+                <button type="button" class="azione-duplica" title="Duplica il post in questo giorno">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="9" y="9" width="12" height="12" rx="2.5"/>
+                    <path d="M5.5 15H4.5A1.5 1.5 0 0 1 3 13.5v-9A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5v1"/>
+                  </svg>
+                  <span class="solo-lettori">Duplica</span>
+                </button>
+                <button type="button" class="azione-elimina" title="Elimina il post">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M4 6.5h16M9.5 6.5V4.8A1.3 1.3 0 0 1 10.8 3.5h2.4a1.3 1.3 0 0 1 1.3 1.3v1.7"/>
+                    <path d="M6.5 6.5 7.4 19a1.6 1.6 0 0 0 1.6 1.5h6a1.6 1.6 0 0 0 1.6-1.5l.9-12.5"/>
+                    <path d="M10.5 10.5v6M13.5 10.5v6"/>
+                  </svg>
+                  <span class="solo-lettori">Elimina</span>
+                </button>
+                </div>
               </td>
             </tr>
           <?php endforeach; ?>

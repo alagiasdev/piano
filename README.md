@@ -277,6 +277,23 @@ di riga da 64 a 43 px. Quel che resta è dettato da contenuto vero.
 della settimana e la data andava corretta subito dopo: due passaggi in
 più per ognuno dei dodici post di un piano, sempre.
 
+## I segni dei canali
+
+Ogni pastiglia porta il segno del suo canale, come **SVG in linea** in
+`App\Support\Canali::SEGNI`. In linea e non come file: sono sei icone di
+poche centinaia di byte, e come `<img>` costerebbero sei richieste in più
+per pagina, come sprite un file da tenere allineato a mano.
+
+Il colore lo prendono dalla pastiglia (`currentColor`), quindi i colori
+dei canali restano definiti **in un posto solo** — `Canali::ELENCO`,
+esposto al CSS come variabili — e non c'è una seconda copia che possa
+scostarsi.
+
+Il segno costa larghezza proprio nella colonna dove la larghezza è
+contata: aggiungendolo, le due pastiglie sono tornate incolonnate e le
+righe da 42 a 64px. I 21px mancanti sono venuti dalla colonna dei
+comandi, che ne aveva d'avanzo da quando i pulsanti sono icone quadrate.
+
 ## Larghezza della tabella del piano
 
 La pagina del piano usa un contenitore da **1440px** invece dei 1180 di
