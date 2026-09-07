@@ -125,7 +125,7 @@ database/
 | GET | `/login` · POST `/login` · POST `/logout` | Accesso |
 | GET | `/` | Dashboard: piani del periodo, prossimi 7 giorni, novità dai clienti |
 | GET | `/clienti` | Elenco clienti |
-| GET | `/clienti/nuovo` · POST `/clienti` | Nuovo cliente |
+| GET | `/clienti/nuovo` · POST `/clienti` | Nuovo cliente *(amministratori)* |
 | GET | `/clienti/{id}/modifica` · POST `/clienti/{id}` | Modifica cliente |
 | POST | `/clienti/{id}/elimina` | Elimina cliente (con i suoi piani) |
 | GET | `/clienti/{id}/piani` | Piani di un cliente |
